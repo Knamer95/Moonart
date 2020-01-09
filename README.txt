@@ -68,3 +68,5 @@ Future implementations (ordered by importance):
 
 - Visualize the followers and following in profile when clicking on them. Modal that shows users, with option to go to their
   profile, with the follow/unfollow button.
+
+- Add DMs.
