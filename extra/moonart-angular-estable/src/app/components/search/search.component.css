@@ -1,0 +1,18 @@
+.container-ma{ 
+    margin-top: 40px; 
+    margin-bottom: 40px; 
+    border-radius: 5px; 
+    padding-top: 30px;
+    padding-bottom: 40px;
+    width: 95%;
+    min-height: 10vh;
+}
+
+.row div:nth-child(1){ padding-left: 40px; }
+
+.row div:nth-child(4){ padding-right: 40px; }
+
+h1 span{
+    font-size: 25px;
+    margin-left: 20px;
+}

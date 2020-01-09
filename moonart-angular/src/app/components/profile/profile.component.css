@@ -1,0 +1,119 @@
+.container-ma{ 
+    margin-top: 40px; 
+    margin-bottom: 20px; 
+    border-radius: 5px; 
+    padding-top: 30px;
+    /* padding-bottom: 40px; */
+    width: 100%;
+    min-height: 70vh;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+}
+
+.profile-picture{
+    width: 160px; 
+    height: 160px;
+    border-radius: 50%;
+}
+
+.user{
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.followers, .following{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.followers span, .following span{ margin-left: 10px;}
+
+.description{
+    width: 95%;
+    height: 125px;
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    background: #ffffff14;
+    padding: 10px 20px;
+    font-size: 18px;
+    word-break: break-all;
+	overflow-y: scroll;
+    text-overflow: ellipsis;
+}
+
+.profile-navbar{
+    font-size: 35px;
+    padding-left: 95px;
+}
+
+.profile-navbar span:hover{
+    cursor: pointer;
+    padding-bottom: 1px;
+}
+
+.chosen{
+    padding-bottom: 1px;
+}
+
+.profile-navbar-content{
+    padding: 30px 10px;
+    width: 100%;
+    border-radius: 10px;
+}
+
+[data-container="day-container"] .profile-navbar-content{
+    background: rgb(255, 255, 255);
+}
+
+[data-container="night-container"] .profile-navbar-content{
+    background: rgba(255, 255, 255, 0.05)
+}
+
+[data-container="day-container"] .profile-navbar{
+    color: rgb(116, 116, 116);
+}
+
+[data-container="day-container"] .profile-navbar span:hover{
+    border-bottom: 1.3px solid rgba(0, 0, 0, 0.603);
+}
+
+[data-container="day-container"] .chosen{
+    color: rgb(66, 66, 66);
+    border-bottom: 1.3px solid rgba(0, 0, 0, 0.603);
+}
+
+[data-container="night-container"] .profile-navbar{
+    color: rgb(134, 134, 134);
+}
+
+[data-container="night-container"] .profile-navbar span:hover{
+    border-bottom: 1.3px solid rgba(238, 238, 238, 0.603);
+}
+
+[data-container="night-container"] .chosen{
+    color: rgb(255, 255, 255);
+    border-bottom: 1.3px solid rgba(238, 238, 238, 0.603);
+}
+
+.images-container{
+    min-height: 40vh;
+}
+
+
+/*
+::-webkit-scrollbar {
+    width: 10px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: none; 
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+    background: none;
+}
+ 
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(0, 183, 255, 0.8); 
+}
+*/

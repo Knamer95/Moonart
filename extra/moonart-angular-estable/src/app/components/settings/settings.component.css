@@ -1,0 +1,93 @@
+.container-ma{ 
+  margin-top: 40px; 
+  margin-bottom: 40px; 
+  border-radius: 5px; 
+  padding-top: 30px;
+  padding-bottom: 40px;
+  width: 30%;
+  min-height: 70vh;
+}
+
+hr{ margin-bottom: 60px; }
+
+input[type="checkbox"].switch{
+  appearance: none;
+  width: 3.5em;
+  height: 2em;
+  background: #ddd;
+  border-radius: 3em;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  transition: all .2s ease-in-out;
+}
+
+input[type="checkbox"].switch:checked{
+  background: #0effb7;
+}
+
+input[type="checkbox"].night:checked{
+  background: #00054e;
+}
+
+input[type="checkbox"].switch:after{
+  position: absolute;
+  content: "";
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 .25em rgba(0,0,0,.3);
+  transform: scale(.7);
+  left: 0;
+  transition: all .2s ease-in-out;
+}
+
+input[type="checkbox"].switch:checked:after{
+  left: calc(100% - 2em);
+}
+
+span{
+  font-size: 21px;
+}
+
+.color{
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(136, 136, 136, 0.685);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.color:hover{
+  transform: scale(1.1);
+}
+
+.feed{
+  width: 56px;
+  height: 40px;
+  font-size: 20px;
+  padding: 0 5px;
+  border-radius: 5px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}
+
+.red{  background: rgb(255, 140, 140); }
+.green{ background: rgb(163, 255, 140); }
+.blue{ background: rgb(140, 190, 255); }
+.violet{ background: rgb(194, 140, 255); }
+.orange{ background: rgb(247, 217, 172); }
+.yellow{ background: rgb(255, 253, 140); }
+
+.chosen{box-shadow: 0px 0px 3px 4px rgba(237, 43, 255, 0.295); transform: scale(1.2);}
+.chosen:hover{ transform: scale(1.2); }

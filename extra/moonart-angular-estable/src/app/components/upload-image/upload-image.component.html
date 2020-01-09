@@ -1,0 +1,83 @@
+<div class="alert alert-success notification" *ngIf="status == 'success'">
+  Imagen subida correctamente. Se te redirigirá en seguida.
+</div>
+
+<div class="alert alert-danger notification" *ngIf="status == 'error'">
+  Error al subir la imagen. Inténtalo de nuevo más tarde.
+</div>
+
+<div class="container-fluid col-md-12 container-ma">
+  <h1 class="index-title pl-5 pb-3">{{page_title}}</h1>
+  <hr class="index-title pb-3">
+
+  <form class="col-md-12" #uploadImageForm="ngForm" (ngSubmit)="onSubmit(uploadImageForm)">
+    <div class="row mb-5">
+      <div class="col-md-5 pl-10">
+        <img [src]="_imageURL" class="mb-3" id="upload-image">
+        <div>
+          <input type="file" name="file" id="path" #file (change)="fileHandler(file.files)" accept="image/*" required> <!-- + (change)="handleFileInput($event.target.files)" -->
+          <div class="min-info">
+            <span id="image_size">Máximo 2Mb.</span><br>
+            <span id="image_res">Debe ser una resolución superior a 400x400</span><br>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-7">
+        <div class="mb-3">
+          <label for="name" class="pr-3">Título de la imagen:</label>
+          <input type="text" name="name" #name="ngModel" [(ngModel)]="image.name" placeholder="Máx 30 caracteres"
+            maxlength="30" class="form-control title" autofocus required>
+          <small *ngIf="!name.valid && name.touched" class="invalid-feedback d-block">
+           Por favor, introduce un título para la imagen.
+          </small>
+        </div>
+        <div class="mb-3">
+          <label for="description">Descripción</label>
+          <div>
+            <textarea name="description" #description="ngModel" [(ngModel)]="image.description" placeholder="Máx 300 caracteres"
+              maxlength="300" class="form-control descr-image" id="upload-desc"></textarea>
+          </div>
+        </div>
+        <div class="mb-3">
+          <input type="checkbox" name="nsfw" #nsfw="ngModel" [(ngModel)]="image.nsfw">
+          <label for="nsfw">Contenido explícito (+18)</label>
+        </div>
+        <div class="mb-3">
+          <input type="checkbox" name="epilepsy" #epilepsy="ngModel" [(ngModel)]="image.epilepsy">
+          <label for="epilepsy">Puede contener elementos que causen epilepsia</label>
+        </div>
+        <div class="mb-5">
+          <label for="rights" class="mr-3">Tipos de derechos:</label>
+          <select name="rights" #rights="ngModel" [(ngModel)]="_rights">
+            <option value="totales" ng-selected="selected">Totales</option>
+            <option value="parciales">Parciales</option>
+            <option value="ninguno">Ninguno</option>
+          </select>
+        </div>
+        <div>
+          <label for="tags" class="pr-3">Tags:</label>
+          <input type="text" name="tags" #tags="ngModel" [(ngModel)]="image.tags" placeholder="Tags (separadas por comas)"
+            maxlength="100" class="form-control tags">
+        </div>
+        <small class="example ml-5 pl-1">Ejemplo: Nebulilla, pokemon, moon</small>
+
+        <!-- <div>
+          Miniatura: <input type="file" name="miniatura" id="upload-min">
+        </div>
+        <div class="min-info">
+          <p>**Una miniatura ayuda a cargar la página de forma más rápida. Es la misma imagen en
+            peor resolución. (No es necesaria)<br><br>
+            Por favor, no introduzca una imagen diferente a la original, o nos veremos
+            obligados a borrarla.</p>
+        </div> -->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div style="text-align:center">
+          <button type="submit" class="btn btn-success btn-upload" [disabled]="uploadImageForm.invalid">Subir imagen</button> <!-- ng-disabled="message.length > 255" -->
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

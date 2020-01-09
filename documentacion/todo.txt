@@ -1,0 +1,15 @@
+Cambiar en la tabla nombres como sfw a nsfw, y epilepsy_friendly a lo contrario.
+
+Cada usuario tiene asociada una configuración. (Configuración)                      -> DB necesita otro campo para esto
+- Opción de poner que se le haga "blur" al contenido explicito (por defecto).
+- Opción de cambiar el fondo de pantalla, la barra.
+
+En su perfil pueden editar por apartados. (Editar perfil)
+- Nombre y nick (email igual).
+- Foto de perfil.                                                                   -> DB necesita otro campo para esto
+- Descripción.
+- Contraseña, confirmando la anterior.
+
+Notas: 
+> ¿Poner blur en feed, pero en el home no mostrar simplemente?
+> Hacer lo mismo con el contenido no apto para epilépticos.

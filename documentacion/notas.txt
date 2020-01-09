@@ -1,0 +1,10 @@
+Ejecutar proyecto Angular con:
+> ng serve --live-reload false  -> Para ver cómo se vería en producción, no recompilando y recargando al añadir un archivo a un fichero,
+  o al editar algo.
+
+> ng serve                      -> Para no tener que estar recargando cada vez que se hagan cambios.
+
+
+> Añadir a usuario campo "config" de tipo JSON (si deja doctrine) -> Nahhh
+
+> Idiomas -> Español, inglés.

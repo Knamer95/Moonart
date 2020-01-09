@@ -1,0 +1,121 @@
+Tareas: (Prioridad alta)
+
+   ✓  Añadir ON DELETE CASCADE para cuando se borra un usuario, una imagen, etc... (en phpMyAdmin -> Estructura, Vista de relaciones)
+      Importante generar el sql una vez esté esto, para tenerlo bien.
+    
+   ✓  Restringir el nick del usuario a 10 caracteres o algo así
+
+   *  Hacer como en ImageComponent en la función loadImage(), que si falla se vuelve a llamar, hasta un máx de x veces.
+      Esto es porque a veces la petición falla.
+
+1  ✓  Crear vista para imagen abierta. Se tiene que pasar un parámetro. Si se puede (sí no?), hacer que sea del estilo "moonart.com/images/AIUJCXO-2000".
+      En las rutas, por GET, moonart.com/images/{image.name}
+
+2  ✓  Borrar imagen. Si (user.role == "ROLE_USER" && user.id == image.user || user.role == "ROLE_ADMIN")
+    
+      Ocultar imagen. Si (user.role == "ROLE_MOD" => image.status = "hidden"). El usuario que la ha subido podrá acceder a ella desde su perfil.
+      Si el usuario accede a ella (otro user también puede con la ruta), se verá arriba en un error de bootstrap 
+      "Imagen ocultada. Motivo: x. Consulte con un moderador si no está de acuerdo.".
+
+3  ✓  Seguir a usuario. Los botones de seguir usuario tienen que estar en imágenes, feed, y perfil. Feed hacer algo en plan Twitter.
+      Con peticiones AJAX, comprobar si se sigue al usuario. Si sí, mostrar botón "Siguiendo", que onhover cambie a "Dejar de seguir". Si no, al revés.
+
+4  ✓  Editar perfil bien hecho. Se puede cambiar: Nombre, nick, contraseña, imagen y descripción.
+      - Falta contraseña !!
+      - Pasar las contraseñas actual y nueva ya codificadas en HASH256 o lo que haya usado. Si getPassword == actual_pass, y 
+        new_pass_1 == new_pass_2 
+
+5  ✓  La ruta de perfil cambiarla a "moonart.com/profile/{user.nick}". Si entras en un perfil ajeno, podrás seguirle. Si entras en el tuyo, podrás editarlo.
+      Hacer el perfil. Prioritario el editar perfil. Luego ya la vista de otros perfiles. (En el mismo componente, no se diferencian en casi nada)
+      -> Perfil propio: Se puede editar. Se puede ver "Likes" y "Favs" como pestañas. Debajo se verán las imágenes subidas.
+      -> Perfil ajeno: Se puede seguir al usuario. Se puede ver "Likes" como pestaña. Debajo se verán las imágenes subidas.
+
+6  ✓  Vista de Feed. El usuario verá las imágenes que otros hayan subido. Su orden estará en función de la fecha created_at de la interacción.
+
+7  -  Editar imagen. Sólo el propio usuario puede hacer esto. Cambiar nombre, descripción, o tags.
+
+8  ✓  Cambiar ruta de web. localhost:4300 -> www.moonart.com
+
+9  -  Añadir saltos de línea al agregar imagen con descripción a la DB. También en la descripción del perfil.
+
+10 ✓  Agregar opción para ver favoritos desde el menú. Cuando le das a tu nombre (o a la imagen cuando la añada). NO
+
+11 ✓  Vista de Discover. En vez de discover, buscador por nombre y tags. Solo un buscador, que incluya ambas cosas.
+
+12 ✓ Hacer que el propio usuario si que pueda ver sus propias imágenes.  
+      -> Pasar a allImages el token identity. Y hacer algo como en getImages, pero que si identity es null también haga las cosas.
+         Algo como $identity->sub == $image->getUser()->getId()
+
+13 -  Sanitizar los @... si cumplen el pattern de nombre de usuario [A-z0-9]
+
+14 ✓  Permitir emojis y ascii
+
+15 -  Solucionar llamadas AJAX en check, get config, get follow...
+
+16 -  Cambiar los comentarios, añadir contador de 300 caracteres 
+      - Contar que emoji y acentos son +6 --> Cambiar en bbdd el máximo de 300 a 600, pero permitir 300
+      - Los \u... de tildes convertirlos a caracter antes del INSERT, es JSON el que lo parsea así.
+      - ¿Máx 20 emojis?
+
+17 -  http://moonart.io:4200/search?q=name:a --> Paginación mal
+
+18 -  Mostrar los datos una vez esté cargada la página
+
+ ---
+
+Cambios:
+
+   !  Ya no se puede comentar en los perfiles.
+
+
+ ---
+
+Hecho:
+                      Tarea realizada                           |   Tiempo invertido
+---------------------------------------------------------------------------------------
+
+1  -  Base de datos en el BACKEND.                              |       3 días
+
+2  -  Login/Registro de usuario, y logout.                      |        1 día
+
+3  -  Vista de Home.                                            |        1 día
+
+4  -  Editar perfil. 50%                                        |      1/2 día
+
+5  -  Interacción con las imágenes.                             |       2 días
+
+6  -  Cambiar ajustes personalizados para cada usuario.         |       2 días
+
+
+ ---
+
+Notas: (Prioridad baja)
+
+  * Aunque probablemente nunca llegue a pasar, al asignar nombre a la imagen es mejor asignarle de valor como time en milisegundos, o buscar ese 
+    nombre en la DB, y si está cogido, generar otro, ya que como está podría darse el caso de que dos imágenes tengan el mismo nombre.
+
+  * A lo mejor en vez de hacer una recursiva que se ejecute hasta que cargue la configuración (en cambiar ajustes), hacer que si tras intentarlo
+    unas 20 veces en un intervalo de 500ms, aparezca en la pantalla "La solicitud ha tardado demasiado. Prueba a recargar".
+
+  * Restringir el nick del usuario a 10 caracteres o algo así
+
+  * Los that que tanto uso, se podrían hacer sin pasar nada, y usar this, pero para más claridad, uso that. Aunque a veces lie más...
+
+ ---
+
+Completado:
+
+1  -  Ocultar imágenes nsfw si nsfw == 0, y epilepsy == 0 (o al revés). Esto es solo en home.component y discover.component.
+
+2  -  Añadir campo tags a tabla imágenes y a input de subir imagen. Separados por espacios. Máx 10 tags, o 100 caracteres.
+      Añadir campo user.image
+
+
+ ---
+
+Solucionar
+
+1  -  Si por ejemplo vas al perfil de otro, y luego al tuyo desde el menú->perfil, no se actualizan los datos. Poner alguna condición
+      o recarga.
+
+2  -  Cuando recargas en el perfil de otro al que sigues, a veces te pone que no le sigues. La petición AJAX falla.

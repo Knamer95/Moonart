@@ -1,0 +1,58 @@
+<div class="container-fluid col-md-12 container-ma">
+  <div class="tweet" *ngFor="let element of sharedImages; let i = index">
+
+    <div class="row" *ngIf="element.user.nick != element.image.user.nick else empty">
+      <div class="col-md-4 text-center shared-by">
+        <i class="fas fa-retweet"></i> Compartido por <a class="user-sharing" [routerLink]="['/profile', element.user.nick]">{{element.user.nick}}</a>
+      </div>
+      <div class="col-md-8"></div>
+    </div>
+    <ng-template #empty>
+      <div class="col-md-12 empty"></div>
+    </ng-template>
+    <div class="row">
+      <div class="col-md-4 text-center">
+        <a [routerLink]="['/images', element.image.id]">
+          <img class="image" [src]="['assets/public/' + element.image.url]">
+        </a>
+      </div>
+      <div class="col-md-8">
+        <div class="row pb-4">
+          <div class="col-md-12">
+            <a [routerLink]="['/images', element.image.id]" class="name">[{{element.image.name}}]</a>
+          </div>
+          <div class="col-md-12">
+            <span class="by">por </span> <a [routerLink]="['/profile', element.image.user.nick]" class="by-user">{{element.image.user.nick}}</a>
+            <button type="button" *ngIf="element.image.user.nick != this.identity.nick" class="button button-follow no-follow"
+              [name]="'user-' + element.image.user.nick" (click)="follow(token, element.image.user.nick)"></button>
+            <!-- *ngIf="this.username != this.identity.nick" -->
+          </div>
+        </div>
+        <div class="row pb-3">
+          <div class="col-md-12 description">
+            <div *ngIf="element.image.description != null else nodescr">
+              <span [innerHTML]="element.image.description"></span>
+            </div>
+            <ng-template #nodescr>
+              <span> El usuario no ha agregado ninguna descripción.</span>
+            </ng-template>
+          </div>
+        </div>
+
+        <div class="row bottom">
+          <div class="col-md-6 counter">
+            <!--  bottom-align-text -->
+            <i class="fas fa-heart"></i> {{element.image.likes}}
+            <i class="fas fa-star"></i> {{element.image.favs}} 
+            <i class="fas fa-retweet"></i> {{element.image.shares}}
+          </div>
+          <div class="col-md-6 date">
+            El {{element.image.createdAt}}
+            <!-- <br> -->
+            <!-- CE {{element.sharedAt}} -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

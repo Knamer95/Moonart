@@ -1,0 +1,124 @@
+.container-ma{ 
+    margin-top: 40px; 
+    margin-bottom: 40px; 
+    border-radius: 5px; 
+    padding-top: 30px;
+    padding-bottom: 40px;
+    width: 95%;
+    min-height: 10vh;
+}
+
+.row div:nth-child(1){ padding-left: 40px; }
+
+.row div:nth-child(4){ padding-right: 40px; }
+
+/* .box #image-box{ background: rgba(0, 0, 0, 0.123); height: 300px; } */
+
+.container-images{ display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; }
+/* grid-template-rows: 1fr 1fr 1fr 1fr; -> Si no hay las 4 filas, no quiero que aparezcan elementos invisibles. */ 
+.grid-col-1 { grid-row: 1; grid-column: 1; }
+.grid-col-2 { grid-row: 1; grid-column: 2; }
+.grid-col-3 { grid-row: 1; grid-column: 3; }
+.grid-col-4 { grid-row: 1; grid-column: 4; }
+.grid-col-5 { grid-row: 2; grid-column: 1; }
+.grid-col-6 { grid-row: 2; grid-column: 2; }
+.grid-col-7 { grid-row: 2; grid-column: 3; }
+.grid-col-8 { grid-row: 2; grid-column: 4; }
+.grid-col-9 { grid-row: 3; grid-column: 1; }
+.grid-col-10{ grid-row: 3; grid-column: 2; }
+.grid-col-11{ grid-row: 3; grid-column: 3; }
+.grid-col-12{ grid-row: 3; grid-column: 4; }
+.grid-col-13{ grid-row: 4; grid-column: 1; }
+.grid-col-14{ grid-row: 4; grid-column: 2; }
+.grid-col-15{ grid-row: 4; grid-column: 3; }
+.grid-col-16{ grid-row: 4; grid-column: 4; }
+
+/* .{  } */
+
+.box{ padding: 10px 10px 10px 10px; justify-self: center; align-self: center;}
+
+.box #image-box{ width: 300px; height: 250px; display: grid; }
+
+.image-parent, .image-element{ max-height: 250px; max-width: 300px; /*250px*/ align-self: center; justify-self: center; cursor: pointer; position: relative; } /* Añadir como requisito un min width y height de 150px al subir imagen.*/
+
+.image-parent:hover, .hovered-parent{
+    background-image: linear-gradient(transparent 20%,rgb(40, 44, 0) 100%); 
+    opacity: 1; }
+
+.image-element { min-width: 233px; } /* Para la barra de acciones */
+
+.image-element:hover, .hovered-children{-webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0.2)));
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.2)); }
+
+/* Blue ver.
+.image-element:hover, .hovered-children{-webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0.2)));
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.2)); }
+*/
+
+.image-description{
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+    pointer-events: none; 
+    position: absolute; 
+    color: white; 
+    font-size: 22px;
+    line-height: 110%; 
+    bottom: 15px; 
+    left: 0px; 
+    margin-left: 20px; 
+    margin-right: 20px; 
+}
+
+.image-parent:hover > .image-description{
+    visibility: visible;
+    opacity: 1;
+}
+
+.image-description:hover{ visibility: visible;
+    opacity: 1; transition: opacity 0.3s ease-out; }
+
+.image-by{
+    font-size: 16px;
+}
+
+.image-user{
+    color: rgb(242, 255, 168);
+}
+
+
+/* Blue ver. 
+.image-user{ color: rgb(128, 215, 255); } 
+*/
+
+.image-action{ position: absolute; top: 0; right: 0; visibility: hidden; 
+}
+.image-frame, .image-heart, .image-star, .image-arrows{ position: absolute; }
+.like{ top: -2px; right: -1px; cursor: default; z-index: 1; }
+.fav{ top: -2px; right: 64px; cursor: default; width: 94px; height: 46px;  z-index: 2;  }
+.share{ top: -2px; right: 129px; cursor: default; width: 94px; height: 46px;  z-index: 3; }
+.like, .fav, .share{ opacity: 0.9; }
+.like:hover, .like-hovered, .fav:hover, .fav-hovered, .share:hover, .share-hovered{ transform: scale(1.1, 1.1); z-index: 4; }
+
+.image-heart, .image-star, .image-arrows{ cursor: pointer; width: 17px; height: 17px; transform: scale(1.5, 1.5); 
+    z-index: 4; background-repeat: no-repeat; }
+.image-heart:hover, .image-star:hover, .image-arrows:hover{ transform: scale(2, 2); }
+
+
+.image-heart, .image-not-liked{ background-image: url("../../../assets/img/heart.png"); top: 14px; right: 27px; }
+.like:hover ~ .image-heart{ background-image: url("../../../assets/img/heart-active.png"); }
+.image-heart:hover, .image-liked{background-image: url("../../../assets/img/heart-active.png"); }
+
+.image-star, .image-not-faved{ background-image: url("../../../assets/img/star.png");  top: 13px; right: 99px; }
+.fav:hover ~ .image-star{ background-image: url("../../../assets/img/star-active.png"); }
+.image-star:hover, .image-faved{ background-image: url("../../../assets/img/star-active.png"); }
+
+.image-arrows, .image-not-shared{ background-image: url("../../../assets/img/repost.png");  top: 14px; right: 163px; }
+.share:hover ~ .image-arrows{ background-image: url("../../../assets/img/repost-active.png"); }
+.image-arrows:hover, .image-shared{ background-image: url("../../../assets/img/repost-active.png"); }
+
+.image-parent:hover .image-action{ visibility: visible; }
+
+.pagination{ margin-right: 30px; margin-bottom: 30px; }
+
+.active{ background: rgb(29, 146, 255); color: white; cursor: none; pointer-events: none; }

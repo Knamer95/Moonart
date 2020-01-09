@@ -1,0 +1,58 @@
+<div class="container-fluid col-md-12 container-ma">
+  <div *ngIf="found==true">
+    <div class="row">
+      <div class="col-md-2 pl-5 ml-3">
+        <img [src]="_imageURL" class="profile-picture">
+      </div>
+      <div class="col">
+        <div class="row pt-3 pl-2">
+          <span class="user">{{username}}</span>
+        </div>
+        <div class="row pt-4">
+          <button type="button" class="button button-follow no-follow" *ngIf="this.username != this.identity.nick"
+            (click)="follow(token, username)"></button><!-- {{followStatus}} -->
+          <button type="button" [routerLink]="['/edit']" class="button button-edit edit" *ngIf="this.username == this.identity.nick">{{this.currentLang.attributes.edit}}</button>
+        </div>
+      </div>
+      <div class="col-md-2 pt-4">
+        <div class="row pt-3 followers">{{this.currentLang.attributes.followers}}<span>{{followers}}</span></div>
+        <div class="row pt-4 following">{{this.currentLang.attributes.following}}<span>{{following}}</span></div>
+      </div>
+      <div class="col-md-6 pt-3">
+        <div class="description">
+          <span *ngIf="this.description != null else nodesc" [innerHTML]="this.description"></span>
+          <ng-template #nodesc>
+              <span>{{this.currentLang.attributes.noDescription}}</span>
+            </ng-template>
+        </div>
+      </div>
+    </div>
+    <hr class="index-title mt-5">
+    <div class="row profile-navbar no-select mt-4">
+      <div class="mr-5">
+        <span class="chosen" (click)="pickElement($event,1)">{{this.currentLang.attributes.gallery}}</span>
+      </div>
+      <div class="mr-5">
+        <span (click)="pickElement($event,2)">{{this.currentLang.attributes.likes}}</span>
+      </div>
+      <div class="mr-5" *ngIf="this.username == this.identity.nick">
+        <span (click)="pickElement($event,3)">{{this.currentLang.attributes.favs}}</span>
+      </div>
+    </div>
+    <div class="container-fluid col-md-12 profile-navbar-content mt-5">
+      <div class="row">
+        <div class="col-md-12 images-container">
+          <images-component *ngIf="this.element == 1"></images-component>
+          <likes-component *ngIf="this.element == 2"></likes-component>
+          <favs-component *ngIf="this.element == 3"></favs-component>
+        </div> <!-- Aquí cargaremos los componentes de Imágenes, Likes y Favs en función de cual esté seleccionado. -->
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid error" *ngIf="found==false">
+    <img src="assets/img/404.png">
+    <h2>{{this.currentLang.attributes.wrongUserTitle}}</h2>
+    <p>{{this.currentLang.attributes.wrongUserBody}}</p>
+    <a [routerLink]="['/home']">&nbsp;{{this.currentLang.attributes.goBack}}&nbsp;</a>
+  </div>
+</div>

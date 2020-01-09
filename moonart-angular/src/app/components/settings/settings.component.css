@@ -1,0 +1,178 @@
+.container-ma{ 
+  margin-top: 40px; 
+  margin-bottom: 40px; 
+  border-radius: 5px; 
+  padding-top: 30px;
+  padding-bottom: 40px;
+  width: 30%;
+  min-height: 70vh;
+}
+
+hr{ margin-bottom: 60px; }
+
+input[type="checkbox"].switch{
+  appearance: none;
+  width: 3.5em;
+  height: 2em;
+  background: #ddd;
+  border-radius: 3em;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  transition: all .2s ease-in-out;
+}
+
+input[type="checkbox"].switch:not(.night):checked{
+  background: #0effb7;
+}
+
+input[type="checkbox"].night:checked{
+  background: #24244e;
+}
+
+input[type="checkbox"].switch:after{
+  position: absolute;
+  content: "";
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 .25em rgba(0,0,0,.3);
+  transform: scale(.7);
+  left: 0;
+  transition: all .2s ease-in-out;
+}
+
+input[type="checkbox"].switch:checked:after{
+  left: calc(100% - 2em);
+}
+
+input[type="checkbox"].switch.night:not(:checked):after{
+  background: #f2ff87 !important;
+}
+
+input[type="checkbox"].switch.night:checked:after{
+  background: #c4c4c4 !important;
+}
+
+input[type="checkbox"].switch.night:checked:after{
+  background: #ffffff;
+}
+
+
+span{
+  font-size: 21px;
+}
+
+.color{
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(136, 136, 136, 0.685);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.color:hover{
+  transform: scale(1.1);
+}
+
+.feed{
+  width: 56px;
+  height: 40px;
+  font-size: 20px;
+  padding: 0 5px;
+  border-radius: 5px;
+  border: 1px solid #00000029;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+input[type="text"], input[type="number"]{
+  border: 1px solid #ffffff8c;
+  background: #ffffff14 !important;
+}
+
+.red{  background: rgb(255, 140, 140); }
+.green{ background: rgb(163, 255, 140); }
+.blue{ background: rgb(140, 190, 255); }
+.violet{ background: rgb(194, 140, 255); }
+.orange{ background: rgb(247, 217, 172); }
+.yellow{ background: rgb(255, 253, 140); }
+
+.chosen{box-shadow: 0px 0px 3px 4px rgba(237, 43, 255, 0.295); transform: scale(1.2);}
+.chosen:hover{ transform: scale(1.2); }
+
+.flag{
+  width: 22px;
+  margin-right: 10px;
+  position: relative;
+  top: -2px;
+}
+
+/* *** */
+
+.select_list{
+  background-color: #fff;
+  border: 1px solid #b3b3b3;
+  cursor: pointer;
+  height: 26px;
+  line-height: 21px;
+  padding: 3px 5px;
+  position: relative;
+  vertical-align: middle;
+  width: 130px;
+  border-radius: 5px;
+}
+.select_list:after{
+  content:"▼";
+  position:absolute;
+  right:3px;
+  color:#b3b3b3;
+}
+.select_list > .options{
+  display:none;
+  position: absolute;
+  top: 21px;
+  left: -1px;
+  width: 130px;
+  border: 1px solid #666;
+  border-top: transparent;
+  padding: 0;
+  margin: 0;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.select_list.active > .options{
+  display:block;
+}
+
+.select_list > span, .select_list > .options li {
+  background-position: 5px center;
+  background-repeat: no-repeat;
+  padding-left: 30px;
+  list-style: none;
+  padding: 10px;
+}
+
+.select_list > span, .select_list > .options li:hover{
+  background: rgb(0, 115, 255);
+  color: white;
+}
+
+.select_list > .options li:hover {
+  background-color:#eee;
+}
+
+.select_list_option{
+  color: black;
+}

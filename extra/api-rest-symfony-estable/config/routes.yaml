@@ -1,0 +1,165 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+
+# RUTAS PARA CONTROLADOR: USER #
+user:
+    path: /user
+    controller: App\Controller\UserController::index
+    methods: [POST]
+
+register_user:
+    path: /register
+    controller: App\Controller\UserController::newUser
+    methods: [POST]
+
+login_user:
+    path: /login
+    controller: App\Controller\UserController::login
+    methods: [POST]
+
+update_user:
+    path: /user/update_user
+    controller: App\Controller\UserController::update
+    methods: [PUT]
+
+update_config:
+    path: /user/update_config
+    controller: App\Controller\UserController::setConfig
+    methods: [PUT]
+
+get_config:
+    path: /user/get_config
+    controller: App\Controller\UserController::getConfig
+    methods: [GET]
+
+get_user:
+    path: /user/get_user
+    controller: App\Controller\UserController::getUserByNick
+    methods: [GET]
+
+check_password:
+    path: /user/check_password
+    controller: App\Controller\UserController::comparePwd
+    methods: [POST]
+
+# RUTAS PARA CONTROLADOR: IMAGES #
+
+image:
+    path: /image
+    controller: App\Controller\ImageController::index
+
+upload_image:
+    path: /image/new
+    controller: App\Controller\ImageController::upload
+    methods: [POST]
+
+update_image:
+    path: /image/update/{id}
+    controller: App\Controller\ImageController::upload
+    methods: [PUT]
+
+list_images:
+    path: /image/list
+    controller: App\Controller\ImageController::images
+    methods: [GET]
+
+list_all:
+    path: /image/list/all
+    controller: App\Controller\ImageController::allImages
+    methods: [GET]
+
+search_images:
+    path: /image/search
+    controller: App\Controller\ImageController::searchImages
+    methods: [GET]
+
+list_faved:
+    path: /image/faved
+    controller: App\Controller\ImageController::interactedUser
+    methods:
+
+image_details:
+    path: /image/details
+    controller: App\Controller\ImageController::details
+    methods: [GET]
+
+remove_image:
+    path: /image/remove/{id}
+    controller: App\Controller\ImageController::remove
+    methods: [DELETE]
+
+hide_image:
+    path: /image/hide/{id}
+    controller: App\Controller\ImageController::hide
+    methods: [PUT]
+
+user_by_image:
+    path: /user/image/{id}
+    controller: App\Controller\ImageController::userByImage
+    methods: [GET]
+
+shared_images:
+    path: /user/feed
+    controller: App\Controller\ImageController::sharedImages
+    methods: [GET]
+
+
+# RUTAS PARA EL CONTROLADOR INTERACTIONS #
+
+create_interaction:
+    path: /create_interaction
+    controller: App\Controller\InteractionsController::interact
+    methods: [POST]
+
+update_interaction:
+    path: /update_interaction
+    controller: App\Controller\InteractionsController::interact
+    methods: [PUT]
+
+check:
+    path: /check
+    controller: App\Controller\InteractionsController::check
+    methods: [POST]
+
+get_image_interactions:
+    path: /image/interactions
+    controller: App\Controller\InteractionsController::countInteractions
+    methods: [GET]
+
+    
+# RUTAS PARA EL CONTROLADOR FOLLOW #
+
+follow_unfollow:
+    path: /user/follow-unfollow
+    controller: App\Controller\FollowController::follow
+    methods: [POST]
+
+get_is_following:
+    path: /user/get-follow
+    controller: App\Controller\FollowController::getIsFollowing
+    methods: [GET]
+
+get_number_follows:
+    path: /user/get-user-follows
+    controller: App\Controller\FollowController::getFollowNumber
+    methods: [GET]
+
+
+# RUTAS PARA EL CONTROLADOR ImageComment #
+
+add_comment:
+    path: /image/add-comment
+    controller: App\Controller\ImageCommentController::addComment
+    methods: [POST]
+
+get_comments:
+    path: /image/get-comments
+    controller: App\Controller\ImageCommentController::getComments
+    methods: [GET]
+
+remove_comment:
+    path: /image/comment/remove/{id}
+    controller: App\Controller\ImageCommentController::removeComment
+    methods: [DELETE]
+    

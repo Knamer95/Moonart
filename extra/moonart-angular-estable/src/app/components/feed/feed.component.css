@@ -1,0 +1,83 @@
+.container-ma{ 
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    /* background: fuchsia; */
+}
+
+.tweet{
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    padding: 10px 40px 40px 40px;
+    border-top: 1px solid rgb(221, 221, 221);
+    border-bottom: 1px solid rgb(221, 221, 221);
+    position: relative;
+}
+
+.image{
+    min-width: 300px;
+    max-width: 350px;
+    max-height: 300px;
+}
+
+.shared-by{
+    font-size: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: rgb(30, 172, 42);
+
+}
+
+.user-sharing{
+    color: rgb(30, 172, 42);
+}
+
+.name, .description, .by, .by-user, .date, .interactions, .counter{
+    font-size: 30px;
+}
+
+.name{
+    font-size: 40px;
+    color: rgb(48, 196, 196);
+}
+
+.by-user{
+    /* display: inline; */
+    margin-right: 27px;
+    color: rgb(48, 196, 196);
+}
+
+.description{
+    font-size: 25px;
+    max-height: 115px;
+    margin-bottom: 40px;
+    /* Does the magic */
+    overflow :hidden;
+    white-space: nowrap;
+    
+    text-overflow: ellipsis; /* Adds the ... */
+}
+
+.date{
+    font-size: 23px;
+    /* position: absolute;
+    bottom: -5px; */
+    color: rgba(170, 170, 170, 0.685);
+    position: relative;
+    bottom: -5px;
+}
+
+.counter{
+    font-size: 27px;
+    /* position: absolute;
+    bottom: -7px; */
+}
+
+.bottom{
+    position: absolute; bottom: 0; width: 100%;
+}
+
+.empty{
+    height: 35px;
+}

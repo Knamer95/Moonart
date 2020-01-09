@@ -1,0 +1,1 @@
+{ "/api": { "target": "http://moonart-api.io", "secure": false } }

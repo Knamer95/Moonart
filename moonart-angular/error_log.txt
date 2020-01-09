@@ -1,0 +1,4 @@
+- Al entrar a un perfil de alguien al que estás siguiendo, falla el comprobar si le estás siguiendo. 
+  Frecuencia: Media
+
+- Al entrar a MoonArt, sale un error que se stackea y hace que la página se ralentice mucho.

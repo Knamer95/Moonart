@@ -1,0 +1,44 @@
+.container-ma{ 
+    margin-top: 40px; 
+    margin-bottom: 40px; 
+    border-radius: 5px; 
+    padding-top: 30px;
+    padding-bottom: 40px;
+    width: 95%;
+    min-height: 10vh;
+}
+
+.row div:nth-child(1){ padding-left: 40px; }
+
+.row div:nth-child(4){ padding-right: 40px; }
+
+/* .box #image-box{ background: rgba(0, 0, 0, 0.123); height: 300px; } */
+
+.container-images{ display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; }
+/* grid-template-rows: 1fr 1fr 1fr 1fr; -> Si no hay las 4 filas, no quiero que aparezcan elementos invisibles. */ 
+.grid-col-1 { grid-row: 1; grid-column: 1; }
+.grid-col-2 { grid-row: 1; grid-column: 2; }
+.grid-col-3 { grid-row: 1; grid-column: 3; }
+.grid-col-4 { grid-row: 1; grid-column: 4; }
+.grid-col-5 { grid-row: 2; grid-column: 1; }
+.grid-col-6 { grid-row: 2; grid-column: 2; }
+.grid-col-7 { grid-row: 2; grid-column: 3; }
+.grid-col-8 { grid-row: 2; grid-column: 4; }
+.grid-col-9 { grid-row: 3; grid-column: 1; }
+.grid-col-10{ grid-row: 3; grid-column: 2; }
+.grid-col-11{ grid-row: 3; grid-column: 3; }
+.grid-col-12{ grid-row: 3; grid-column: 4; }
+.grid-col-13{ grid-row: 4; grid-column: 1; }
+.grid-col-14{ grid-row: 4; grid-column: 2; }
+.grid-col-15{ grid-row: 4; grid-column: 3; }
+.grid-col-16{ grid-row: 4; grid-column: 4; }
+
+/* .{  } */
+
+.box{ padding: 10px 10px 10px 10px; justify-self: center; align-self: center;}
+
+.box #image-box{ width: 300px; height: 250px; display: grid; }
+
+.pagination{ margin-right: 30px; margin-bottom: 30px; }
+
+.active{ background: rgb(29, 146, 255); color: white; cursor: none; pointer-events: none; }

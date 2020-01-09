@@ -1,0 +1,207 @@
+<div class="alert alert-danger notification" *ngIf="this.image.status == 'hidden'">
+  La imagen ha sido deshabilitada porque inflingía las normas. Si crees que esto es un error, por favor contacta con un
+  moderador.
+</div>
+
+<div class="alert alert-danger notification" *ngIf="this.deleted == true">
+  La imagen se ha borrado correctamente. Se te redirigirá en seguida.
+</div>
+
+<div class="alert alert-success notification" *ngIf="this.commentAdded == true">
+  <!-- class="... fixed success"-->
+  Comentario añadido.
+</div>
+
+<div class="container-fluid col-md-12 container-ma">
+  <div class="row">
+
+    <i *ngIf="this.identity.nick == this.image.user.nick" class="edit fas fa-edit"></i>
+
+    <i *ngIf="this.identity.nick == this.image.user.nick || this.identity.role == 'role_admin'" class="delete fas fa-trash-alt"
+      data-toggle="modal" data-target="#deleteModal"></i>
+
+    <i *ngIf="this.identity.role == 'role_mod' && this.identity.nick != this.image.user.nick && this.image.status == 'published'"
+      class="delete fas fa-ban" data-toggle="modal" data-target="#hideModal"></i>
+
+    <i *ngIf="this.identity.role == 'role_mod' && this.identity.nick != this.image.user.nick && this.image.status == 'hidden'"
+      class="unban fas fa-unlock" data-toggle="modal" data-target="#showModal"></i>
+
+    <div class="col-md-8 text-center image-container">
+
+      <span *ngIf="visible==false" class="view" (click)="visible=true">Mostrar</span>
+
+      <div *ngIf="visible==false else noblur" (click)="doNothing($event)" class="blur">
+        <img [src]="['assets/public/' + this.image.url]" class="image nocursor" id="">
+      </div>
+
+      <ng-template #noblur>
+
+        <a [href]="['assets/public/' + this.image.url]">
+          <img [src]="['assets/public/' + this.image.url]" class="image" id="">
+        </a>
+
+        <div *ngIf="this.image.status != 'hidden' && identity && identity.nick != 'guest'" class="image-actions">
+          <div class="image-heart black" (click)="_imageService.saveInteraction($event, this, 'like', true);"></div>
+          <div class="image-star black" (click)="_imageService.saveInteraction($event, this, 'fav', true);"></div>
+          <div class="image-arrows black" (click)="_imageService.saveInteraction($event, this, 'share', true);"></div>
+        </div>
+
+      </ng-template>
+
+    </div>
+    <div class="col-md-4 float-left">
+      <div class="details-container mr-5 pr-2 mt-2">
+
+        <div class="title pb-2">
+          {{this.image.name}}
+        </div>
+
+        <div class="author pb-5">
+          Por <span [routerLink]="['/profile', this.image.user.nick]">{{this.image.user.nick}}</span>
+          <button type="button" class="button button-follow no-follow ml-4" *ngIf="this.identity.nick != this.image.user.nick && this.identity.nick != 'guest'"
+            (click)="follow(token, username)"></button><!-- {{followStatus}} -->
+        </div>
+
+        <div class="description pb-5">
+          <span *ngIf="this.image.description!=null" [innerHTML]="this.image.description"></span>
+          <span *ngIf="this.image.description==null">El usuario no ha agregado ninguna descripción.</span>
+        </div>
+
+        <div class="rights pb-5">
+          <span>Derechos: <span class="highlighed">{{this.image.rights}}</span></span>
+        </div>
+
+        <div *ngIf="isTags == true" class="tags-container pb-5">
+          <span class="mr-2 mb-3">Tags:</span>
+          <span *ngFor="let tag of tags; let i = index">
+            <span class="tags" (click)="navigate(tag)">{{tag}}</span></span>
+        </div>
+
+        <div class="counter pb-5">
+          <i class="fas fa-heart"></i> <span> {{this.nLikes}}</span>  
+          <i class="fas fa-star"></i> <span> {{this.nFavs}}</span>  
+          <i class="fas fa-retweet"></i><span> {{this.nShares}}</span>
+        </div>
+
+        <div class="created-at">Subida el {{this.image.createdAt}}</div>
+
+      </div>
+    </div>
+  </div>
+  <div class="row ml-5 mt-5 mr-5" *ngIf="this.image.status != 'hidden'">
+    <div class="col-md-12">
+      <div class="comments mb-3">Comentarios</div>
+      <div class="row">
+        <form [formGroup]="formVar" (ngSubmit)="onSubmit(formVar)" class="col-md-12 mb-4">
+          <textarea formControlName="comment" maxlength="300" [value]="addComment" #tarea></textarea>
+          <button type="submit" class="btn btn-primary btn-success float-right" [disabled]="identity.nick == 'guest'">Agregar
+            comentario</button>
+        </form>
+      </div>
+      <div class="comment" *ngFor="let comment of this.comments; let i = index">
+        <div class="row mb-5">
+          <div class="col-md-2">
+            <img [src]="['assets/profile-picture/' + comment.user.image]" [routerLink]="['/profile', comment.user.nick]" 
+              class="comment-image ml-3">
+          </div>
+          <div class="col-md-9 ml-n5" [id]="'comment-' + comment.id">
+            <div class="mt-1">
+              <span class="comment-name" [routerLink]="['/profile', comment.user.nick]">{{comment.user.nick}}</span><span
+                class="comment-date"> - {{comment.createdAt}}</span></div>
+            <div class="comment-text mt-2" [innerHTML]="comment.comment"></div>
+            <div class="ml-1">
+              <span class="reply-comment" (click)="tarea.focus(); addName($element, comment.user.nick, tarea.value)">Responder</span>
+              <span class="delete-comment" (click)="assignDelete(comment.id)" data-toggle="modal" data-target="#deleteCommentModal"
+                *ngIf="comment.user.nick == identity.nick || identity.role == 'role_admin'">Eliminar</span>
+            </div>
+            <!-- [innerHTML]="permissionArray" -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">¿Borrar imagen?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        La imagen se borrará permanentemente.
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="delete(this.imageId)" class="btn btn-primary btn-danger" data-dismiss="modal">Borrar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="hideModal" tabindex="-1" role="dialog" aria-labelledby="hideModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="example2ModalLabel">¿Ocultar imagen?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        La imagen ya no se mostrará.
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="hideToggle(this.imageId, 'hidden')" class="btn btn-primary btn-danger"
+          data-dismiss="modal">Ocultar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="example3ModalLabel">¿Desbanear imagen?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        La imagen se mostrará de nuevo.
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="hideToggle(this.imageId, 'published')" class="btn btn-primary btn-success"
+          data-dismiss="modal">Mostrar</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="deleteCommentModal" tabindex="-1" role="dialog" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModal4Label">¿Borrar comentario?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          El comentario se borrará permanentemente.
+        </div>
+        <div class="modal-footer">
+          <button type="button" (click)="deleteComment(commentToDelete)" class="btn btn-primary btn-danger" data-dismiss="modal">Borrar</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  

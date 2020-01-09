@@ -1,0 +1,83 @@
+<div class="alert alert-success notification" *ngIf="status == 'success'">
+  {{this.currentLang.attributes.uploadSuccess}}
+</div>
+
+<div class="alert alert-danger notification" *ngIf="status == 'error'">
+  {{this.currentLang.attributes.uploadError}}
+</div>
+
+<div class="container-fluid col-md-12 container-ma">
+  <h1 class="index-title no-select pl-5 pb-3">{{this.currentLang.attributes.title}}</h1>
+  <hr class="pb-3">
+
+  <form class="col-md-12" #uploadImageForm="ngForm" (ngSubmit)="onSubmit(uploadImageForm)">
+    <div class="row mb-5">
+      <div class="col-md-5 pl-10">
+        <img [src]="_imageURL" class="mb-3" id="upload-image">
+        <div>
+          <input type="file" name="file" id="path" #file (change)="fileHandler(file.files)" accept="image/*" required> <!-- + (change)="handleFileInput($event.target.files)" -->
+          <div class="min-info">
+            <span id="image_size">{{this.currentLang.attributes.maxSize}}</span><br>
+            <span id="image_res">{{this.currentLang.attributes.minResolution}}</span><br>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-7">
+        <div class="mb-3">
+          <label for="name" class="pr-3">{{this.currentLang.attributes.imageTitle}}</label>
+          <input type="text" name="name" #name="ngModel" [(ngModel)]="image.name" placeholder="{{this.currentLang.attributes.max30CharsPlaceholder}}"
+            maxlength="30" class="form-control title" autofocus required>
+          <small *ngIf="!name.valid && name.touched" class="invalid-feedback d-block">
+            {{this.currentLang.attributes.invalidTitle}}
+          </small>
+        </div>
+        <div class="mb-3">
+          <label for="description">{{this.currentLang.attributes.description}}</label>
+          <div>
+            <textarea name="description" #description="ngModel" [(ngModel)]="image.description" placeholder="{{this.currentLang.attributes.max300CharsPlaceholder}}"
+              maxlength="300" class="form-control descr-image" id="upload-desc"></textarea>
+          </div>
+        </div>
+        <div class="mb-3">
+          <input type="checkbox" name="nsfw" #nsfw="ngModel" [(ngModel)]="image.nsfw">
+          <label for="nsfw">{{this.currentLang.attributes.nsfwContent}}</label>
+        </div>
+        <div class="mb-3">
+          <input type="checkbox" name="epilepsy" #epilepsy="ngModel" [(ngModel)]="image.epilepsy">
+          <label for="epilepsy">{{this.currentLang.attributes.epilepsyContent}}</label>
+        </div>
+        <div class="mb-5">
+          <label for="rights" class="mr-3">{{this.currentLang.attributes.rights}}</label>
+          <select name="rights" #rights="ngModel" [(ngModel)]="_rights">
+            <option value="totales" ng-selected="selected">{{this.currentLang.attributes.total}}</option>
+            <option value="parciales">{{this.currentLang.attributes.partial}}</option>
+            <option value="ninguno">{{this.currentLang.attributes.none}}</option>
+          </select>
+        </div>
+        <div>
+          <label for="tags" class="pr-3">{{this.currentLang.attributes.tags}}</label>
+          <input type="text" name="tags" #tags="ngModel" [(ngModel)]="image.tags" placeholder="{{this.currentLang.attributes.tagsPlaceholder}}"
+            maxlength="100" class="form-control tags">
+        </div>
+        <small class="example ml-5 pl-1">{{this.currentLang.attributes.tagsExample}}</small>
+
+        <!-- <div>
+          Miniatura: <input type="file" name="miniatura" id="upload-min">
+        </div>
+        <div class="min-info">
+          <p>**Una miniatura ayuda a cargar la página de forma más rápida. Es la misma imagen en
+            peor resolución. (No es necesaria)<br><br>
+            Por favor, no introduzca una imagen diferente a la original, o nos veremos
+            obligados a borrarla.</p>
+        </div> -->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div style="text-align:center">
+          <button type="submit" class="btn btn-success btn-upload" [disabled]="uploadImageForm.invalid">{{this.currentLang.attributes.uploadImage}}</button> <!-- ng-disabled="message.length > 255" -->
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
