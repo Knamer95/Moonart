@@ -22,6 +22,9 @@ SET time_zone = "+00:00";
 -- Base de datos: `moonart`
 --
 
+DROP DATABASE IF EXISTS `moonart`;
+CREATE DATABASE `moonart`;
+USE `moonart`; 
 -- --------------------------------------------------------
 
 --
