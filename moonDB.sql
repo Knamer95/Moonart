@@ -2,7 +2,7 @@
 -- version 4.8.4
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1:3306
+-- Servidor: 127.0.0.1:3306 
 -- Tiempo de generación: 08-01-2020 a las 22:59:36
 -- Versión del servidor: 5.7.24
 -- Versión de PHP: 7.2.14
