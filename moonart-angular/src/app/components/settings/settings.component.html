@@ -69,14 +69,14 @@
   </div>
 
   <!-->div ng-app="app" ng-controller="AppCtrl">
-    <div class="select_list" [ngClass]='{active:active}' (click)="active=!active">
-      <ul class="options">
-        <li class="select_list_option">English</li>
-        <li class="select_list_option">Español</li>
-        <li class="select_list_option" ng-repeat="language in language_list" ng-click="obj.language_selected=language"
-          ng-style="{'background-image':'url('+language.url+')'}">{{language.name}}</li>
-      </ul>
-    </div>
+  <div class="select_list" [ngClass]='{active:active}' (click)="active=!active">
+    <ul class="options">
+      <li class="select_list_option">English</li>
+      <li class="select_list_option">Español</li>
+      <li class="select_list_option" ng-repeat="language in language_list" ng-click="obj.language_selected=language"
+        ng-style="{'background-image':'url('+language.url+')'}">{{language.name}}</li>
+    </ul>
+  </div>
   </div-->
 
   <div class="pb-4"></div>
@@ -89,6 +89,9 @@
   </div>
   <div class="themes-container">
     <div class="row pl-5 pr-5">
+      <div class="col-md-2">
+        <div class="color zoe" (click)="pickColor($event, 'zoe')" data-toggle="tooltip" data-placement="top" title="Zoe"></div>
+      </div>
       <div class="col-md-2">
         <div class="color red" (click)="pickColor($event, 'red')" data-toggle="tooltip" data-placement="top" title="Red"></div>
       </div>
@@ -106,13 +109,13 @@
         <div class="color orange" (click)="pickColor($event, 'orange')" data-toggle="tooltip" data-placement="top"
           title="Orange"></div>
       </div>
+    </div>
+
+    <div class="row pl-5 pr-5 mt-3">
       <div class="col-md-2">
         <div class="color yellow" (click)="pickColor($event, 'yellow')" data-toggle="tooltip" data-placement="top"
           title="Yellow"></div>
       </div>
-    </div>
-
-    <div class="row pl-5 pr-5 mt-3">
       <div class="col-md-2">
         <div class="color light" (click)="pickColor($event, 'light')" data-toggle="tooltip" data-placement="top" title="Light"></div>
       </div>

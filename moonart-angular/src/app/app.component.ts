@@ -3,6 +3,8 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { UserService } from './services/user.service';
 import { Renderer2 } from '@angular/core';
 import { CommonService } from './services/common.service';
+import * as $ from 'jquery';
+
 // import { SettingsComponent } from '../app/components/settings/settings.component';
 
 @Component({
@@ -20,10 +22,9 @@ export class AppComponent implements OnInit, DoCheck {
     public token: string;
     public config: any;
     public configJSON: string;
-    public arrayNavs: Array<string>;
-    public arrayNightMode: Array<string>;
     public i: number;
     public searchQuery;
+    public navStatus: number;
     public language: Object;
     public currentLang: Object;
     public lang: number;
@@ -45,6 +46,8 @@ export class AppComponent implements OnInit, DoCheck {
 
         this.lang = JSON.parse(localStorage.getItem("config")).lang ? JSON.parse(localStorage.getItem("config")).lang : 1;
         this.currentLang = this.getLang(this.lang);
+
+        this.navStatus = 1;
     }
 
     ngDoCheck() {
@@ -59,13 +62,14 @@ export class AppComponent implements OnInit, DoCheck {
     }
 
     changeColor(color) {
-        let array = ["nav-red", "nav-green", "nav-blue", "nav-violet", "nav-orange", "nav-yellow", "nav-light"];
+        let array = ["red", "green", "blue", "violet", "orange", "yellow", "light", "zoe"];
+        this.render.setAttribute(document.querySelector(".nav-background"), "data-theme", color);
 
-        for (let i = 0; i < array.length; i++) {
-            this.render.removeClass(document.querySelector(".nav-background"), array[i]);
+        let elements = document.querySelectorAll(".themed");
+
+        for (let i = 0; i < elements.length; i++) {
+            this.render.setAttribute(elements[i], "data-theme", color);
         }
-
-        this.render.addClass(document.querySelector(".nav-background"), "nav-" + color);
     }
 
     header(that) {
@@ -82,6 +86,34 @@ export class AppComponent implements OnInit, DoCheck {
             that.changeColor(that.config.color);
         }
         that.i++;
+    }
+
+    toggle() {
+
+        if ($(".menu-toggle").css("display") != "none") {
+            let elements = document.querySelectorAll("[data-view]");
+
+            for (let i = 0; i < elements.length; i++) {
+                this.render.setAttribute(elements[i], "data-view", this.navStatus.toString());
+            }
+
+            // this.render.setAttribute(document.querySelector("[data-toggle]"), "data-toggle", this.navStatus.toString());
+
+            if (parseInt($(".nav-container").attr("data-view")) === 1) {
+                $(".nav-background, .clip").animate({
+                    height: $(".nav-container").height() + 20
+                });
+                console.log("A");
+            }
+            else {
+                $(".nav-background, .clip").animate({
+                    height: "110px"
+                });
+                console.log("B");
+            }
+
+            this.navStatus = (this.navStatus + 1) % 2;
+        }
     }
 
     validateSearch() {

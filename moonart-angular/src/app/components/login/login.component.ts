@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit {
                 nightMode: 0,
                 nsfw: 0,
                 epilepsy: 0,
-                color: "blue",
+                color: "zoe",
                 lang: 1,
                 share: true,
                 feed: 15
@@ -144,7 +144,7 @@ export class LoginComponent implements OnInit {
                         nightMode: 0,
                         nsfw: 0,
                         epilepsy: 0,
-                        color: "blue",
+                        color: "zoe",
                         lang: 1,
                         share: true,
                         feed: 15

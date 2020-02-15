@@ -385,7 +385,7 @@ class UserController extends AbstractController
             $nsfw = (!empty($params->nsfw)) ? $params->nsfw : false;
             $epilepsy = (!empty($params->epilepsy)) ? $params->epilepsy : false;
             $lang = (!empty($params->lang)) ? $params->lang : 1;
-            $color = (!empty($params->color)) ? $params->color : "blue";
+            $color = (!empty($params->color)) ? $params->color : "zoe";
             $share = (!empty($params->share)) ? $params->share : false;
             $feed = (!empty($params->feed)) ? $params->feed : 15;
 

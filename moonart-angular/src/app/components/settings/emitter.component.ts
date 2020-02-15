@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2, AfterViewInit, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
     selector: 'app-emitter',

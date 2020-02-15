@@ -58,7 +58,11 @@ export class HomeComponent implements OnInit {
             this._commonService.changeNightModeAttr(this.nightMode);
         }
 
-        this.lang = JSON.parse(localStorage.getItem("config")).lang;;
+        this.lang = JSON.parse(localStorage.getItem("config")).lang;
+
+        if (!this.lang)
+            this.lang = 1;
+
         this.currentLang = this.getLang(this.lang);
         this._commonService.changeLangAttr(this.lang);
     }

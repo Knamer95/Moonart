@@ -78,6 +78,19 @@ a:hover{text-decoration: none;}
     ESTILOS NAV
 ----------------------------------------------------- */
 
+.nav-wrapper{
+    position: relative;
+    z-index: 1000;
+}
+
+/* https://stackoverflow.com/questions/12463658/parent-child-with-position-fixed-parent-overflowhidden-bug */
+.clip{
+    clip: rect(0, auto, auto, 0);
+    position: fixed;
+    width: 100%;
+    height: 110px;
+}
+
 /* .btn-toggle:hover > .fa-lightbulb{color:rgb(77, 160, 255);} */
 
 .form-inline{margin-top:5px; margin-bottom:5px;} /* Botón buscar nav centrado */
@@ -96,18 +109,22 @@ li:not(.select2-results__option){ margin: 0 10px; }
     /* background-attachment: fixed; */
     background-repeat: no-repeat;  
     height: 110px;
-    opacity: 0.95;
+    /* opacity: 0.95; */
     /* -webkit-mask-image: -webkit-gradient(linear, left top, left bottom,  */
     /* from(rgba(0,0,0,1)), to(rgba(0,0,0,0))); */
 } /*https://d2gg9evh47fn9z.cloudfront.net/800px_COLOURBOX3139322.jpg*/
 
-.nav-light  { background: rgb(255, 255, 255, 0.6); }
-.nav-red    { background-image: url("assets/img/nav-bg-red.jpg"); }
-.nav-green  { background-image: url("assets/img/nav-bg-green.jpg"); }
-.nav-blue   { background-image: url("assets/img/nav-bg-blue.jpg"); }
-.nav-violet { background-image: url("assets/img/nav-bg-violet.jpg"); }
-.nav-orange { background-image: url("assets/img/nav-bg-orange.jpg"); }
-.nav-yellow { background-image: url("assets/img/nav-bg-yellow.jpg"); }
+.nav-background[data-theme="zoe"]    { background: linear-gradient(45deg, #fcba67, #e65cff75); }
+.nav-background[data-theme="light"]  { background: rgb(255, 255, 255, 0.6); }
+.nav-background[data-theme="red"]    { background-image: url("assets/img/nav-bg-red.jpg"); }
+.nav-background[data-theme="green"]  { background-image: url("assets/img/nav-bg-green.jpg"); }
+.nav-background[data-theme="blue"]   { background-image: url("assets/img/nav-bg-blue.jpg"); }
+.nav-background[data-theme="violet"]  { background-image: url("assets/img/nav-bg-violet.jpg"); }
+.nav-background[data-theme="orange"]  { background-image: url("assets/img/nav-bg-orange.jpg"); }
+.nav-background[data-theme="yellow"] { background-image: url("assets/img/nav-bg-yellow.jpg"); }
+
+.themed[data-theme]         { color: rgb(78, 255, 196) !important; }
+.themed[data-theme="zoe"]   { color: #e5ffa7 !important; }
 
 .navbar{
     height: 90px; 
@@ -730,5 +747,208 @@ background: #29c5d6;
     content: 'Dejar de seguir';
 }
 
+.menu-toggle{
+    display: none;
+}
 
 /* media queries width < 1350 */
+
+@media screen and (min-width: 1151px){
+    .nav-background{
+        height: 110px !important;
+    }
+
+    .clip{
+        clip: auto;
+    }
+}
+
+@media screen and (max-width: 1150px){
+
+    .img-over {
+        top: -18px;
+    }
+
+    .nav-title{
+        top: 2px;    
+    }
+
+    .nav-el-2 ul{
+        display: grid;
+        grid-template-rows: auto auto auto auto;
+        grid-template-columns: 1fr;
+        margin: 0 -1rem !important;
+        text-align: center;
+    }
+
+    .nav-link {
+        color: rgb(255,255,255) !important;
+        font-family: 'M PLUS Rounded 1c', sans-serif;
+        font-size: 44px;
+        display: block;
+    }
+
+    .nav-item.mr-auto{
+        margin-right: 10px !important;
+    }
+
+    .nav-container{
+        grid-template-columns: 1fr;
+        overflow: visible !important;        
+        position: unset;
+    }
+
+    .nav-background{
+        overflow: visible !important;
+    }
+
+    .nav-container[data-view="0"]{
+        max-height: 110px;
+        /* transition: max-height 5s ease-in; */
+    }
+
+    .nav-container[data-view="1"]{
+        max-height: auto;
+        /* transition: max-height 5s ease-in; */
+    }
+
+    .nav-background[data-view="1"]{
+        /* height: 540px; */
+    }
+
+    .search-input{
+        margin-top: 13px;
+        width: 270px;
+        height: 54px;
+        font-size: 40px;
+        padding-bottom: 14px;
+    }
+
+    /*
+    .nav-container .nav-el-3 {
+        /* justify-self: center;
+        position: absolute;
+        top: 0px;
+        right: 356px;
+    }
+*/
+    .nav-el-4{
+        justify-self: inherit !important;
+        text-align: center;
+    }
+
+    .nav-el-4 ul{
+        margin: 0 -1rem !important;
+    }
+
+    .nav-container .nav-el-3 {
+        justify-self: inherit !important;
+        position: relative;
+        text-align: center;
+        top: 0px;
+        display: none;
+    }
+
+    .search-box{
+        position: relative;
+        left: 56px;
+    }
+
+    .log-reg, .log-reg li {
+        display: block !important;
+    }
+
+    .menu-toggle{
+        display: inline-block;
+        position: absolute;
+        top: -3px;
+        right: 17px;        
+        color: #ffffff;
+        font-size: 68px;
+    }
+
+    .menu-toggle .fa-bars{
+        cursor: pointer;
+        animation: all 1s;
+    }
+
+    .menu-toggle .fa-bars:hover{
+        /*
+        text-shadow: 10px 5px 20px rgba(255, 255, 255, 0.424), 
+        10px -5px 20px rgba(255, 255, 255, 0.424),
+        -10px 5px 20px rgba(255, 255, 255, 0.424),
+        -10px -5px 20px rgba(255, 255, 255, 0.424);
+        */
+
+        text-shadow: 0px 0px 15px rgb(255, 255, 255);
+    }
+
+    .welcome-container{
+        position: absolute;
+        top: 20px;        
+        right: 118px;
+        font-size: 30px;
+    }
+
+    .nav-welcome, .dropdown button{
+        font-size: 40px;
+    }
+
+    .dropdown button{
+        line-height: 35px;
+    }
+
+    .nav-welcome{
+        top: 0px;
+    }
+
+    /*
+    [data-toggle='0']{
+        display: none;
+    }
+
+    [data-toggle='1']{
+        display: block;
+    }
+    */
+
+    .container-images{ display: grid; grid-template-columns: 1fr 1fr 1fr; }
+    /* grid-template-rows: 1fr 1fr 1fr 1fr; -> Si no hay las 4 filas, no quiero que aparezcan elementos invisibles. */ 
+    .grid-col-1 { grid-row: 1; grid-column: 1; }
+    .grid-col-2 { grid-row: 1; grid-column: 2; }
+    .grid-col-3 { grid-row: 1; grid-column: 3; }
+    .grid-col-4 { grid-row: 2; grid-column: 1; }
+    .grid-col-5 { grid-row: 2; grid-column: 2; }
+    .grid-col-6 { grid-row: 2; grid-column: 3; }
+    .grid-col-7 { grid-row: 3; grid-column: 1; }
+    .grid-col-8 { grid-row: 3; grid-column: 2; }
+    .grid-col-9 { grid-row: 3; grid-column: 3; }
+    .grid-col-10{ grid-row: 4; grid-column: 1; }
+    .grid-col-11{ grid-row: 4; grid-column: 2; }
+    .grid-col-12{ grid-row: 4; grid-column: 3; }
+    .grid-col-13{ grid-row: 5; grid-column: 1; }
+    .grid-col-14{ grid-row: 5; grid-column: 2; }
+    .grid-col-15{ grid-row: 5; grid-column: 3; }
+    .grid-col-16{ grid-row: 6; grid-column: 1; }
+}
+
+@media screen and (max-width: 815px){
+    .container-images{ display: grid; grid-template-columns: 1fr 1fr; }
+    /* grid-template-rows: 1fr 1fr 1fr 1fr; -> Si no hay las 4 filas, no quiero que aparezcan elementos invisibles. */ 
+    .grid-col-1 { grid-row: 1; grid-column: 1; }
+    .grid-col-2 { grid-row: 1; grid-column: 2; }
+    .grid-col-3 { grid-row: 2; grid-column: 1; }
+    .grid-col-4 { grid-row: 2; grid-column: 2; }
+    .grid-col-5 { grid-row: 3; grid-column: 1; }
+    .grid-col-6 { grid-row: 3; grid-column: 2; }
+    .grid-col-7 { grid-row: 4; grid-column: 1; }
+    .grid-col-8 { grid-row: 4; grid-column: 2; }
+    .grid-col-9 { grid-row: 5; grid-column: 1; }
+    .grid-col-10{ grid-row: 5; grid-column: 2; }
+    .grid-col-11{ grid-row: 6; grid-column: 1; }
+    .grid-col-12{ grid-row: 6; grid-column: 2; }
+    .grid-col-13{ grid-row: 7; grid-column: 1; }
+    .grid-col-14{ grid-row: 7; grid-column: 2; }
+    .grid-col-15{ grid-row: 8; grid-column: 1; }
+    .grid-col-16{ grid-row: 8; grid-column: 2; }
+}

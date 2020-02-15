@@ -48,7 +48,7 @@ export class CommonService {
                                 nightMode: 0,
                                 nsfw: 0,
                                 epilepsy: 0,
-                                color: "blue",
+                                color: "zoe",
                                 lang: 1,
                                 share: 1,
                                 feed: 15
@@ -79,7 +79,7 @@ export class CommonService {
                 nightMode: 0,
                 nsfw: 0,
                 epilepsy: 0,
-                color: "blue",
+                color: "zoe",
                 lang: 1,
                 share: 1,
                 feed: 15
