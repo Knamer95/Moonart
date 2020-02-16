@@ -1,3 +1,3 @@
 export var global = {
-    url: 'http://moonart-api.io/'
+    url: 'http://localhost/moonart/api-rest-symfony/public/'
 }

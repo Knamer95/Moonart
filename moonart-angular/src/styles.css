@@ -713,7 +713,7 @@ background: #29c5d6;
 }
 
 .fa-heart[data-status="1"]:hover, .fa-star[data-status="1"]:hover, .fa-retweet[data-status="1"]:hover{
-    color: white;
+    color: #868686;
 }
 
 /*===================*/

@@ -2914,7 +2914,7 @@ var CommonService = /** @class */ (function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "global", function() { return global; });
 var global = {
-    url: 'http://moonart-api.io/'
+    url: 'http://localhost/moonart/api-rest-symfony/public/'
 };
 
 
