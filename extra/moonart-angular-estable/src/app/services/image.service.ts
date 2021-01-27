@@ -354,7 +354,7 @@ export class ImageService {
 
 
 
-    saveInteraction(event, that, action, unique = null) { // unique es un parámetro opcional, que en caso de true, indica que es imagen única.
+    saveInteraction(event, that, action, unique = null) { // 'unique' is an optional boolean param, that if true, means that it's a single image
 
         var id;
         var estado;
@@ -439,7 +439,7 @@ export class ImageService {
     }
 
 
-    // Métodos para los hover en las imágenes, para que los padres e hijos tengan los estilos convenientes.
+    // Methods for image hovers (gallery and profile), so parents and children have the right styles
 
     in(event, that, value) {
         that.render.addClass(event.target.parentElement.parentElement.querySelector(".image-element"), "hovered-children");

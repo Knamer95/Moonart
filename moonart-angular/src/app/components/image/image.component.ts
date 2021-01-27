@@ -204,9 +204,7 @@ export class ImageComponent implements OnInit {
     }
 
 
-    /*
-        Función para la carga del usuario, sus datos y demás.
-    */
+    // Function to load user and its data
 
     loadUser() {
         this.identity = this._userService.getIdentity();
@@ -215,9 +213,7 @@ export class ImageComponent implements OnInit {
     }
 
 
-    /*
-        Función para comprobar si el usuario que está viendo la imagen sigue al propietario de ésta.
-    */
+    // Function to check if the user visualizing the image follows the image owner or not
 
     follow(token, nick) {
         this._userService.follow(token, nick).subscribe(
@@ -243,12 +239,7 @@ export class ImageComponent implements OnInit {
     }
 
 
-    /*
-        Función para conseguir todos los comentarios
-        Transforma el formato de fecha a uno más legible.
-        También sustituye < y > para evitar que se inyecte html, ya que para que los saltos de línea se tengan en cuenta,
-        se transforman los \n en <br>, y se inyecta en la etiqueta como html (en image.component.html)
-    */
+    // Function to get all comments. It transforms the date to a more readable one
 
     getAllComments(imageId) {
         this._imageService.getComments(imageId).subscribe(
@@ -306,12 +297,7 @@ export class ImageComponent implements OnInit {
 
     }
 
-    /*
-        Función onSubmit, para el envío del comentario.
-        Para que sean posibles los saltos de línea, coge los caracteres charCode cuyo valor sea 10 (salto de línea),
-        ya que en la DB se guardan como simples espacios, y los sustituye por \n.
-        Luego se tratan más arriba.
-    */
+    // Function onSubmit, for the comment submission. Changes charCode === 10 (linejumps) with \n to store them on the DB
 
     onSubmit(form) {
         let comment = this.formVar.value.comment;
@@ -343,7 +329,7 @@ export class ImageComponent implements OnInit {
                         this.commentAdded = false;
                     }, 1000); 
                     */
-                    this.getAllComments(this.imageId); // Recarga los comentarios, para que se vea el que has añadido sin necesidad de recargar.
+                    this.getAllComments(this.imageId); // Reloads the comments, so you don't have to reload the page to see the one you added
                     // console.log(response);
                 }
                 else {
@@ -356,7 +342,7 @@ export class ImageComponent implements OnInit {
         );
     }
 
-    addName(event, nick, taVal) { // taVal = textarea value (en el html es tarea)
+    addName(event, nick, taVal) { // taVal = textarea value (on the html it's 'tarea')
         // console.log(event.target.closest(".comment"));
         this.parent = event.target.closest(".comment").getElementsByClassName("comment-id")[0].id.replace("comment-", "");
         // console.log(this.parent);
@@ -367,10 +353,7 @@ export class ImageComponent implements OnInit {
 
     }
 
-    /* 
-        Función para borrar una imagen. Solo pueden acceder a esta los role_admin, y los propios usuarios que la hayan subido.
-        LLama a la función delete del servicio ImageService. Si todo va bien, efectúa la query, y redirige al home.
-    */
+    // Function to delete an image. Only roles [role_admin | role_owner] can access this function. If everything goes well, it deletes the image, and redirects home
 
     delete(id) {
         this._imageService.delete(this.token, id).subscribe(
@@ -409,11 +392,8 @@ export class ImageComponent implements OnInit {
     }
 
 
-    /*  
-        Función para ocultar una imagen. Sólo si user_role=="role_mod". Oculta la imagen (Cambia la propiedad status a hidden)
-        LLama a la función hide del servicio ImageService. Si todo va bien, efectúa la query, y redirige al home.
-        Si es su propia imagen, no puede ocultarla (está en image.component.html), ya que no tendría mucha lógica.
-    */
+    //  Function to hide an image if role user_role == role_admin || role_mod (Image status is set to hidden, so only the owner can see it at their profile)
+    //  Only if the user hiding it is not the owner, cause it wouldn't make sense otherwise to hide your own image 
 
     hideToggle(id, action) {
         this._imageService.hide(this.token, id, action).subscribe(
@@ -436,9 +416,7 @@ export class ImageComponent implements OnInit {
         this._router.navigateByUrl("/search?q=tag:" + tag)
     }
 
-    /*
-        Función para parar propagación de eventos.
-    */
+    // Function to stop propagation of events
 
     doNothing(e) {
         e.stopPropagation();
@@ -493,8 +471,8 @@ export class ImageComponent implements OnInit {
                 lang: "english",
                 attributes: {
                     title: "Image",
-                    imageHidden: "The image has been disabled due to infringing the rules. If you think this is a mistake, please contact with a moderator.",
-                    imageDeleted: "The image has been deleted successfully. You will soon be redirected.",
+                    imageHidden: "This image has been disabled due to infringement of rules. If you think this is a mistake, please contact with a moderator.",
+                    imageDeleted: "Image deleted successfully. You will soon be redirected.",
                     commentAdded: "Comment added.",
                     noDescription: "User didn't add a description.",
                     rights: "Rights:",

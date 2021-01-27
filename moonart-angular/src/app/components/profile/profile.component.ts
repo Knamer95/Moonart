@@ -53,7 +53,7 @@ export class ProfileComponent implements OnInit {
     ) {
         this.page_title = "Profile";
         
-        /* Si se accede a la URL desde @[+username], lo muestra como tal, como se haya escrito, no como el nombre de usuario. Ej: @nAO !== Nao */
+        /* Fixed so if user access a profile from @[+username] (mentions), it will show the proper username. e.g: @nAO !== @Nao */
         this.urlname = window.location.href.split("/");
         for (let i = 0; i < this.urlname.length; i++) {
             if (this.urlname[i] == "profile" && (i + 1) < this.urlname.length) {

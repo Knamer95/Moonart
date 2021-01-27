@@ -97,7 +97,7 @@ export class ImageService {
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
             .set('Authorization', token);
 
-        return this._http.put(this.url + 'image/hide/' + id, params, { headers: headers }); // Si no hay 3 args, headers se pasa como parámentro
+        return this._http.put(this.url + 'image/hide/' + id, params, { headers: headers }); // If there aren't 3 args, headers is passed as param
     }
 
     checkInteractions(token, data): Observable<any> {
@@ -162,7 +162,7 @@ export class ImageService {
     }
 
 
-    // Funciones comunes a varios componentes
+    // Common functions to multiple components
 
     showAllImages(that, page, nsfw, epilepsy, user = null, isProfileUser = false) {
         this.getAllImages(page, nsfw, epilepsy, user, isProfileUser).subscribe(
@@ -281,8 +281,8 @@ export class ImageService {
         );
     }
 
-    getInteractions(that, unique = null, env = null) {  // Llamado por showAllImages, showAllFavs... Le pasamos that, que es this del elemento que lo llama 
-        // (home.component, images.component...) Se encarga de
+    getInteractions(that, unique = null, env = null) {  // Called by showAllImages, showAllFavs... 'that' is 'this' of the element that calls it 
+        // (home.component, images.component...)
         if (that.identity != null && that.identity.nick != 'guest') {
             var less = false;
             console.log(that.images.length);
@@ -380,13 +380,14 @@ export class ImageService {
 
 
 
-    saveInteraction(event, that, action, unique = null, env = null, callback = null) { // unique es un parámetro opcional, que en caso de true, indica que es imagen única.
+    saveInteraction(event, that, action, unique = null, env = null, callback = null) { // 'unique' is an optional param, that if true, means it's a single image
 
         var id;
         var estado;
         var selectedImage;
 
-        console.log(that);
+        // console.log(that);
+        var newTarget = event.target.parentElement;
 
         if (unique) {
             selectedImage = document.querySelector(".image");
@@ -394,7 +395,7 @@ export class ImageService {
             id = that.imageId;
         }
         else {
-            selectedImage = event.target.parentElement.parentElement.querySelector(".image-element").src;
+            selectedImage = newTarget.parentElement.parentElement.querySelector(".image-element").src;
             selectedImage = selectedImage.split("/");
             selectedImage = selectedImage[selectedImage.length - 1];
 
@@ -431,19 +432,19 @@ export class ImageService {
 
                             if (!env) {
                                 if (response.params.liked)
-                                    that.render.addClass(event.target.parentElement.querySelector(".image-heart"), "image-liked");
+                                    that.render.addClass(newTarget.parentElement.querySelector(".image-heart"), "image-liked");
                                 else
-                                    that.render.removeClass(event.target.parentElement.querySelector(".image-heart"), "image-liked");
+                                    that.render.removeClass(newTarget.parentElement.querySelector(".image-heart"), "image-liked");
 
                                 if (response.params.faved)
-                                    that.render.addClass(event.target.parentElement.querySelector(".image-star"), "image-faved");
+                                    that.render.addClass(newTarget.parentElement.querySelector(".image-star"), "image-faved");
                                 else
-                                    that.render.removeClass(event.target.parentElement.querySelector(".image-star"), "image-faved");
+                                    that.render.removeClass(newTarget.parentElement.querySelector(".image-star"), "image-faved");
 
                                 if (response.params.shared)
-                                    that.render.addClass(event.target.parentElement.querySelector(".image-arrows"), "image-shared");
+                                    that.render.addClass(newTarget.parentElement.querySelector(".image-arrows"), "image-shared");
                                 else
-                                    that.render.removeClass(event.target.parentElement.querySelector(".image-arrows"), "image-shared");
+                                    that.render.removeClass(newTarget.parentElement.querySelector(".image-arrows"), "image-shared");
                             }
                             else if (env === 'imageComponent') {
                                 if (response.params.liked)
@@ -462,8 +463,9 @@ export class ImageService {
                                     that.render.setAttribute(document.querySelector(".fa-retweet"), "data-status", "0");
                             }
 
-                            that.updateCounter(event, that, action);
-                            
+                            if (env) {
+                                that.updateCounter(event, that, action);
+                            }
                         },
                         error => {
                             console.log(error);
@@ -479,36 +481,40 @@ export class ImageService {
     }
 
 
-    // Métodos para los hover en las imágenes, para que los padres e hijos tengan los estilos convenientes.
+    // Methods to apply styles on hover to parents and children, for the interactions bar (gallery and profile)
 
     in(event, that, value) {
-        that.render.addClass(event.target.parentElement.parentElement.querySelector(".image-element"), "hovered-children");
-        that.render.addClass(event.target.parentElement.parentElement.parentElement.querySelector(".image-parent"), "hovered-parent");
+        var newTarget = event.target.parentElement;
+
+        that.render.addClass(newTarget.parentElement.parentElement.querySelector(".image-element"), "hovered-children");
+        that.render.addClass(newTarget.parentElement.parentElement.parentElement.querySelector(".image-parent"), "hovered-parent");
 
 
         if (value == 1) {
-            that.render.addClass(event.target.parentElement.parentElement.querySelector(".like"), "like-hovered");
+            that.render.addClass(newTarget.parentElement.parentElement.querySelector(".like"), "like-hovered");
         }
         else if (value == 2) {
-            that.render.addClass(event.target.parentElement.parentElement.querySelector(".fav"), "fav-hovered");
+            that.render.addClass(newTarget.parentElement.parentElement.querySelector(".fav"), "fav-hovered");
         }
         else if (value == 3) {
-            that.render.addClass(event.target.parentElement.parentElement.querySelector(".share"), "share-hovered");
+            that.render.addClass(newTarget.parentElement.parentElement.querySelector(".share"), "share-hovered");
         }
     }
 
     out(event, that, value) {
-        that.render.removeClass(event.target.parentElement.parentElement.querySelector(".image-element"), "hovered-children");
-        that.render.removeClass(event.target.parentElement.parentElement.parentElement.querySelector(".image-parent"), "hovered-parent");
+        var newTarget = event.target.parentElement;
+
+        that.render.removeClass(newTarget.parentElement.parentElement.querySelector(".image-element"), "hovered-children");
+        that.render.removeClass(newTarget.parentElement.parentElement.parentElement.querySelector(".image-parent"), "hovered-parent");
 
         if (value == 1) {
-            that.render.removeClass(event.target.parentElement.parentElement.querySelector(".like"), "like-hovered");
+            that.render.removeClass(newTarget.parentElement.parentElement.querySelector(".like"), "like-hovered");
         }
         else if (value == 2) {
-            that.render.removeClass(event.target.parentElement.parentElement.querySelector(".fav"), "fav-hovered");
+            that.render.removeClass(newTarget.parentElement.parentElement.querySelector(".fav"), "fav-hovered");
         }
         else if (value == 3) {
-            that.render.removeClass(event.target.parentElement.parentElement.querySelector(".share"), "share-hovered");
+            that.render.removeClass(newTarget.parentElement.parentElement.querySelector(".share"), "share-hovered");
         }
     }
 }

@@ -25,13 +25,19 @@ import { Renderer2 } from '@angular/core';
           <div class="image-action" *ngIf="identity && identity.nick != 'guest'">
             <img class="image-frame like" src="assets/img/image-like-border.png" (mouseover)="_imageService.in($event, this, null);"
               (mouseleave)="_imageService.out($event, this, null);">
-            <div class="image-heart" (mouseover)="_imageService.in($event, this, 1);" (mouseleave)="_imageService.out($event, this, 1);" (click)="_imageService.saveInteraction($event, this, 'like');"></div>
+            <div class="image-heart" (mouseover)="_imageService.in($event, this, 1);" (mouseleave)="_imageService.out($event, this, 1);" (click)="_imageService.saveInteraction($event, this, 'like');">
+            <i class="fas fa-heart"></i>
+            </div>
             <img class="image-frame fav" src="assets/img/image-fav-border.png" (mouseover)="_imageService.in($event, this, null);"
               (mouseleave)="_imageService.out($event, this, null);">
-            <div class="image-star" (mouseover)="_imageService.in($event, this, 2);" (mouseleave)="_imageService.out($event, this, 2);" (click)="_imageService.saveInteraction($event, this, 'fav');"></div>
+            <div class="image-star" (mouseover)="_imageService.in($event, this, 2);" (mouseleave)="_imageService.out($event, this, 2);" (click)="_imageService.saveInteraction($event, this, 'fav');">
+            <i class="fas fa-star"></i>
+            </div>
             <img class="image-frame share" src="assets/img/image-share-border.png" (mouseover)="_imageService.in($event, this, null);"
               (mouseleave)="_imageService.out($event, this, null);">
-            <div class="image-arrows" (mouseover)="_imageService.in($event,this, 3);" (mouseleave)="_imageService.out($event, this, 3);" (click)="_imageService.saveInteraction($event, this, 'share');"></div>
+            <div class="image-arrows" (mouseover)="_imageService.in($event,this, 3);" (mouseleave)="_imageService.out($event, this, 3);" (click)="_imageService.saveInteraction($event, this, 'share');">
+            <i class="fas fa-retweet"></i>
+            </div>
           </div>
         </div>
         <!-- <img src="../api-rest-symfony/public/storage/images/image-example.jpg" class="image-element"> -->
@@ -61,7 +67,7 @@ import { Renderer2 } from '@angular/core';
 export class LikesComponent implements OnInit {
 
   public page_title: string;
-  public identity: any;            // User logueado
+  public identity: any;
   public token: string;
   public images: Array<Object>;
   public estado: boolean;
@@ -73,7 +79,7 @@ export class LikesComponent implements OnInit {
   public nightMode: boolean;
   public nsfw: boolean;
   public epilepsy: boolean;
-  public username: any;            // Username es el user de la página
+  public username: any;
   public id: string;
   public url: string;
   public interaction: string;

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hi-Lo Game</title>
+    <script type="text/javascript">
+
+        var whichDiv = 1;
+        var name = "";
+        var maxNumber = 0;
+        var guessNumber = 0;
+        var randomNumber = 0;
+        var max = 2;
+        var min = 1;
+
+        function nextDiv() {
+            if (whichDiv == 1) {
+                name = namePrompt.value;
+                section1.style.display = "none";
+                section2.style.display = "block";
+            }
+            else if (whichDiv == 2) {
+                prepareDiv2();
+                section2.style.display = "none";
+                section3.style.display = "block";	// hide the second, show the third
+                randomNumber = Math.floor(Math.random() * maxNumber);
+            }
+            else if (whichDiv == 3) {
+                guessNumber = guessPrompt.value;
+                section3.style.display = "none";
+                section4.style.display = "block";
+            }
+            else if (whichDiv == 4) {
+                changeBackground('lime');
+                section3.style.display = "none";
+                section4.style.display = "block";
+                section4.innerHTML = "You Win!! You guessed the number!! <input id='win' type='button' value='Play Again' onclick='nextDiv();prepareDiv2();'/>";
+                whichDiv = 2;
+                min = 1;
+            }
+        }
+
+        function changeBackground(color) {
+            document.body.style.background = color;
+        }
+
+        function validateInputs() {
+            var whichName = namePrompt.value;
+
+            nameError.innerHTML = "";
+
+            if ((whichName.trim()).length == 0) {
+                nameError.innerHTML = "Your name <b>cannot</b> be BLANK.";
+            }
+            else {
+                name = whichName;
+                nextDiv();		// move onto the next DIV
+                prepareDiv2();
+                whichDiv++;		// let's move into the next phase of the "screens"
+            }
+        }
+
+        function validateNumber() {
+            var whichNumber = numberPrompt.value;
+
+            guessError.innerHTML = "";
+
+            var lettersNSpaces = /^[A-Za-z\s]+$/;
+            if (whichNumber.match(lettersNSpaces)) {
+                numberError.innerHTML = "Your number must be <b>numbers</b> only";
+            }
+            else if (whichNumber.length == 0) {
+                // error message / feedback
+                numberError.innerHTML = "Your number <b>cannot</b> be BLANK.";
+            }
+            else if (whichNumber < 2) {
+                numberError.innerHTML = "Your number needs to be greater than 1.";
+            }
+            else {
+                maxNumber = whichNumber;
+                max = maxNumber;
+                nextDiv();		// move onto the next DIV
+                whichDiv++;		// let's move into the next phase of the "screens"
+                prepareDiv3();
+            }
+        }
+
+        function validateGuess() {
+            var whichGuess = guessPrompt.value;
+
+            numberError.innerHTML = "";
+
+            var lettersNSpaces = /^[A-Za-z\s]+$/;
+            if (whichGuess.match(lettersNSpaces)) {
+                guessError.innerHTML = "Your guess must be <b>numbers</b> only";
+                guessHiLo.innerHTML = "";
+            }
+            else if (whichGuess.length == 0) {
+                guessError.innerHTML = "Your guess <b>cannot</b> be BLANK.";
+                guessHiLo.innerHTML = "";
+            }
+            else if (whichGuess < 1) {
+                guessError.innerHTML = "Your guess must be greater than 0";
+                guessHiLo.innerHTML = "";
+            }
+            else if (whichGuess > max || whichGuess < min) {
+                guessError.innerHTML = "Your guess must be in the range: " + min + " to " + max + ".";
+                guessHiLo.innerHTML = "";
+            }
+            else {
+                guessError.innerHTML = "";
+
+                if (whichGuess < randomNumber) {
+                    min = whichGuess;
+                    min++;
+                    prepareDiv3();
+                    guessHiLo.innerHTML = "Guess Higher";
+                }
+                else if (whichGuess > randomNumber) {
+                    max = whichGuess;
+                    max--;
+                    prepareDiv3();
+                    guessHiLo.innerHTML = "Guess Lower";
+                }
+                else {
+                    whichDiv++;
+                    nextDiv();
+                }
+            }
+        }
+
+        function prepareDiv2() {
+            changeBackground('white');
+            section2.style.display = "block";
+            section3.style.display = "none";
+            section4.style.display = "none";
+            section2.innerHTML = "" + name + ", please enter the maximum number <input id='numberPrompt' type='text'> <input id='submitNumber' type='button' value='Submit' onclick='validateNumber();'>&nbsp; <div id='numberError' style='color:red;''> </div>";
+        }
+        function prepareDiv3() {
+            section3.innerHTML = "" + name + ", please guess a number <input id='guessPrompt' type='text'> <input id='submitGuess' type='button' value='Make this Guess' onclick='validateGuess();'>&nbsp; <div id='guessError' style='color:red;''> </div><div id='guessHiLo'></div> Your allowable guessing range is any value between <b>" + min + "</b> and <b>" + max + "</b>.";
+        }
+    </script>
+</head>
+
+<body>
+    <div id="section1">
+        What is your name?
+        <input id="namePrompt" type="text">&nbsp;
+        <input id="submitName" type="button" value="Submit" onclick="validateInputs();">&nbsp;
+        <div id="nameError" style="color:red;"></div>
+    </div>
+    <div id="section2" style="display: none"></div>
+    <div id="section3" style="display:none">
+        <input id="guessPrompt" type="text">&nbsp;
+        <input id="submitGuess" type="button" value="Make this Guess" onclick="validateGuess();">&nbsp;
+        <div id="guessError" style="color:red;"></div>
+        <div id="guessHiLo"></div>
+    </div>
+    <div id="section4" style="display: none; color:green;">
+        <input id="win" type="button" value="Play Again!" onclick="nextDiv();prepareDiv2();">
+    </div>
+</body>
+
+</html>

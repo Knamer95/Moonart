@@ -8,6 +8,6 @@ export class User{
         public description: string,
         public role: string,
         public createdAt: string,
-        public imageToUpload: any   // Antes userImage
+        public imageToUpload: any   // Previously userImage
     ){}
 }

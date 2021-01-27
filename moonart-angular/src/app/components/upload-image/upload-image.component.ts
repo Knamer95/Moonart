@@ -12,9 +12,9 @@ import { CommonService } from '../../services/common.service';
     providers: [UserService, ImageService, CommonService]
 })
 export class UploadImageComponent implements OnInit {
-    public _rights = "totales"; // Valor por defecto select
+    public _rights = "totales"; // Select default value
     public _imageURL: any = "assets/img/preview-icon.png";
-    // public _file; // Archivo subido
+    // public _file; // Uploaded file
     public page_title: string;
     public identity: any;
     public token: string;
@@ -58,7 +58,7 @@ export class UploadImageComponent implements OnInit {
     }
 
     /*
-    handleFileInput(files: FileList) { // Para ver los atributos del objeto files
+    handleFileInput(files: FileList) { // To see the object files attributes
         this.fileToUpload = files.item(0);
         console.log(this.fileToUpload);
     }
@@ -68,7 +68,7 @@ export class UploadImageComponent implements OnInit {
         if (files.length === 0)
             return;
 
-        console.log("size:" + files[0].size); // *Cambiar* -> Poner limitaciones, desactivar el botón si no las cumple
+        console.log("size:" + files[0].size); // *Change* -> Add limitations, deactivate button if they are not fullfilled
         // https://stackoverflow.com/questions/29280473/how-can-i-use-angluarjs-to-disable-a-button-if-a-value-is-bigger-than-255
 
         var mimeType = files[0].type;
@@ -123,15 +123,14 @@ export class UploadImageComponent implements OnInit {
         }
 
         var epilepsy: boolean = Boolean(this.image.epilepsy);
-        if (epilepsy == true) { // epilepsyFriendy true == puede contener elementos que causen epilepsia.
+        if (epilepsy == true) { // epilepsyFriendy true == may contain elements that cause epilepsy
             this.image.epilepsy = 1;
         }
         else {
             this.image.epilepsy = 0;
         }
 
-        this.image.rights = this._rights; // Asignamos el valor de _rights. Si en el modelo html le asignamos 
-        //al campo image.rights, carga sin nada seleccionado
+        this.image.rights = this._rights; // Assign the _rights value. If in the html model we assign it to the field image.rights, it loads with nothing selected
 
         console.log(this._rights);
         // console.log(this._file);

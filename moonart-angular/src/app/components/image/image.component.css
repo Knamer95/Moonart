@@ -106,13 +106,26 @@
     font-size: 15px;
     padding: 5px;
     margin-right: 5px; 
-    background: rgb(46, 115, 218);
+    background: rgb(255, 121, 238);
     color: white;
-    border-radius: 20px;
+    border-radius: 2px;
     display:inline-block;
     margin-bottom: 5px;
     /* user-select: none; */
     cursor: pointer;
+    transition: all 0.3s;
+}
+
+[data-container="night-container"] .tags{
+    background: rgb(182, 2, 159);
+}
+
+.tags:hover{
+    background: rgb(215, 86, 198);
+}
+
+[data-container="night-container"] .tags:hover{
+    background: rgb(246, 73, 223);
 }
 
 .comments{

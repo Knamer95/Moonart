@@ -26,7 +26,7 @@ export class CommonService {
         this.setCError = 0;
     }
 
-    getUserConfig(that, token) { // Coge el objeto de getConfig (petición AJAX de user.service) y lo almacena.
+    getUserConfig(that, token) { // Gets the getConfig object (user.service AJAX petition), and stores it
         if (token != null) {
             that._userService.getConfig(token).subscribe(
                 response => {
@@ -62,7 +62,7 @@ export class CommonService {
                 },
                 error => {
                     /*
-                    Falla pero hace las cosas (?)
+                    It fails but sometimes it works (?)
                     */
                     console.log("getConfig()");
                     console.log("Ero..." + " attempt: " + this.confError);
@@ -90,7 +90,7 @@ export class CommonService {
         }
     }
 
-    setUserConfig(that, token, data) { // Coge el objeto de getConfig (petición AJAX de user.service) y lo almacena.
+    setUserConfig(that, token, data) { // 
         that._userService.setConfig(token, data).subscribe(
             response => {
                 if (!response.status || response.status != 'error') {
@@ -152,7 +152,7 @@ export class CommonService {
 
     noscript(string) {
         console.log(string);
-        string = string.replace(/\<script\>/g, "Not today..."); // Evitar que se metan scripts
+        string = string.replace(/\<script\>/g, "Not today..."); // Avoid script injection
         string = string.replace(/\<\/script\>/g, "... but good try."); // en la db
         string = string.replace(/\</g, "(");
         string = string.replace(/\>/g, ")");

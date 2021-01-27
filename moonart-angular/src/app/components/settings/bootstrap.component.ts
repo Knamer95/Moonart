@@ -1,4 +1,4 @@
-// Not used
+// Not in use
 
 import { Component, AfterViewInit, ElementRef } from '@angular/core';
 

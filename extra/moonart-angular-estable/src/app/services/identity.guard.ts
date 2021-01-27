@@ -1,4 +1,4 @@
-// Comprobar si el user está logueado. Si no, no permitir que acceda a las páginas donde se requiera estarlo. (Mi perfil, cerrar sesión...)
+// Check if user is logged. If not, not allow them to access to pages where it's required to be. (Profile, log out...)
 
 import { Injectable } from '@angular/core';
 import { Router, CanActivate } from '@angular/router';

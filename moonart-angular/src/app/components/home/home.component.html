@@ -1,4 +1,4 @@
-<div class="container-fluid col-md-12 container-ma">
+<div class="container-fluid col-md-12 container-ma deviant-art-version">
   <h1 class="index-title no-select">&nbsp;&nbsp;{{this.currentLang.attributes.title}}</h1>
   <hr>
   <!-- <div class="espaciado"></div> -->
@@ -20,15 +20,15 @@
             <img class="image-frame like" src="assets/img/image-like-border.png" (mouseover)="_imageService.in($event, this, null);"
               (mouseleave)="_imageService.out($event, this, null);">
             <div class="image-heart" (mouseover)="_imageService.in($event, this, 1);" (mouseleave)="_imageService.out($event, this, 1);"
-              (click)="_imageService.saveInteraction($event, this, 'like');"></div>
+              (click)="_imageService.saveInteraction($event, this, 'like');"><i class="fas fa-heart"></i></div>
             <img class="image-frame fav" src="assets/img/image-fav-border.png" (mouseover)="_imageService.in($event, this, null);"
               (mouseleave)="_imageService.out($event, this, null);">
             <div class="image-star" (mouseover)="_imageService.in($event, this, 2);" (mouseleave)="_imageService.out($event, this, 2);"
-              (click)="_imageService.saveInteraction($event, this, 'fav');"></div>
+              (click)="_imageService.saveInteraction($event, this, 'fav');"><i class="fas fa-star"></i></div>
             <img class="image-frame share" src="assets/img/image-share-border.png" (mouseover)="_imageService.in($event, this, null);"
               (mouseleave)="_imageService.out($event, this, null);">
             <div class="image-arrows" (mouseover)="_imageService.in($event,this, 3);" (mouseleave)="_imageService.out($event, this, 3);"
-              (click)="_imageService.saveInteraction($event, this, 'share');"></div>
+              (click)="_imageService.saveInteraction($event, this, 'share');"><i class="fas fa-retweet"></i></div>
           </div>
         </div>
         <!-- <img src="../api-rest-symfony/public/storage/images/image-example.jpg" class="image-element"> -->
@@ -37,7 +37,7 @@
   </div>
 </div>
 
-<!-- <a href="index_2.html">Siguiente</a> -->
+<!-- <a href="index_2.html">Next</a> -->
 
 <nav aria-label="Page navigation example">
   <ul class="pagination float-right">
@@ -46,7 +46,7 @@
     </li>
     <li *ngFor="let num of number_pages; let i = index">
       <a class="page-link" *ngIf="i<5" [routerLink]="['/home', num]" [ngClass]="{'active': num == page}">{{num}}</a>
-      <!-- Cambiar para que si p.e estás en la pág 20, salga 18 - 19 - 20 - 21 - 22 -->
+      <!-- Change so if e.g you are at page pág 20, it shows 18 - 19 - 20 - 21 - 22 -->
     </li>
     <li *ngIf="page != total_pages">
       <!--  && total_pages > 1 -->

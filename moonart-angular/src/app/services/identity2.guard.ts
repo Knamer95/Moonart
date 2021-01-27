@@ -1,4 +1,4 @@
-// Comprobar si el user está logueado. Si sí, no permitir que acceda a las páginas donde se requiera no estarlo. (Login, register...)
+// Check if user is logged. If yes, restrict access to pages where not being logged is required (Login, register...)
 
 import { Injectable } from '@angular/core';
 import { Router, CanActivate } from '@angular/router';
@@ -15,12 +15,12 @@ export class Identity2Guard implements CanActivate{
     canActivate(){
         let identity = this._userService.getIdentity();
 
-        if (identity && identity.nick != 'guest'){ // O null (no accedido) o Object (accedido)
+        if (identity && identity.nick != 'guest'){ // Either null (not logged) or Object (logged)
             this._router.navigate(['/home']);
             return false;
         }
         else{
-            return true; // Si devuelve true, va a la localización a la que se está intentando acceder.
+            return true; // If it returns true, it redirects to the location
         }
     }
 }

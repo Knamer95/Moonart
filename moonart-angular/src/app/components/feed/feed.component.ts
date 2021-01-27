@@ -38,7 +38,7 @@ export class FeedComponent implements OnInit {
     public _imageURL: string;
     public sharedImages: any = [];
     public sharError: number;
-    public index: number;  // Cada vez que se llega abajo, hace query y se asigna uno nuevo.
+    public index: number;  // Every time scroll reaches the bottom, it executes the query, and a new one is assigned
     public loaded: boolean;
     public isLast: boolean;
     public objectSend: Object;
@@ -74,7 +74,7 @@ export class FeedComponent implements OnInit {
         this.epilepsy = JSON.parse(localStorage.getItem("config")).epilepsy;
 
         this.getSharedItems(this.index);
-        // this._userService.checkFollowing(this);  // Hay que hacer un caso a parte
+        // this._userService.checkFollowing(this);  // A new case has to be done appart
 
         this.lang = JSON.parse(localStorage.getItem("config")).lang;
         this.currentLang = this.getLang(this.lang);
@@ -82,7 +82,7 @@ export class FeedComponent implements OnInit {
     }
 
     @HostListener("window:scroll", ['$event'])
-    doSomethingOnWindowsScroll($event: Event) {
+    doSomethingOnWindowsScroll($event: Event) { // Event to fire new items on scroll down
 
         var d = document.documentElement;
         var zoom = 0.8; // Establecido en CSS
@@ -92,7 +92,7 @@ export class FeedComponent implements OnInit {
         // console.log('offset = ' + offset);
         // console.log('height = ' + height);
 
-        if (offset >= (height - 5) && this.loaded == true && this.isLast == false) { // 5 es el margen de error
+        if (offset >= (height - 5) && this.loaded == true && this.isLast == false) { // 5 is the margin of error
             this.loaded = false;
             this.getSharedItems(this.index);
         }
@@ -157,7 +157,7 @@ export class FeedComponent implements OnInit {
                         this.sharedImages[i].image.createdAt = date;
 
                         this.sharedImages[i].image.description = descr;
-                        this.sharedImages[i].image.formattedDescription = descr; // We add a new attr instead of modifying the main.
+                        this.sharedImages[i].image.formattedDescription = descr; // We add a new attr instead of modifying the main one.
                                                                                  // Otherwise, it caches, and going from feed to image, 
                                                                                  // and then back to feed, would cause a bad formatting.
 

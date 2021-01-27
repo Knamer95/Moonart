@@ -75,12 +75,13 @@ export class UserEditComponent implements OnInit {
         else {
             this.imageSize = true;
         }
-        // console.log("size:" + files[0].size); // *Cambiar* -> Poner limitaciones, desactivar el botón si no las cumple
+
+        // console.log("size:" + files[0].size); // *Change* -> Add limitations, deactivate button if they are not fullfilled
         // https://stackoverflow.com/questions/29280473/how-can-i-use-angluarjs-to-disable-a-button-if-a-value-is-bigger-than-255
 
         var mimeType = files[0].type;
         if (mimeType.match(/image\/*/) == null) {
-            // console.log("Sólo se admiten imágenes.");
+            // console.log("Only images allowed.");
             return;
         }
 

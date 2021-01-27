@@ -1,3 +1,5 @@
+// Not in use. Changed to Feed
+
 import { Component, OnInit } from '@angular/core';
 
 @Component({
