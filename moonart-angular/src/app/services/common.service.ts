@@ -298,7 +298,7 @@ export class CommonService {
 
             // Get total seconds between the times
             var delta = Math.abs(mydate.getTime() - now.getTime()) / 1000;
-            delta = delta > 0 ? delta : 0;  // Added so it won't show negative dates (if server clock is delayed, that could happen) 
+            delta = delta > 0 ? delta : 0;  // Added so it won't show negative dates (if server clock is delayed, that could happen)
             // An alternative would be getting the current server date too
             secondsStr = delta + " " + (hours === 1 ? "second" : "seconds");
 

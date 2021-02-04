@@ -365,7 +365,7 @@ export class ImageComponent implements OnInit {
                             this.commentAdded = false;
                         }, 1000); 
                         */
-                        this.getAllComments(this.imageId); // Reloads the comments, so you don't have to reload the page to see the one you added
+                        this.getAllComments(this.imageId); // Reloads the comments, so you don't have to reload the page to see the one you added 
                         // console.log(response);
                     }
                     else {
