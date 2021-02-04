@@ -323,7 +323,7 @@ export class ImageService {
         // (home.component, images.component...)
         if (that.identity != null && that.identity.nick != 'guest') {
             var less: boolean = false;
-            var intImages: Array<any>;
+            var intImages: any;
 
             // console.log(that.images.length);
             if (unique) {
