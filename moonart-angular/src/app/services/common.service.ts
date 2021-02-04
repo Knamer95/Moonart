@@ -297,7 +297,7 @@ export class CommonService {
             let now = new Date;
 
             // Get total seconds between the times
-            var delta = Math.abs(mydate - now) / 1000;
+            var delta = Math.abs(mydate.getTime() - now.getTime()) / 1000;
             delta = delta > 0 ? delta : 0;  // Added so it won't show negative dates (if server clock is delayed, that could happen) 
             // An alternative would be getting the current server date too
             secondsStr = delta + " " + (hours === 1 ? "second" : "seconds");
@@ -321,7 +321,7 @@ export class CommonService {
 
             // What's left is seconds
             // var seconds = delta % 60;  // In theory the modulus is not required
-            console.log(`${days} ${hours} ${minutes} ${delta}`)
+            // console.log(`${days} ${hours} ${minutes} ${delta}`)
 
             if (delta < 60)
                 return secondsStr

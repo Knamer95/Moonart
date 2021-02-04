@@ -213,7 +213,7 @@ export class ImageComponent implements OnInit {
                     that.customAlert += this.currentLang.attributes.imageAlert5;
 
                     if (!this.moreImagesLoaded) {
-                        console.log(this.moreImagesLoaded);
+                        // console.log(this.moreImagesLoaded);
                         this.moreImagesLoaded = true;
                         this.getMoreImages(); // We load more images by the user
                     }
@@ -460,10 +460,10 @@ export class ImageComponent implements OnInit {
     }
 
     addEvents() {
-        console.log(this.comments);
+        // console.log(this.comments);
         let elements = document.querySelectorAll('.user-at');
         // that.image.description.querySelector('[data-link]').addEventListener('click', ));
-        console.log(elements);
+        // console.log(elements);
 
         elements.forEach((element) => {
             element.addEventListener('click', () => {

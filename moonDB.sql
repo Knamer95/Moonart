@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS `config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `night_mode` tinyint(1) DEFAULT '0',
+  `scroll` tinyint(1) DEFAULT '1',
   `nsfw` tinyint(1) DEFAULT '0',
   `epilepsy` tinyint(1) DEFAULT '0',
   `lang` tinyint(16) DEFAULT '1' COMMENT '1 => en. 2 => es',
@@ -51,10 +52,10 @@ CREATE TABLE IF NOT EXISTS `config` (
 --
 
 INSERT INTO `config` (`id`, `user_id`, `night_mode`, `nsfw`, `epilepsy`, `lang`, `color`, `share`, `feed`) VALUES
-(4, 5, 1, 0, 0, 2, 'orange', 1, 5),
-(5, 3, 1, 0, 1, 1, 'orange', 1, 5),
-(8, 7, 1, 1, 1, 1, 'orange', 1, 5),
-(9, 6, 0, 1, 1, 1, 'orange', 1, 15);
+(4, 2, 1, 1, 0, 0, 2, 'orange', 1, 5),
+(5, 1, 1, 0, 1, 1, 1, 'orange', 1, 5),
+(8, 4 1, 1, 1, 1, 1, 'orange', 1, 5),
+(9, 3, 0, 1, 1, 1, 1, 'orange', 1, 15);
 
 -- --------------------------------------------------------
 
@@ -85,12 +86,12 @@ CREATE TABLE IF NOT EXISTS `images` (
 --
 
 INSERT INTO `images` (`id`, `user_id`, `url`, `name`, `description`, `status`, `nsfw`, `epilepsy`, `created_at`, `updated_at`, `rights`, `tags`) VALUES
-(40, 3, 'PHRTCSRERH-603711.jpeg', 'Marco and Star', NULL, 'published', 0, 0, '2019-05-04 14:40:22', '2019-05-04 14:40:22', 'totales', NULL),
-(55, 5, 'RUFIHAFWJA-035470.jpeg', 'Awaken', 'From league of legends.\\nGreat clip.\\n:D', 'published', 0, 0, '2019-05-16 18:45:00', '2019-05-16 18:45:00', 'totales', 'riven, awaken, lol'),
-(69, 5, 'SHUHPVWTYI-843660.png', 'Zoe lol', 'Un dibujo de Zoe poniendo cara de poco agrado.\\n\\nColoreada con Photoshop CC por @skittlebug94.\\n\\n2019\\n', 'published', 0, 0, '2019-05-17 21:24:27', '2019-05-17 21:24:27', 'ninguno', 'zoe,coffee,dislike,face,weird,lol'),
-(77, 5, 'OWCMXSRJBS-620601.png', 'XD', NULL, 'published', 0, 1, '2019-05-17 23:35:11', '2019-05-17 23:35:11', 'totales', NULL),
-(93, 3, 'UTPCHPNMKF-022052.jpeg', 'Zoe', 'A Zoe drawing by @bonniie_art', 'published', 0, 0, '2020-01-04 23:23:00', '2020-01-04 23:23:01', 'totales', 'zoe, art, bonniie, uwu'),
-(94, 7, 'WQTKTQNFER-878828.png', 'Casual clothes Zoe', 'This is a drawing I did a while ago.\\n\\nProfile of my  accounts: @Nao, @Mark, @Moon.\\n\\n{{lt;}}script{{gt;}}console.log(\"Hello\");{{lt;}}/script{{gt;}}', 'published', 0, 0, '2020-01-08 22:32:24', '2020-01-08 22:32:24', 'totales', 'zoe, lol, oc');
+(40, 1, 'PHRTCSRERH-603711.jpeg', 'Marco and Star', NULL, 'published', 0, 0, '2019-05-04 14:40:22', '2019-05-04 14:40:22', 'totales', NULL),
+(55, 2, 'RUFIHAFWJA-035470.jpeg', 'Awaken', 'From league of legends.\\nGreat clip.\\n:D', 'published', 0, 0, '2019-05-16 18:45:00', '2019-05-16 18:45:00', 'totales', 'riven, awaken, lol'),
+(69, 2, 'SHUHPVWTYI-843660.png', 'Zoe lol', 'Un dibujo de Zoe poniendo cara de poco agrado.\\n\\nColoreada con Photoshop CC por @skittlebug94.\\n\\n2019\\n', 'published', 0, 0, '2019-05-17 21:24:27', '2019-05-17 21:24:27', 'ninguno', 'zoe,coffee,dislike,face,weird,lol'),
+(77, 2, 'OWCMXSRJBS-620601.png', 'XD', NULL, 'published', 0, 1, '2019-05-17 23:35:11', '2019-05-17 23:35:11', 'totales', NULL),
+(93, 1, 'UTPCHPNMKF-022052.jpeg', 'Zoe', 'A Zoe drawing by @bonniie_art', 'published', 0, 0, '2020-01-04 23:23:00', '2020-01-04 23:23:01', 'totales', 'zoe, art, bonniie, uwu'),
+(94, 4, 'WQTKTQNFER-878828.png', 'Casual clothes Zoe', 'This is a drawing I did a while ago.\\n\\nProfile of my  accounts: @Nao, @Mark, @Moon.\\n\\n{{lt;}}script{{gt;}}console.log(\"Hello\");{{lt;}}/script{{gt;}}', 'published', 0, 0, '2020-01-08 22:32:24', '2020-01-08 22:32:24', 'totales', 'zoe, lol, oc');
 
 -- --------------------------------------------------------
 
@@ -137,10 +138,10 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `nick`, `password`, `email`, `description`, `role`, `created_at`, `user_image`) VALUES
-(3, 'Nao', 'Nao', '6dc1b00366412461aef1ad0c10332a3f4caaae8a35950160c2a989f89dae6d0c', 'nao@moonart.com', 'Hey my name is Nao and I\'m looking for new friends and artists.\\n\\nTest.\\n\\nTest 2.\\n\\nTest 3.\\n\\nTest 4.', 'role_user', '2019-04-30 23:36:22', 'GFCWNPIGHS-264185.png'),
-(5, 'Mark', 'Mark', '2cb330c3a0ed2740c1f74941ee6441fac705029523d9221391689a68083a94d7', 'mark@moonart.com', 'Hola, soy Marcos, y soy el creador de esta página. Espero que os guste. :)', 'role_mod', '2019-05-03 07:48:44', 'FNXQUCMSRN-518768.jpeg'),
-(6, 'Admin', 'admin', '3b612c75a7b5048a435fb6ec81e52ff92d6d795a8b5a9c17070f6a63c97a53b2', 'admin@moonart.com', NULL, 'role_admin', '2019-05-11 22:51:42', 'default.jpg'),
-(7, 'Moon', 'Moon', '923654d39d69b2acf437e779fec5fc04357e415ec2036413dcf2d21e0691cf23', 'moon@moonart.com', 'Descripción de ejemplo', 'role_admin', '2019-05-11 22:57:28', 'BMKCAXHVDU-408040.jpeg');
+(1, 'Nao', 'Nao', '6dc1b00366412461aef1ad0c10332a3f4caaae8a35950160c2a989f89dae6d0c', 'nao@moonart.com', 'Hey my name is Nao and I\'m looking for new friends and artists.\\n\\nTest.\\n\\nTest 2.\\n\\nTest 3.\\n\\nTest 4.', 'role_user', '2019-04-30 23:36:22', 'GFCWNPIGHS-264185.png'),
+(2, 'Mark', 'Mark', '2cb330c3a0ed2740c1f74941ee6441fac705029523d9221391689a68083a94d7', 'mark@moonart.com', 'Hola, soy Marcos, y soy el creador de esta página. Espero que os guste. :)', 'role_mod', '2019-05-03 07:48:44', 'FNXQUCMSRN-518768.jpeg'),
+(3, 'Admin', 'admin', '3b612c75a7b5048a435fb6ec81e52ff92d6d795a8b5a9c17070f6a63c97a53b2', 'admin@moonart.com', NULL, 'role_admin', '2019-05-11 22:51:42', 'default.jpg'),
+(4, 'Moon', 'Moon', '923654d39d69b2acf437e779fec5fc04357e415ec2036413dcf2d21e0691cf23', 'moon@moonart.com', 'Descripción de ejemplo', 'role_admin', '2019-05-11 22:57:28', 'BMKCAXHVDU-408040.jpeg');
 -- --------------------------------------------------------
 --
 -- Estructura de tabla para la tabla `user_comments`
