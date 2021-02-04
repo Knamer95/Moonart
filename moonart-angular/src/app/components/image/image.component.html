@@ -11,44 +11,23 @@
   {{this.currentLang.attributes.commentAdded}}
 </div>
 
-<div class="container-fluid col-md-12 container-ma">
-  <div class="row">
-    <div class="actions-container">
-      <span data-toggle="tooltip" data-placement="top" title="{{this.currentLang.attributes.edit}}">
-        <i *ngIf="this.identity.nick == this.image.user.nick" class="edit fas fa-edit"></i>
-      </span>
+<div class="container-fluid col-md-12 container-ma no-padding">
+  <div class="row no-padding">
+    <div class="col-md-9 no-padding">
+      <div class="image-container text-center">
+        <span *ngIf="visible==false" class="view" (click)="visible=true">{{this.currentLang.attributes.show}}</span>
 
-      <span data-toggle="tooltip" data-placement="top" title="{{this.currentLang.attributes.hide}}">
-        <i *ngIf="(this.identity.role == 'role_mod' || this.identity.role == 'role_admin') && this.identity.nick != this.image.user.nick && this.image.status == 'published'"
-          class="ban fas fa-ban" data-toggle="modal" data-target="#hideModal"></i>
-      </span>
+        <div *ngIf="visible==false else noblur" (click)="doNothing($event)" class="blur">
+          <img [src]="['assets/public/' + this.image.url]" class="image nocursor" id="">
+        </div>
 
-      <span data-toggle="tooltip" data-placement="top" title="{{this.currentLang.attributes.unban}}">
-        <i *ngIf="(this.identity.role == 'role_mod' || this.identity.role == 'role_admin') && this.identity.nick != this.image.user.nick && this.image.status == 'hidden'"
-          class="unban fas fa-unlock" data-toggle="modal" data-target="#showModal"></i>
-      </span>
+        <ng-template #noblur>
 
-      <span data-toggle="tooltip" data-placement="top" title="{{this.currentLang.attributes.delete}}">
-        <i *ngIf="this.identity.nick == this.image.user.nick || this.identity.role == 'role_admin'" class="delete fas fa-trash-alt"
-          data-toggle="modal" data-target="#deleteModal"></i>
-      </span>
+          <a [href]="['assets/public/' + this.image.url]">
+            <img [src]="['assets/public/' + this.image.url]" class="image" id="">
+          </a>
 
-    </div>
-    <div class="col-md-8 text-center image-container">
-
-      <span *ngIf="visible==false" class="view" (click)="visible=true">{{this.currentLang.attributes.show}}</span>
-
-      <div *ngIf="visible==false else noblur" (click)="doNothing($event)" class="blur">
-        <img [src]="['assets/public/' + this.image.url]" class="image nocursor" id="">
-      </div>
-
-      <ng-template #noblur>
-
-        <a [href]="['assets/public/' + this.image.url]">
-          <img [src]="['assets/public/' + this.image.url]" class="image" id="">
-        </a>
-
-        <!--
+          <!--
         <div *ngIf="this.image.status != 'hidden' && identity && identity.nick != 'guest'" class="image-actions">
           <div class="image-heart black" (click)="_imageService.saveInteraction($event, this, 'like', true);"></div>
           <div class="image-star black" (click)="_imageService.saveInteraction($event, this, 'fav', true);"></div>
@@ -56,101 +35,219 @@
         </div>
         -->
 
-      </ng-template>
-
-    </div>
-    <div class="col-md-4 float-left">
-      <div class="details-container mr-5 pr-2 mt-2">
-
-        <div class="title pb-2">
-          {{this.image.name}}
-        </div>
-
-        <div class="author pb-5">
-          {{this.currentLang.attributes.by}}&nbsp;<span [routerLink]="['/profile', this.image.user.nick]">{{this.image.user.nick}}</span>
-          <button type="button" class="button button-follow no-follow ml-4" *ngIf="this.identity.nick != this.image.user.nick && this.identity.nick != 'guest'"
-            (click)="follow(token, username)"></button><!-- {{followStatus}} -->
-        </div>
-
-        <div class="description pb-5">
-          <span *ngIf="this.image.description" [innerHTML]="this.image.description | safe: 'html'" (click)="this._commonService.redirectToProfile($event)"></span>
-          <span *ngIf="!this.image.description" class="grey-text">{{this.currentLang.attributes.noDescription}}</span>
-        </div>
-
-        <div class="rights pb-5">
-          <span>{{this.currentLang.attributes.rights}} <span class="highlighed">{{this.image.rights}}</span></span>
-        </div>
-
-        <div *ngIf="this.image.nsfw || this.image.epilepsy" class="nsfw-epilepsy-alert pb-5">
-          <span>{{this.customAlert}}</span>
-        </div>
-
-        <div *ngIf="isTags == true" class="tags-container pb-5">
-          <span class="mr-2 mb-3">Tags:</span>
-          <span *ngFor="let tag of tags; let i = index">
-            <span class="tags" (click)="navigate(tag)">{{tag}}</span></span>
-        </div>
-
-        <div class="created-at pb-5">{{this.currentLang.attributes.uploaded}}&nbsp;{{this.image.createdAt}}</div>
-
-        <div *ngIf="this.image.status != 'hidden' && identity && identity.nick != 'guest'" class="counter pb-5">
-          <i class="fas fa-heart" (click)="_imageService.saveInteraction($event, this, 'like', true, 'imageComponent');"></i><span>{{this.nLikes}}</span>
-          <i class="fas fa-star" (click)="_imageService.saveInteraction($event, this, 'fav', true, 'imageComponent');"></i><span>{{this.nFavs}}</span>
-          <i class="fas fa-retweet" (click)="_imageService.saveInteraction($event, this, 'share', true, 'imageComponent');"></i><span>{{this.nShares}}</span>
-        </div>
-
+        </ng-template>
       </div>
-    </div>
-  </div>
-  <div class="mb-5 pb-2" *ngIf="this.image.status == 'hidden'"></div>
-  <div class="row ml-5 mt-5 mr-5">
-    <div class="col-md-12">
-      <div class="comments mb-3">{{this.currentLang.attributes.comments}} ({{this.commentsLength}})</div>
-      <div class="mb-5 pb-2" *ngIf="this.image.status == 'hidden'"></div>
-      <div class="row">
-        <form [formGroup]="formVar" (ngSubmit)="onSubmit(formVar)" class="col-md-12 mb-4" *ngIf="this.image.status != 'hidden'">
-          <textarea formControlName="comment" maxlength="300" [value]="addComment" id="tarea" #tarea (input)="this.checkText($event);"></textarea>
-          <button type="submit" class="btn btn-primary btn-success float-right" [disabled]="identity.nick == 'guest'">{{this.currentLang.attributes.addComment}}</button>
-        </form>
-      </div>
-      <div class="comment" *ngFor="let comment of this.comments; let i = index" (click)="this._commonService.redirectToProfile($event)">
-        <div class="row mb-5">
-          <div class="col-md-1">
-            <div class="comment-image-container ml-3">
-              <img [src]="['assets/profile-picture/' + comment.user.image]" [routerLink]="['/profile', comment.user.nick]"
-                class="comment-image">
-            </div>
-          </div>
-          <div class="comment-id col-md-11" [id]="'comment-' + comment.id">
-            <div class="mt-1 mb-1">
-              <span class="comment-name" [routerLink]="['/profile', comment.user.nick]">{{comment.user.nick}}</span><span
-                class="comment-date"> - {{comment.createdAt}}</span></div>
-            <div class="comment-text mb-2" [ngClass]="{'removed': comment.status == 'deleted'}" [innerHTML]="comment.comment | safe: 'html'"></div>
-            <div *ngIf="comment.status == 'published'" class="ml-1">
-              <span class="reply-comment" (click)="this.tarea.focus(); addName($event, comment.user.nick, tarea.value)">{{this.currentLang.attributes.reply}}</span>
-              <span class="delete-comment" (click)="assignDelete(comment.id)" data-toggle="modal" data-target="#deleteCommentModal"
-                *ngIf="comment.user.nick == identity.nick || identity.role == 'role_admin'">{{this.currentLang.attributes.delete}}</span>
-            </div>
+      <div class="actions-container"></div> <!-- Now as dropdown -->
 
-            <div class="subcomment" *ngFor="let subcomment of comment.children; let i = index">
-              <div class="row mt-5">
-                <div class="col-md-1">
-                  <div class="subcomment-image-container ml-3">
-                    <img [src]="['assets/profile-picture/' + subcomment.user.image]" [routerLink]="['/profile', subcomment.user.nick]"
-                      class="subcomment-image">
+      <div class="row no-padding info-block">
+        <div class="col-md-2"></div>
+        <div class="col-md-10 no-padding">
+          <div class="">
+            <div class="interactions-container grid-actions">
+              <div>
+                <div class="like-container"
+                  (click)="_imageService.saveInteraction($event, this, 'like', true, 'imageComponent');">
+                  <i class="far fa-heart"></i><span>LIKE</span>
+                </div>
+              </div>
+              <div>
+                <div class="fav-container"
+                  (click)="_imageService.saveInteraction($event, this, 'fav', true, 'imageComponent');">
+                  <i class="fas fa-star"></i><span>ADD TO FAVOURITES</span>
+                </div>
+              </div>
+              <div>
+                <div class="share-container"
+                  (click)="_imageService.saveInteraction($event, this, 'share', true, 'imageComponent');">
+                  <i class="fas fa-retweet"></i><span>SHARE</span>
+                </div>
+              </div>
+              <div class="grid-actions-right">
+                <div class="edit-container">
+                  <span class="edit-button">EDIT</span>
+                </div>
+                <div class="more-container" data-theme="zoe" role="button" id="dropdownActions" data-toggle="dropdown"
+                  aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-ellipsis-h"></i><span></span>
+                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownActions">
+
+                    <span class="dropdown-item" id="report-image" (click)="prop('#reportModal')">
+                      <i class="far fa-flag"></i>
+                      <span>{{this.currentLang.attributes.report}}</span>
+                    </span>
+
+                    <span class="dropdown-item" id="ban-image" *ngIf="(this.identity.role == 'role_mod' || this.identity.role == 'role_admin') 
+                    && this.identity.nick != this.image.user.nick && this.image.status == 'published'"
+                      (click)="prop('#hideModal')">
+                      <i class="unban fas fa-ban"></i>
+                      <span>{{this.currentLang.attributes.hide}}</span>
+                    </span>
+
+                    <span class="dropdown-item" id="unban-image" *ngIf="(this.identity.role == 'role_mod' || this.identity.role == 'role_admin') 
+                    && this.identity.nick != this.image.user.nick && this.image.status == 'hidden'"
+                      (click)="prop('#showModal')">
+                      <i class="unban fas fa-unlock"></i>
+                      <span>{{this.currentLang.attributes.unban}}</span>
+                    </span>
+
+                    <span class="dropdown-item" id="delete-image"
+                      *ngIf="this.identity.nick == this.image.user.nick || this.identity.role == 'role_admin'"
+                      (click)="prop('#deleteModal')">
+                      <i class="unban fas fa-trash-alt"></i>
+                      <span>{{this.currentLang.attributes.delete}}</span>
+                    </span>
                   </div>
                 </div>
-                <div class="col-md-11" [id]="'subcomment-' + subcomment.id">
-                  <div class="mt-1 mb-1">
-                    <span class="subcomment-name" [routerLink]="['/profile', subcomment.user.nick]">{{subcomment.user.nick}}</span><span
-                      class="subcomment-date"> - {{subcomment.createdAt}}</span></div>
-                  <div class="subcomment-text mb-2" [ngClass]="{'removed': subcomment.status == 'deleted'}" [innerHTML]="subcomment.comment | safe: 'html'"></div>
-                  <div *ngIf="subcomment.status == 'published'" class="ml-1">
-                    <span class="reply-comment" (click)="tarea.focus(); addName($event, subcomment.user.nick, tarea.value)">{{this.currentLang.attributes.reply}}</span>
-                    <span class="delete-comment" (click)="assignDelete(subcomment.id)" data-toggle="modal" data-target="#deleteCommentModal"
-                      *ngIf="subcomment.user.nick == identity.nick || identity.role == 'role_admin'">{{this.currentLang.attributes.delete}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-2"></div>
+        <div class="col-md-8 no-padding">
+          <div class="details-container mr-5 pr-2 mt-2">
+            <div class="row no-padding grid-user-info">
+              <div class="author-img">
+                <img [src]="'assets/profile-picture/' + this.image.user.image" class="userby-picture">
+              </div>
+              <div class="grid-user-description">
+                <div class="title">
+                  {{this.image.name}}
+                </div>
+                <div class="author">
+                  {{this.currentLang.attributes.by}}&nbsp;<span
+                    [routerLink]="['/profile', this.image.user.nick]">{{this.image.user.nick}}</span>
+                  <button type="button" class="button button-follow no-follow ml-4"
+                    *ngIf="this.identity.nick != this.image.user.nick && this.identity.nick != 'guest'"
+                    (click)="follow(token, username)"></button><!-- {{followStatus}} -->
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="this.image.status != 'hidden' && identity && identity.nick != 'guest'" class="counter pb-5">
+              <i class="fas fa-heart"></i><span>{{this.nLikes}} Likes</span>
+              <i class="fas fa-star"></i><span>{{this.nFavs}} Favourites</span>
+              <i class="fas fa-retweet"></i><span>{{this.nShares}} shares</span>
+            </div>
+
+
+            <div *ngIf="isTags == true" class="tags-container pb-5">
+              <span class="mr-2 mb-3">{{this.currentLang.attributes.tags}}</span>
+              <div class="tag-container pt-2">
+                <span *ngFor="let tag of tags; let i = index">
+                  <span *ngIf="tag != ''" class="tags" (click)="navigate(tag)">{{tag}}</span></span>
+              </div>
+            </div>
+
+            <div class="description-container pb-5">
+              <span class="mr-2 mb-3">{{this.currentLang.attributes.description}}</span>
+              <div class="description pt-2">
+                <span *ngIf="this.image.description" [innerHTML]="this.image.description | safe: 'html'"
+                  (click)="this._commonService.redirectToProfile($event)"></span>
+                <span *ngIf="!this.image.description"
+                  class="grey-text">{{this.currentLang.attributes.noDescription}}</span>
+              </div>
+            </div>
+
+            <div class="rights-container pb-5">
+              <span class="mr-2 mb-3">{{this.currentLang.attributes.rights}}</span>
+              <div class="rights pt-2">
+                <span class="not-highlighed">{{this.image.rights}}</span>
+              </div>
+            </div>
+
+            <div *ngIf="this.image.nsfw || this.image.epilepsy" class="nsfw-epilepsy-alert pb-5">
+              <span>{{this.customAlert}}</span>
+            </div>
+
+            <div class="created-at-container pb-5">
+              <span class="mr-2 mb-3">{{this.currentLang.attributes.uploaded}}&nbsp;
+              </span>
+              <div class="created-at pt-2">
+                <span>{{this.image.createdAt}}</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="mb-5 pb-2" *ngIf="this.image.status == 'hidden'"></div>
+          <div class="comments-container mb-3">
+            <span class="comments-title">{{this.currentLang.attributes.comments}} </span>
+            <span class="comments-number">{{this.commentsLength}}</span>
+          </div>
+          <div class="mb-5 pb-2" *ngIf="this.image.status == 'hidden'"></div>
+
+          <div class="row no-padding">
+            <form [formGroup]="formVar" (ngSubmit)="onSubmit(formVar)" #newCommentForm="ngForm"
+              class="col-md-12 mb-4 no-padding" *ngIf="this.image.status != 'hidden'">
+              <div class="add-comment-container pb-5">
+                <img [src]="'assets/profile-picture/' + this._imageURL" class="profile-picture">
+                <div class="comment-box-container">
+                  <textarea formControlName="comment" maxlength="300" [value]="addComment" id="tarea" #tarea
+                    (input)="this.checkText($event);" [placeholder]="'Add a new comment...'" required></textarea>
+                </div>
+                <div class="lower-textarea">
+                  <button type="submit" class="add-comment"
+                    [disabled]="identity.nick == 'guest' || newCommentForm.invalid">{{this.currentLang.attributes.addComment}}</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="comment" *ngFor="let comment of this.comments; let i = index"
+            (click)="this._commonService.redirectToProfile($event)">
+            <div class="row no-padding mb-5">
+              <div class="comment-container pb-5">
+                <div class="comment-image-container">
+                  <img [src]="['assets/profile-picture/' + comment.user.image]"
+                    [routerLink]="['/profile', comment.user.nick]" class="comment-image">
+                </div>
+                <div class="comment-id" [id]="'comment-' + comment.id">
+                  <div class="mb-1">
+                    <span class="comment-name"
+                      [routerLink]="['/profile', comment.user.nick]">{{comment.user.nick}}</span><span
+                      class="comment-date"> - {{comment.createdAt}}</span>
                   </div>
-                  <!-- [innerHTML]="permissionArray" -->
+                  <div class="comment-text mt-2" [ngClass]="{'removed': comment.status == 'deleted'}"
+                    [innerHTML]="comment.comment | safe: 'html'"></div>
+                  <div *ngIf="comment.status == 'published'" class="ml-1">
+                  </div>
+                </div>
+                <div class="comment-actions">
+                  <span class="reply-comment"
+                    (click)="this.tarea.focus(); addName($event, comment.user.nick, tarea.value)">{{this.currentLang.attributes.reply}}</span>
+                  <span class="delete-comment" (click)="assignDelete(comment.id)" data-toggle="modal"
+                    data-target="#deleteCommentModal"
+                    *ngIf="(comment.user.nick == identity.nick || identity.role == 'role_admin') && comment.status != 'deleted'">{{this.currentLang.attributes.delete}}</span>
+                </div>
+              </div>
+              <div class="subcomment subcomment-alignment" *ngFor="let subcomment of comment.children; let i = index">
+                <div class="row no-padding mb-5 w-95">
+                  <div class="subcomment-container pb-3">
+                    <div class="subcomment-image-container ml-3">
+                      <img [src]="['assets/profile-picture/' + subcomment.user.image]"
+                        [routerLink]="['/profile', subcomment.user.nick]" class="subcomment-image">
+                    </div>
+
+                    <div class="subcomment-id" [id]="'subcomment-' + subcomment.id">
+                      <div class="mb-1">
+                        <span class="subcomment-name"
+                          [routerLink]="['/profile', subcomment.user.nick]">{{subcomment.user.nick}}</span><span
+                          class="subcomment-date"> - {{subcomment.createdAt}}</span>
+                      </div>
+                      <div class="subcomment-text mt-2" [ngClass]="{'removed': subcomment.status == 'deleted'}"
+                        [innerHTML]="subcomment.comment | safe: 'html'"></div>
+                      <div *ngIf="subcomment.status == 'published'" class="ml-1">
+                      </div>
+                    </div>
+                    <div class="subcomment-actions">
+                      <span class="reply-comment"
+                        (click)="this.tarea.focus(); addName($event, comment.user.nick, tarea.value)">{{this.currentLang.attributes.reply}}</span>
+                      <span class="delete-comment" (click)="assignDelete(comment.id)" data-toggle="modal"
+                        data-target="#deleteCommentModal"
+                        *ngIf="subcomment.user.nick == identity.nick || identity.role == 'role_admin'">{{this.currentLang.attributes.delete}}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -160,11 +257,27 @@
         </div>
       </div>
     </div>
+    <div class="more-by-container col-md-3">
+      <div class="more-by-theme">
+        <span class="more-by-user">{{this.currentLang.attributes.moreBy}}&nbsp;<span
+            [routerLink]="['/profile', this.image.user.nick]" class="more-by-user-link">{{this.image.user.nick}}</span>
+        </span>
+        <div class="more-by-images-container">
+          <div class="more-by-image" *ngFor="let image of images; let i = index" style="--aspect-ratio: 1/1;">
+            <a class="more-by-image-link" *ngIf="i < 12" (click)="reload(image)">
+              <img src="assets/public/{{image[0].url}}" [id]="'img' + (i + 1)" class="more-by-image-element"
+                [class.hidden]="image[0].status == 'hidden'" (load)="getRatio('img' + (i + 1))">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
 
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -177,8 +290,10 @@
         {{this.currentLang.attributes.deleteModalBody}}
       </div>
       <div class="modal-footer">
-        <button type="button" (click)="delete(this.imageId)" class="btn btn-primary btn-danger" data-dismiss="modal">{{this.currentLang.attributes.remove}}</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{this.currentLang.attributes.cancel}}</button>
+        <button type="button" (click)="delete(this.imageId)" class="btn btn-primary btn-danger"
+          data-dismiss="modal">{{this.currentLang.attributes.remove}}</button>
+        <button type="button" class="btn btn-secondary"
+          data-dismiss="modal">{{this.currentLang.attributes.cancel}}</button>
       </div>
     </div>
   </div>
@@ -199,7 +314,8 @@
       <div class="modal-footer">
         <button type="button" (click)="hideToggle(this.imageId, 'hidden')" class="btn btn-primary btn-danger"
           data-dismiss="modal">{{this.currentLang.attributes.hide}}</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{this.currentLang.attributes.cancel}}</button>
+        <button type="button" class="btn btn-secondary"
+          data-dismiss="modal">{{this.currentLang.attributes.cancel}}</button>
       </div>
     </div>
   </div>
@@ -220,7 +336,8 @@
       <div class="modal-footer">
         <button type="button" (click)="hideToggle(this.imageId, 'published')" class="btn btn-primary btn-success"
           data-dismiss="modal">{{this.currentLang.attributes.show}}</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{this.currentLang.attributes.cancel}}</button>
+        <button type="button" class="btn btn-secondary"
+          data-dismiss="modal">{{this.currentLang.attributes.cancel}}</button>
       </div>
     </div>
   </div>
@@ -240,8 +357,10 @@
         {{this.currentLang.attributes.deleteCommentModalBody}}
       </div>
       <div class="modal-footer">
-        <button type="button" (click)="deleteComment(commentToDelete)" class="btn btn-primary btn-danger" data-dismiss="modal">{{this.currentLang.attributes.remove}}</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{this.currentLang.attributes.cancel}}</button>
+        <button type="button" (click)="deleteComment(commentToDelete)" class="btn btn-primary btn-danger"
+          data-dismiss="modal">{{this.currentLang.attributes.remove}}</button>
+        <button type="button" class="btn btn-secondary"
+          data-dismiss="modal">{{this.currentLang.attributes.cancel}}</button>
       </div>
     </div>
   </div>

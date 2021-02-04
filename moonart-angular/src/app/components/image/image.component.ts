@@ -30,8 +30,11 @@ export class ImageComponent implements OnInit {
     public description: string;
     public isOwner: boolean;
     public isFollowing: boolean;
+    public _imageURL: string; // The image of the logged in user
     public image: Object;
     public images: Array<Object>;
+    public images2: Array<Object>;
+    public moreImagesLoaded: boolean = false; // Flag to avoid loading them every time
     public tags: Array<string>;
     public isTags: boolean;
     public role: string;
@@ -55,6 +58,7 @@ export class ImageComponent implements OnInit {
     public isFwError: number;
     public loadError: number;
     public iCntError: number;
+    public moreError: number;
     public chckError: number = 0;
     public language: Object;
     public lang: number;
@@ -92,14 +96,32 @@ export class ImageComponent implements OnInit {
         }
     }
 
+    reload(newImg) {
+        this.imageId = newImg[0].id;
+
+        if (window.history.replaceState) {
+            //prevents browser from storing history with each change:
+            window.history.replaceState('page', 'Title', '/images/' + this.imageId);
+        }
+        else{
+            window.history.pushState('page', 'Title', '/images/' + this.imageId);
+        }
+
+        this.ngOnInit();
+    }
+
     ngOnInit() {
 
         this.page_title = "Image";
         this.loadUser();
-        this.imageId = window.location.href.split("/");
-        for (let i = 0; i < this.imageId.length; i++) {
-            if (this.imageId[i] == "images" && (i + 1) < this.imageId.length) {
-                this.imageId = this.imageId[i + 1];
+
+        if (!this.imageId) {
+            this.imageId = window.location.href.split("/");
+
+            for (let i = 0; i < this.imageId.length; i++) {
+                if (this.imageId[i] == "images" && (i + 1) < this.imageId.length) {
+                    this.imageId = this.imageId[i + 1];
+                }
             }
         }
 
@@ -136,13 +158,16 @@ export class ImageComponent implements OnInit {
         that._imageService.getImage(that.imageId).subscribe(
             response => {
                 if (response.status == "success") {
+                    console.log(response);
+
                     this._commonService.displayNotification(this);
 
                     that.username = response.imagen.user.nick;
+
                     this._userService.checkFollowing(that);
                     that.image = response.imagen;
-
-                    that.images = that.image;
+                    // that.images = that.image;
+                    // console.log(that.images);
 
                     this._imageService.getInteractions(this, true, "imageComponent");
 
@@ -155,7 +180,7 @@ export class ImageComponent implements OnInit {
 
                     // that.image.rights = that.image.rights.charAt(0).toUpperCase() + that.image.rights.slice(1);
 
-                    switch (that.image.rights){
+                    switch (that.image.rights) {
                         case "ninguno": that.image.rights = this.currentLang.attributes.none; break;
                         case "parciales": that.image.rights = this.currentLang.attributes.partial; break;
                         case "totales": default: that.image.rights = this.currentLang.attributes.total; break;
@@ -186,10 +211,17 @@ export class ImageComponent implements OnInit {
                         that.customAlert += this.currentLang.attributes.imageAlert4;
 
                     that.customAlert += this.currentLang.attributes.imageAlert5;
+
+                    if (!this.moreImagesLoaded) {
+                        console.log(this.moreImagesLoaded);
+                        this.moreImagesLoaded = true;
+                        this.getMoreImages(); // We load more images by the user
+                    }
                 }
                 else {
                     this.error();
                 }
+                that.loadError = 0;
             },
             error => {
                 console.log("Ero..." + " attempt: " + that.loadError);
@@ -209,7 +241,7 @@ export class ImageComponent implements OnInit {
     loadUser() {
         this.identity = this._userService.getIdentity();
         this.token = this._userService.getToken();
-        // console.log(this.token);
+        this._imageURL = this.identity.image;
     }
 
 
@@ -222,6 +254,7 @@ export class ImageComponent implements OnInit {
                     this._commonService.displayNotification(this);
                     this._userService.checkFollowing(this);
                 }
+                this.isFwError = 0;
             },
             error => {
                 console.log("Ero..." + " attempt: " + this.isFwError);
@@ -260,7 +293,7 @@ export class ImageComponent implements OnInit {
                     }
                     catch (err) { }
 
-                    if (this.comments[i].status == "deleted"){
+                    if (this.comments[i].status == "deleted") {
                         this.comments[i].comment = this.currentLang.attributes.deletedComment;
                     }
 
@@ -284,7 +317,7 @@ export class ImageComponent implements OnInit {
                 }
 
                 // console.log(this.comments);
-
+                this.commError = 0;
             },
             error => {
                 console.log("Ero..." + " attempt: " + this.commError);
@@ -301,45 +334,49 @@ export class ImageComponent implements OnInit {
 
     onSubmit(form) {
         let comment = this.formVar.value.comment;
-        for (let i = 0; i < comment.length; i++) {
-            if (comment.charCodeAt(i) == 10) {
-                comment = comment.substr(0, i) + '\\n' + comment.substr(i + 1);
-            }
-        }
 
-        comment = this._commonService.noscript(comment);
-        this.formVar.value.comment = comment;
-
-        let data = {
-            userId: this.identity.sub,
-            imageId: this.imageId,
-            parent: this.parent ? this.parent : null,
-            comment: this.formVar.value.comment
-        }
-        let json = JSON.stringify(data);
-        this._imageService.addComment(this.token, json).subscribe(
-            response => {
-                if (response.status == "success") {
-                    this._commonService.displayNotification(this);
-
-                    form.reset();
-                    /*
-                    this.commentAdded = true;
-                    setTimeout(function(){
-                        this.commentAdded = false;
-                    }, 1000); 
-                    */
-                    this.getAllComments(this.imageId); // Reloads the comments, so you don't have to reload the page to see the one you added
-                    // console.log(response);
+        // Cannot submit empty comment
+        if (comment) {
+            for (let i = 0; i < comment.length; i++) {
+                if (comment.charCodeAt(i) == 10) {
+                    comment = comment.substr(0, i) + '\\n' + comment.substr(i + 1);
                 }
-                else {
-                    console.log(response);
-                }
-            },
-            error => {
-                console.log(error);
             }
-        );
+
+            comment = this._commonService.noscript(comment);
+            this.formVar.value.comment = comment;
+
+            let data = {
+                userId: this.identity.sub,
+                imageId: this.imageId,
+                parent: this.parent ? this.parent : null,
+                comment: this.formVar.value.comment
+            }
+            let json = JSON.stringify(data);
+            this._imageService.addComment(this.token, json).subscribe(
+                response => {
+                    if (response.status == "success") {
+                        this._commonService.displayNotification(this);
+
+                        form.reset();
+                        /*
+                        this.commentAdded = true;
+                        setTimeout(function(){
+                            this.commentAdded = false;
+                        }, 1000); 
+                        */
+                        this.getAllComments(this.imageId); // Reloads the comments, so you don't have to reload the page to see the one you added
+                        // console.log(response);
+                    }
+                    else {
+                        console.log(response);
+                    }
+                },
+                error => {
+                    console.log(error);
+                }
+            );
+        }
     }
 
     addName(event, nick, taVal) { // taVal = textarea value (on the html it's 'tarea')
@@ -441,28 +478,63 @@ export class ImageComponent implements OnInit {
         // console.log(this.parent);
     }
 
-    
+
     updateCounter(event, that, action) {
         this.getInteractionsInfo(that);
     }
 
-    getInteractionsInfo(that){
+    getInteractionsInfo(that) {
         that._imageService.getInteractionsCount(that.imageId, that.identity.sub).subscribe(
             response => {
-                console.log(response);
+                // console.log(response);
                 this.nLikes = response.likes;
                 this.nFavs = response.favs;
                 this.nShares = response.shares;
+
+                that.iCntError = 0;
             },
             error => {
                 console.log(error);
                 console.log("Ero..." + " attempt: " + that.iCntError);
                 if (that.iCntError < 5) {
-                    that.loadImage(that);
+                    that.getInteractionsInfo(that);
                     that.iCntError++;
                 }
             }
         );
+    }
+
+    getMoreImages() {
+        this._route.params.subscribe(params => {
+            if (localStorage.getItem("config") != null || localStorage.getItem("config") != undefined) {
+                this.nsfw = JSON.parse(localStorage.getItem("config")).nsfw;
+                this.epilepsy = JSON.parse(localStorage.getItem("config")).epilepsy;
+            }
+
+            if (this.username != this.identity.nick) {
+                this._imageService.showAllImages(this, 1, this.nsfw, this.epilepsy, this.username);
+            }
+
+            else {
+                this._imageService.showAllImages(this, 1, "true", "true", this.username, true);
+            }
+        });
+    }
+
+    getRatio(img) {
+        img = document.getElementById(img);
+        // console.log(img.clientWidth, img.clientHeight);
+
+        if (img.clientWidth > img.clientHeight) {
+            img.classList.add("aspect-width");
+        }
+        else {
+            img.classList.add("aspect-height");
+        }
+    }
+
+    prop(el){
+        jQuery(el).modal("show");
     }
 
     getLang(lang) {
@@ -474,25 +546,28 @@ export class ImageComponent implements OnInit {
                     imageHidden: "This image has been disabled due to infringement of rules. If you think this is a mistake, please contact with a moderator.",
                     imageDeleted: "Image deleted successfully. You will soon be redirected.",
                     commentAdded: "Comment added.",
+                    description: "Description",
                     noDescription: "User didn't add a description.",
-                    rights: "Rights:",
+                    rights: "Rights",
                     total: "All",
                     partial: "Partial",
                     none: "None",
-                    tags: "Tags:",
-                    by: "By",
-                    uploaded: "Uploaded the",
+                    tags: "Tags",
+                    by: "by",
+                    moreBy: "More by",
+                    uploaded: "Upload date",
                     comments: "Comments",
-                    addComment: "Add comment",
+                    addComment: "COMMENT",
                     show: "Show",
                     reply: "Reply",
                     delete: "Delete",
                     remove: "Delete",
                     hide: "Hide",
                     unban: "Unban",
+                    report: "Report",
                     edit: "Edit",
                     cancel: "Cancel",
-                    deletedComment: "Removed comment.",
+                    deletedComment: "This comment was deleted.",
                     deleteModalTitle: "Delete image?",
                     deleteModalBody: "The image will be deleted permanently.",
                     hideModalTitle: "Hide image?",
@@ -516,25 +591,28 @@ export class ImageComponent implements OnInit {
                     imageHidden: "La imagen ha sido deshabilitada porque inflingía las normas. Si crees que esto es un error, por favor contacta con un moderador.",
                     imageDeleted: "La imagen se ha borrado correctamente. Se te redirigirá en seguida.",
                     commentAdded: "Comentario añadido.",
+                    description: "Descripción",
                     noDescription: "El usuario no ha agregado ninguna descripción.",
-                    rights: "Derechos:",
+                    rights: "Derechos",
                     total: "Totales",
                     partial: "Parciales",
                     none: "Ninguno",
-                    tags: "Tags:",
-                    by: "Por",
-                    uploaded: "Subida el",
+                    tags: "Tags",
+                    by: "por",
+                    moreBy: "Más de",
+                    uploaded: "Fecha de subida",
                     comments: "Comentarios",
-                    addComment: "Agregar comentario",
+                    addComment: "COMENTAR",
                     show: "Mostrar",
                     reply: "Responder",
                     delete: "Eliminar",
                     remove: "Borrar",
                     hide: "Ocultar",
                     unban: "Desbanear",
+                    report: "Reportar",
                     edit: "Editar",
                     cancel: "Cancelar",
-                    deletedComment: "Comentario borrado.",
+                    deletedComment: "Este comentario fue borrado.",
                     deleteModalTitle: "¿Borrar imagen?",
                     deleteModalBody: "La imagen se borrará permanentemente.",
                     hideModalTitle: "¿Ocultar imagen?",

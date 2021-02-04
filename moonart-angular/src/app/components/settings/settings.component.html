@@ -14,6 +14,17 @@
 
   <div class="row pl-4">
     <div class="col-md-9">
+      <span>&nbsp;&nbsp;{{this.currentLang.attributes.paginationType}}</span>
+    </div>
+    <div class="col-md-3">
+      <input type="checkbox" class="switch" [checked]="scroll==true" (change)="change($event,'scroll')">
+    </div>
+  </div>
+
+  <div class="pb-4"></div>
+
+  <div class="row pl-4">
+    <div class="col-md-9">
       <span>&nbsp;&nbsp;{{this.currentLang.attributes.showNsfw}}</span>
     </div>
     <div class="col-md-3">

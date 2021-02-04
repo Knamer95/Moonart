@@ -12,7 +12,7 @@
 
 .tweet{
     font-family: 'M PLUS Rounded 1c', sans-serif;
-    padding: 10px 40px 40px 40px;
+    padding: 20px 40px 20px 40px;
     border-top: 1px solid rgb(221, 221, 221);
     border-bottom: 1px solid rgb(221, 221, 221);
     position: relative;
@@ -26,7 +26,6 @@
 }
 
 .image{
-    min-width: 300px;
     max-width: 350px;
     max-height: 300px;
     border-radius: 3px;
@@ -34,16 +33,19 @@
 }
 
 .image:hover{
-    transform: scale(1.05);
-    filter: brightness(1.1) invert(0);
+    /* transform: scale(1.05); */
+    /* filter: brightness(1.1) invert(0); */
 }
 
 .shared-by{
-    font-size: 20px;
+    font-size: 18px;
     padding-top: 10px;
     padding-bottom: 10px;
     color: rgb(30, 172, 42);
-
+    position: absolute;
+    display: inline;
+    right: 30px;
+    top: 10px;
 }
 
 .user-sharing{
@@ -51,22 +53,25 @@
 }
 
 .name, .description, .by, .by-user, .date, .interactions{
-    font-size: 30px;
+    font-size: 20px;
 }
 
 .name{
-    font-size: 40px;
+    font-size: 32px;
     color: rgb(48, 196, 196);
+}
+
+.by, .by-user{
+    font-size: 20px;
 }
 
 .by-user{
     /* display: inline; */
-    margin-right: 27px;
     color: rgb(48, 196, 196);
 }
 
 .description{
-    font-size: 25px;
+    font-size: 20px;
     max-height: 115px;
     margin-bottom: 40px;
     /* Does the magic */
@@ -76,16 +81,21 @@
 }
 
 .date{
-    font-size: 23px;
+    font-size: 16px;
     /* position: absolute;
     bottom: -5px; */
     color: rgba(120, 120, 120, 0.685);
     position: relative;
     bottom: -5px;
+    text-align: right;
 }
 
 .bottom{
     position: absolute; bottom: 0; width: 100%;
+}
+
+.counter{
+    font-size: 20px;
 }
 
 .empty{
@@ -93,5 +103,5 @@
 }
 
 .image-container{
-    margin: auto 0;
+    margin: 0;
 }

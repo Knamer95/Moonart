@@ -174,10 +174,12 @@ export class AppComponent implements OnInit, DoCheck {
 
     // https://stackoverflow.com/questions/38393494/how-to-emit-event-in-router-outlet-in-angular2
     onActivate(elementRef) {
-        if (elementRef.emitter) // Adds emitter only if there is an EventEmitter defined on the module (Settings)
+        if (elementRef.emitter) { // Adds emitter only if there is an EventEmitter defined on the module (Settings)
             elementRef.emitter.subscribe(event => {
+                console.log(elementRef);
                 this.onEmited(event)
             });
+        }
     }
 }
 

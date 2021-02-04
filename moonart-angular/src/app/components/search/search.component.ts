@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ImageService } from '../../services/image.service';
 import { CommonService } from '../../services/common.service';
@@ -26,8 +26,13 @@ export class SearchComponent implements OnInit {
     public nightMode: boolean;
     public nsfw: boolean;
     public epilepsy: boolean;
+    public scroll: boolean;
+    public isLast: boolean;
+    public loaded: boolean;
     public query: string;
     public q: string;
+    public querySelector: string;
+    public search: string;
     public searError: number;
     public language: Object;
     public currentLang: any;
@@ -43,6 +48,7 @@ export class SearchComponent implements OnInit {
     ) {
         this.page_title = "  Resultados de: ";
         this.searError = 0;
+        this.scroll = true; // Depends on user settings
         this.q = "";
         /*
         _router.events.subscribe(() => {
@@ -51,64 +57,89 @@ export class SearchComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.images = [];
+        this.isLast == false;
+        this.loaded == false;
+
         this.loadUser();
 
         if (localStorage.getItem("config") != null && localStorage.getItem("config") != "undefined") {
 
             this.nightMode = JSON.parse(localStorage.getItem("config")).nightMode;
             this._commonService.changeNightModeAttr(this.nightMode);
+            this.scroll = JSON.parse(localStorage.getItem("config")).scroll;
         }
 
         this._route.queryParams.subscribe(params => {
             this.query = params['q'];
             this.changeURL();
         });
-    
+
         this.lang = JSON.parse(localStorage.getItem("config")).lang;;
         this.currentLang = this.getLang(this.lang);
         this._commonService.changeLangAttr(this.lang);
     }
 
+    @HostListener("window:scroll", ['$event'])
+    doSomethingOnWindowsScroll($event: Event) { // Copied from home.component.ts -> If possible, make this a common function of image.service.ts
+
+        var d = document.documentElement;
+        var zoom = 0.8; // Establecido en CSS
+        var offset = d.scrollTop + window.innerHeight;
+        var height = d.offsetHeight * zoom;
+
+        if (offset >= (height - 5) && this.isLast == false && this.loaded == true) { // 5 is the margin of error
+            this.loaded = false; // Checker so it doesn't skip more than one page
+            this.page = this.page ? this.page : 1;
+
+            this.page++;
+            this.pageSearch();
+        }
+    }
+
     changeURL() {
         let tagQuery = this.query.search("tag:");
         let nameQuery = this.query.search("name:");
-        let querySelector;
-        let search;
         this.filter = "";
 
         if (tagQuery == 0) {
-            querySelector = "tag";
+            this.querySelector = "tag";
         }
         else if (nameQuery == 0) {
-            querySelector = "name";
+            this.querySelector = "name";
         }
         else {
-            querySelector = "all";
+            this.querySelector = "all";
         }
 
-        search = this.query.replace("tag:", "").replace("name:", "");
-        this.page_title = "  Resultados de: " + search;
-        this.q = search;
+        this.search = this.query.replace("tag:", "").replace("name:", "");
+        this.q = this.search;
         if (tagQuery != -1 || nameQuery != -1) {
-            this.filter = querySelector;
+            this.filter = this.querySelector;
         }
-        this.pageSearch(querySelector, search);
+        this.page_title = "  Resultados de: " + this.search;
+
+        this.pageSearch();
     }
 
-    pageSearch(querySelector, search) {
+    pageSearch() {
         this._route.params.subscribe(params => {
-            this.page = +params['page'];
+            if (!this.scroll) {
 
-            if (!this.page) {
-                this.page = 1;
-                this.prev_page = 1;
-                this.next_page = 2;
+                this.page = +params['page'];
+
+                if (!this.page) {
+                    this.page = 1;
+                    this.prev_page = 1;
+                    this.next_page = 2;
+                }
             }
+
             if (localStorage.getItem("config") != null || localStorage.getItem("config") != undefined) {
                 this.nsfw = JSON.parse(localStorage.getItem("config")).nsfw;
                 this.epilepsy = JSON.parse(localStorage.getItem("config")).epilepsy;
             }
-            this._imageService.showImageSearch(this, this.page, this.nsfw, this.epilepsy, querySelector, search);
+            this._imageService.showImageSearch(this, this.page, this.nsfw, this.epilepsy, this.querySelector, this.search);
         });
     }
 
@@ -123,7 +154,7 @@ export class SearchComponent implements OnInit {
             {
                 lang: "english",
                 attributes: {
-                    title: "Results: " + this.query.replace("tag:", "").replace("name:", ""),
+                    title: "Results:",
                     by: "by",
                     filter: "filter",
                     previous: "Previous",
@@ -134,7 +165,7 @@ export class SearchComponent implements OnInit {
             {
                 lang: "spanish",
                 attributes: {
-                    title: "Resultados de: " + this.query.replace("tag:", "").replace("name:", ""),
+                    title: "Resultados de:",
                     by: "por",
                     filter: "filtro",
                     previous: "Anterior",

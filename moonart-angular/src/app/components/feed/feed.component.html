@@ -1,65 +1,74 @@
-<div class="container-fluid col-md-12 container-ma">
-  <div class="tweet" *ngFor="let element of sharedImages; let i = index">
+<div class="row no-padding">
+  <div class="col-md-2"></div>
+  <div class="container-fluid col-md-8 container-ma">
+    <div class="tweet" *ngFor="let element of sharedImages; let i = index">
 
-    <div class="row" *ngIf="element.user.nick != element.image.user.nick else empty">
-      <div class="col-md-4 text-center shared-by">
-        <i class="fas fa-retweet"></i>{{this.currentLang.attributes.sharedBy}}&nbsp;<a class="user-sharing"
-          [routerLink]="['/profile', element.user.nick]">{{element.user.nick}}</a>
-      </div>
-      <div class="col-md-8"></div>
-    </div>
-    <ng-template #empty>
-      <div class="col-md-12 empty"></div>
-    </ng-template>
-    <div class="row">
-      <div class="col-md-4 text-center image-container">
-        <a [routerLink]="['/images', element.image.id]">
-          <div class="wrapper">
-            <img class="image" [src]="['assets/public/' + element.image.url]">
-          </div>
-        </a>
-      </div>
-      <div class="col-md-8">
-        <div class="row pb-4">
-          <div class="col-md-12">
-            <a [routerLink]="['/images', element.image.id]" class="name">[{{element.image.name}}]</a>
-          </div>
-          <div class="col-md-12">
-            <span class="by">{{this.currentLang.attributes.by}}&nbsp;</span> <a [routerLink]="['/profile', element.image.user.nick]"
-              class="by-user">{{element.image.user.nick}}</a>
-            <button type="button" *ngIf="element.image.user.nick != this.identity.nick" class="button button-follow no-follow"
-              [name]="'user-' + element.image.user.nick" (click)="follow(token, element.image.user.nick)"></button>
-            <!-- *ngIf="this.username != this.identity.nick" -->
-          </div>
+      <div class="row" *ngIf="element.user.nick != element.image.user.nick else empty">
+        <div class="shared-by">
+          <i class="fas fa-retweet"></i>{{this.currentLang.attributes.sharedBy}}&nbsp;<a class="user-sharing"
+            [routerLink]="['/profile', element.user.nick]">{{element.user.nick}}</a>
         </div>
-        <div class="row pb-3">
-          <div class="col-md-12 description">
-            <div *ngIf="element.image.description != null else nodescr">
-              <span [innerHTML]="element.image.formattedDescription | safe: 'html'" (click)="this._commonService.redirectToProfile($event)"></span>
+        <div class="col-md-8"></div>
+      </div>
+      <ng-template #empty>
+        <div class="col-md-12 empty"></div>
+      </ng-template>
+      <div class="row">
+        <div class="col-md-4 text-center image-container">
+          <a [routerLink]="['/images', element.image.id]">
+            <div class="wrapper">
+              <img class="image" [src]="['assets/public/' + element.image.url]">
             </div>
-            <ng-template #nodescr>
-              <span class="grey-text">{{this.currentLang.attributes.noDescription}}</span>
-            </ng-template>
-          </div>
+          </a>
         </div>
-
-        <div class="row bottom">
-
-          <div class="col-md-6">
-            <div class="counter">
-              <i class="fas fa-heart" [attr.data-status]="element.image.userLike" (click)="saveInteraction($event, this.element, 'like')"></i><span>{{element.image.likes}}</span>
-              <i class="fas fa-star" [attr.data-status]="element.image.userFav" (click)="saveInteraction($event, this.element, 'fav');"></i><span>{{element.image.favs}}</span>
-              <i class="fas fa-retweet" [attr.data-status]="element.image.userShare" (click)="saveInteraction($event, this.element, 'share');"></i><span>{{element.image.shares}}</span>
+        <div class="col-md-8">
+          <div class="row pb-4">
+            <div class="col-md-12">
+              <a [routerLink]="['/images', element.image.id]" class="name">[{{element.image.name}}]</a>
+            </div>
+            <div class="col-md-12">
+              <span class="by">{{this.currentLang.attributes.by}}&nbsp;</span> <a
+                [routerLink]="['/profile', element.image.user.nick]" class="by-user">{{element.image.user.nick}}</a>
+              <button type="button" *ngIf="element.image.user.nick != this.identity.nick"
+                class="button button-follow no-follow ml-3" [name]="'user-' + element.image.user.nick"
+                (click)="follow(token, element.image.user.nick)"></button>
+              <!-- *ngIf="this.username != this.identity.nick" -->
+            </div>
+          </div>
+          <div class="row pb-3">
+            <div class="col-md-12 description">
+              <div *ngIf="element.image.description != null else nodescr">
+                <span [innerHTML]="element.image.formattedDescription | safe: 'html'"
+                  (click)="this._commonService.redirectToProfile($event)"></span>
+              </div>
+              <ng-template #nodescr>
+                <span class="grey-text">{{this.currentLang.attributes.noDescription}}</span>
+              </ng-template>
             </div>
           </div>
 
-          <div class="col-md-6 date no-select">
-            {{this.currentLang.attributes.the}}&nbsp;{{element.image.createdAt}}
-            <!-- <br> -->
-            <!-- CE {{element.sharedAt}} -->
+          <div class="row bottom">
+
+            <div class="col-md-6">
+              <div class="counter">
+                <i class="fas fa-heart" [attr.data-status]="element.image.userLike"
+                  (click)="saveInteraction($event, this.element, 'like')"></i><span>{{element.image.likes}}</span>
+                <i class="fas fa-star" [attr.data-status]="element.image.userFav"
+                  (click)="saveInteraction($event, this.element, 'fav');"></i><span>{{element.image.favs}}</span>
+                <i class="fas fa-retweet" [attr.data-status]="element.image.userShare"
+                  (click)="saveInteraction($event, this.element, 'share');"></i><span>{{element.image.shares}}</span>
+              </div>
+            </div>
+
+            <div class="col-md-6 date no-select">
+              {{this.currentLang.attributes.the}}{{element.image.createdAt}}{{this.currentLang.attributes.ago}}
+              <!-- <br> -->
+              <!-- CE {{element.sharedAt}} -->
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <div class="col-md-2"></div>
 </div>

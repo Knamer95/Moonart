@@ -54,9 +54,9 @@ class ImageController extends AbstractController
         return strcmp($param_1, $param_2);
     }
 
-    public function upload(Request $request, JwtAuth $jwt_auth, $id = null){ // Crea o modifica un registro. (Si $id no es null, lo edita)
+    public function upload(Request $request, JwtAuth $jwt_auth, $id = null){ // Creates or modifies a register (if $id is not null, it edits it)
 
-        // Añadir respuesta por defecto
+        // Default response
         $data = [
             'status'    => 'error',
             'messsage'  => 'La imagen no se ha subido.',
@@ -65,19 +65,19 @@ class ImageController extends AbstractController
         // Recoger token
         $token = $request->headers->get('Authorization', null);
 
-        // Comprobar si es correcto
+        // Check if it's correct
         $authCheck = $jwt_auth->checkToken($token);
 
         if ($authCheck){
 
-            // Recoger datos por POST
+            // Get POST data
             $json = $request->get('json', null);
             $params = json_decode($json);
 
-            // Recoger el objeto del usuario identificado
+            // Get the identified user object
             $identity = $jwt_auth->checkToken($token, true);
 
-            // Comprobar y validar datos
+            // Check and validate data
             if (!empty($json)){
 
                 $extension = $params->imageToUpload->filetype;
@@ -95,7 +95,7 @@ class ImageController extends AbstractController
 
                 if(!empty($user_id) && !empty($name) && !empty($image_to_upload)){
 
-                    // Guardar la nueva imagen en la DB
+                    // Save new image on DB
 
                     $em = $this->getDoctrine()->getManager();
                     $user = $this->getDoctrine()->getRepository(User::class)->findOneBy([
@@ -104,7 +104,7 @@ class ImageController extends AbstractController
                     
                     if ($id == null){
 
-                        // Crear y guardar objeto
+                        // Create and save objects
                         $image = new Image();
                         $image->setUser($user);
                         $image->setUrl($url);
@@ -131,7 +131,7 @@ class ImageController extends AbstractController
                         $path = './storage/images/';
                         $uploader->uploadImage($image_to_upload, $path);
 
-                        // Insertar en la DB
+                        // Insert on DB
 
                         $em->persist($image);
                         $em->flush();
@@ -155,7 +155,7 @@ class ImageController extends AbstractController
                         ]);
 
                         if ($image && is_object($image)){
-                            // $image->setUrl($url);                |   -> En principio no debería poderse.
+                            // $image->setUrl($url);                |   -> It shouldn't be allowed
                             $image->setName($name);
                             $image->setDescription($description);
                             $image->setNsfw($nsfw);
@@ -179,7 +179,7 @@ class ImageController extends AbstractController
             }
         }
 
-        // Devolver respuesta
+        // Return response
 
         return $this->ajson($data);
     }
@@ -339,7 +339,7 @@ class ImageController extends AbstractController
 
         // recoger el parámetro page de la URL
         $page = $request->query->getInt('page', 1); // Por defecto, 1
-        $items_per_page = 12;
+        $items_per_page = 24;
 
         // Invocar paginación
         $pagination = $paginator->paginate($query, $page, $items_per_page);
@@ -422,7 +422,7 @@ class ImageController extends AbstractController
         $query = $em->createQuery($dql);
 
         $page = $request->query->getInt('page', 1); // Por defecto, 1
-        $items_per_page = 12;
+        $items_per_page = 24;
 
         // Invocar paginación
         $pagination = $paginator->paginate($query, $page, $items_per_page);
@@ -612,7 +612,7 @@ class ImageController extends AbstractController
 
         // recoger el parámetro page de la URL
         $page = $request->query->getInt('page', 1); // Por defecto, 1
-        $items_per_page = 12;
+        $items_per_page = 24;
 
         // Invocar paginación
         $pagination = $paginator->paginate($query, $page, $items_per_page);

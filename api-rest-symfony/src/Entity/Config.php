@@ -31,6 +31,13 @@ class Config
     /**
      * @var bool|null
      *
+     * @ORM\Column(name="scroll", type="boolean", nullable=true, options={"default"="1"})
+     */
+    private $scroll = '1';
+
+    /**
+     * @var bool|null
+     *
      * @ORM\Column(name="nsfw", type="boolean", nullable=true, options={"default"="0"})
      */
     private $nsfw = '0';
@@ -96,6 +103,18 @@ class Config
 
         return $this;
     }
+    
+    public function getScroll(): ?bool
+    {
+        return $this->scroll;
+    }
+
+    public function setScroll(?bool $scroll): self
+    {
+        $this->scroll = $scroll;
+
+        return $this;
+    }
 
     public function getNsfw(): ?bool
     {
@@ -145,7 +164,6 @@ class Config
         return $this;
     }
 
-
     public function getShare(): ?bool
     {
         return $this->share;
@@ -158,12 +176,10 @@ class Config
         return $this;
     }
 
-
     public function getFeed(): ?int
     {
         return $this->feed;
     }
-
 
     public function setFeed(?int $feed): self
     {
@@ -171,7 +187,6 @@ class Config
 
         return $this;
     }
-
 
     public function getUser(): ?User
     {

@@ -1,0 +1,82 @@
+Known bugs:
+
+- If user has no followers, following, images uploaded, liked, faved... console shows error (I think when editing? an user -> description is null, cannot apply functions like replace)
+  This one is fixed, but it may happen with other fields in other parts. Test empty users.
+
+- (Not really bug but) check that every AJAX call that fails retries at least 5 times.
+
+- Deleting subcomment doesn't delete it
+
+- Commenting after replying to a comment will comment on that comment too. Make it so commenting on a subcomment displays another textarea, different to the main one, used to comment without replying.
+
+Solved: 
+
+- Search: Clicking on pagination  -> Redirects to /home (in live repo it worked properly, so it won't be noticeable)
+
+- Search (again): Whenever you searched for a string, it would only show the first search. 
+  Ex: 
+	Search 1: 'a' -> Results: 'a' (searches 'a' and displays results)
+	Search 2: 'b' -> Results: 'a' (searches 'b' and displays results)
+	
+	The search worked, but the string specifying what your search was wouldn't update. Probably due to the implementation of language vars.
+	
+
+Implemented changes:
+
+#2021000 Updated the images shown to 24 (used to be 12)
+
+#2021001 Improved styles (now images aren't as separate), better image overlay when on hover (more readable in white pics and without the fadeout white that was unintended) -> added everywhere
+
+#2021002 Added option to show gallery by scrolling or paginated (scroll by default). Added also in profile and search
+
+#2021003 Reactions to the image used to be icons. This meant there was an image for unliked and liked (same for the others) -> Maybe it could have been done with filters and a single icon for each... Now it uses fontawesome icons.
+
+#2021004 Avoid user being able to comment empty comments -> Controll what is being submitted, and also add an ngForm condition of required to the textarea.
+
+
+Pending (priority order):
+
+#2021005 Make gallery images align better (either each image occupies 1/3rd | 1/4th (cut square), or script like DeviantArt that chooses images for each row according to their length.
+  Idea: If screen width is 10 units (we would want to fit 4 there... would depend on screen size though). 
+  Using 4 as a case, if an image with adjusted height isn't 5 or more, square of 2.5 units, otherwise rectangle of 5/7.5 units -> Problem, would need to save in the image attributes its size in units depending on the media screen size. 
+
+#2021006 Visualizing an image doesn't really let you appreciate it, because of the description at the right. Change the design so description is under pic.
+
+#2021007 Feed looks too big, too little info in too much space. Look for better solutions.
+
+#2021008 Translate comments and documentation to English.
+
+  --- Commit after you reach this part ---
+
+#2021009 Allow user to navigate through artist pictures by pressing next / prev (determine if the pic being shown is the first or last, check for next image taking in account that it's not hidden, or sensitive content if chosen not to show)
+
+#2021009 Restrict image dimensions adapted to the new specs (on upload, minimum width and height).
+
+#2021010 Responsiveness (now for real) -> Adapt to all screens with media queries and BS.
+
+#2021011 Visualize the followers and following in profile when clicking on them. Modal that shows users, with option to go to their profile, with the follow/unfollow button.
+
+#2021012 When opening an image, open it on the same webpage, with customized interface, not an <a> element that redirects.
+
+#2021013 Option to edit a picture. There is a button for it but it does nothing. (Tags, title, description)
+
+#2021014 Fix problem with comments' length. It allows 300 chars, but it's saved as JSON, and emojis are 12 characters, so any comment with more than 300 chars will cause an error. Also add a counter like  (map them so they take 3 characters  instead, and save as normal text, not JSON. Also with special chars like ยด `)
+
+#2021015 Consider making tags work in another way (?) Right now it's a string, what if the user introduces too many? Could restrict them, but it's a better idea to make another table with an image tag relationship.
+
+#2021016 Look for ways to load a thumbnail first, then actual image once it has loaded (or maybe leave a thumbnail, since it's smaller than the image, or has to be)
+
+#2021017 Add notifications when user follows, comments, etc. (Can be disabled)
+
+#2021018 Add DMs.
+
+#2021019 Public - Private - Hidden -> Something like YT, being able to make your picture public, private or hidden. If private, anyone can access with the image link. If 
+
+#2021020 Regarding issue #2021004, try to use a generic function on image.service.ts, instead of how it's done. It has a scrollable event, maybe it's not possible.
+
+#2021021 Update the general interface (uploading images, logn, etc) so it looks more light. Thinner and more simple buttons.
+
+#2021022 Fix problem with comments' length. It allows 300 chars, but it's saved as JSON, and emojis are 12 characters, so any comment with more than 300 chars will cause an error. Also add a counter like  (map themso they take 3 characters instead, and save as normal text, not JSON. Also with special chars like ´ `)
+
+
+#20210xx Possible future version for phones with Cordova.

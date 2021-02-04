@@ -382,6 +382,7 @@ class UserController extends AbstractController
 
             $user_id = ($identity->sub != null) ? $identity->sub : null;
             $night_mode = (!empty($params->nightMode)) ? $params->nightMode : false;
+            $scroll = (!empty($params->scroll)) ? $params->scroll : false;
             $nsfw = (!empty($params->nsfw)) ? $params->nsfw : false;
             $epilepsy = (!empty($params->epilepsy)) ? $params->epilepsy : false;
             $lang = (!empty($params->lang)) ? $params->lang : 1;
@@ -402,6 +403,7 @@ class UserController extends AbstractController
 
                 $config->setUser($user);
                 $config->setNightMode($night_mode);
+                $config->setScroll($scroll);
                 $config->setNsfw($nsfw);
                 $config->setEpilepsy($epilepsy);
                 $config->setLang($lang);

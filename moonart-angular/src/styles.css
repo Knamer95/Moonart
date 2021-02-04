@@ -7,6 +7,7 @@
 
 html{
     zoom: 0.8;
+    letter-spacing: 2px;
 }
 
 [data-container="day-container"]{ background: rgba(255, 255, 255, 0.801); color: black;}    /* ***      CUSTOMIZABLES      *** */
@@ -18,7 +19,15 @@ html{
 
 [data-container="night-container"]>h1{ color: lightgrey; }
 
-[data-container="night-container"] input, [data-container="night-container"] textarea, [data-container="night-container"] select{ background: #ffffff14 !important; color: white; }
+[data-container="night-container"] input, 
+[data-container="night-container"] textarea, 
+[data-container="night-container"] select{ 
+    background: #2c2b2f !important; 
+    color: white; 
+    border: none;
+    outline: none;
+    letter-spacing: 2px;
+}
 
 [data-container="night-container"] option { background: #222222db !important; }
 
@@ -70,6 +79,11 @@ a:hover{text-decoration: none;}
 .espaciado{height: 60px;}
 
 .nav-spacing{ width: 100%; height: 110px; }
+
+.no-padding{
+    padding: 0 !important;
+    margin: 0 !important;
+}
 
 /* Título */
 .index-title{ color: rgb(63, 63, 63); font-size: 44px;}
@@ -207,7 +221,10 @@ li:not(.select2-results__option){ margin: 0 10px; }
 .nav-welcome{color: rgb(255, 255, 255) !important;}
 
 .username{ color:rgb(78, 255, 196) !important; top: -3px !important; }
-.username:hover{text-decoration: none !important; color:rgb(148, 247, 214) !important;}
+.username:hover{
+    text-decoration: none !important; 
+    /* color:rgb(148, 247, 214) !important; */
+}
 .username, .nav-welcome{ font-size: 25px; font-family: 'M PLUS Rounded 1c', sans-serif; }
 
 .nav-profileimg > img{height:40px; border-radius: 50%;}
@@ -272,22 +289,24 @@ li:not(.select2-results__option){ margin: 0 10px; }
 
 
 .container-ma{ 
+    z-index: 2;
+    position: relative;
+    padding: 30px 40px 40px 40px;
+}
+
+.container-ma.block{ 
     margin-top: 40px; 
     margin-bottom: 40px; 
     border-radius: 5px; 
-    padding-top: 30px;
-    padding-bottom: 40px;
     width: 95%;
     min-height: 10vh;
-    z-index: 2;
-    position: relative;
 }
 
 
 /* .box #image-box{ background: rgba(0, 0, 0, 0.123); height: 300px; } */
 
 .container-images{ display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; }
-.deviant-art-version .container-images{ display: inline-block; text-align: center; }
+.deviantart-version .container-images{ display: inline-block; text-align: center; width: 100%; }
 /* grid-template-rows: 1fr 1fr 1fr 1fr; -> Si no hay las 4 filas, no quiero que aparezcan elementos invisibles. */ 
 .grid-col-1 { grid-row: 1; grid-column: 1; }
 .grid-col-2 { grid-row: 1; grid-column: 2; }
@@ -310,29 +329,63 @@ li:not(.select2-results__option){ margin: 0 10px; }
 
 .box{ padding: 10px 10px 10px 10px; justify-self: center; align-self: center;}
 
-.deviant-art-version .box{ display: inline-block; width: unset; }
+.deviantart-version .box{ display: inline-block; width: unset; }
 
-.box #image-box{ width: 300px; height: 250px; display: grid; }
+.box #image-box{ width: 300px; height: 250px; display: grid; position: relative; }
 
-.deviant-art-version .box #image-box{ width: unset !important; }
+.deviantart-version .box #image-box{ width: unset !important; }
 
 .image-parent, .image-element{ max-height: 250px; max-width: 300px; /*250px*/ align-self: center; justify-self: center; cursor: pointer; position: relative; } /* Añadir como requisito un min width y height de 150px al subir imagen.*/
 
-.deviant-art-version .image-parent, .deviant-art-version .image-element{ height: 330px; max-width: unset; max-height: unset; }
+.deviantart-version .image-parent, .deviantart-version .image-element{ height: 330px; max-width: unset; max-height: unset; }
 
 .image-parent:hover, .hovered-parent{
     background-image: linear-gradient(transparent 20%,rgb(40, 44, 0) 100%); 
     opacity: 1; }
 
-.image-element { min-width: 233px; transition: all 1s; } /* Para la barra de acciones */
+.image-element { min-width: 233px; } /* Para la barra de acciones */
 
-.image-element:hover, .hovered-children{-webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0.2)));
-    mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.2)); }
 
-/* Blue ver.
-.image-element:hover, .hovered-children{-webkit-mask-image:-webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0.2)));
-    mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0.2)); }
+/* 
+    The following lines, .image-element:hover {}, .image-wrapper:hover {}, .image-element:hover, .hovered-children {},
+    make the faded yellow thing that appears at the bottom side of the picture 
+
+    In order to make it look good in png transparent pics, we add a white bg on a picture div, and in the div inside
+    we add the yellow (this will be the color displayed, so if you want to change it, that's where)
+
+    In .image-element:hover, .hovered-children{} you define how transparent it is. The bottom part is 57% currently, and
+    the top part is transparent, so it does a fadeout effect
 */
+/*
+.image-element{ background: white; }
+[data-container="night-container"] .image-element{ background: black; }
+
+.image-wrapper:hover{
+    background: #384500;
+}
+
+.image-element:hover, .hovered-children{
+    -webkit-mask-image: linear-gradient(to top, rgb(0 0 0 / 14%) 0%, rgb(0 0 0) 76%);
+    mask-image: linear-gradient(to top, rgb(0 0 0 / 14%) 0%, rgb(0 0 0) 76%);
+}
+*/
+
+/* Simpler alternative */
+.gradient-mask {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 2;
+}
+
+.gradient-mask:hover,
+.image-parent.hovered-parent .gradient-mask{
+    background-image: linear-gradient(180deg,transparent,rgba(6,7,13,.5));
+}
+
+.image-element{ background: white; }
+[data-container="night-container"] .image-element{ background: black; }
+
 
 
 .image-element.hidden{
@@ -347,6 +400,7 @@ li:not(.select2-results__option){ margin: 0 10px; }
 }
 
 .image-description{
+    text-align: left;
     visibility: hidden;
     opacity: 0;
     transition: opacity 0.3s ease-out;
@@ -357,8 +411,13 @@ li:not(.select2-results__option){ margin: 0 10px; }
     line-height: 110%; 
     bottom: 15px; 
     left: 0px; 
-    margin-left: 20px; 
-    margin-right: 20px; 
+    z-index: 2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    padding: 0 20px;
+    width: 100%;
 }
 
 .image-parent:hover > .image-description{
@@ -382,8 +441,14 @@ li:not(.select2-results__option){ margin: 0 10px; }
 .image-user{ color: rgb(128, 215, 255); } 
 */
 
-.image-action{ position: absolute; top: 0; right: 0; opacity: 0; 
+.image-action{ 
+    position: absolute; 
+    top: 0; 
+    right: 0; 
+    opacity: 0;  
+    z-index: 4;
 }
+
 .image-frame, .image-heart, .image-star, .image-arrows{ position: absolute; }
 .like{ top: -2px; right: -1px; cursor: default; z-index: 1; }
 .fav{ top: -2px; right: 64px; cursor: default; width: 94px; height: 46px;  z-index: 2;  }
@@ -515,6 +580,11 @@ li:not(.select2-results__option){ margin: 0 10px; }
 
 .button-follow:focus {outline:0;}
 
+.button-follow{
+    border-radius: 3px;
+    font-size: 14px;
+}
+
 .fixed{
     position: fixed; 
     width: 100%; 
@@ -552,6 +622,16 @@ li:not(.select2-results__option){ margin: 0 10px; }
 
 ::placeholder{
     color: rgba(255, 255, 255, 0.479);
+}
+
+textarea::placeholder{
+    color: grey;
+    opacity: 1; /* Firefox */
+}
+
+textarea:focus{
+    border: none;
+    outline: 0;
 }
 
 .search-input{
@@ -615,8 +695,13 @@ li:not(.select2-results__option){ margin: 0 10px; }
 
 /* width */
 ::-webkit-scrollbar {
-    width: 7px;
-    height: 7px;
+    width: 12px;
+    height: 12px;
+}
+
+[data-mode="night-bg"]::-webkit-scrollbar,
+[data-mode="night-bg"] ::-webkit-scrollbar {
+    background: #202020;
 }
 
 /* Track */
@@ -628,12 +713,12 @@ box-shadow: inset 0 0 2px grey;
 /* Handle */
 ::-webkit-scrollbar-thumb {
 background: #00808d;
-border-radius: 4px;
+border-radius: 0px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-background: #29c5d6; 
+background: #0093a2; 
 }
 
 ::selection{
@@ -698,13 +783,17 @@ background: #29c5d6;
 /*===========================*/ 
 
 .counter{
-    font-size: 20px;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-    width: 240px;
+    font-family: monospace;
+    letter-spacing: 1px;
+    font-size: 16px;
+    /* font-size: 20px; */
+    /* display: grid; */
+    /* grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; */
+    /* width: 240px; */
 }
 
-.counter .fas{
+.counter .fas,
+.counter .far{
     align-self: center;
     justify-self: end;
     margin-right: 10px;
@@ -713,7 +802,7 @@ background: #29c5d6;
 }
 
 .counter .fas[data-status="0"]:hover{
-    transform: scale(1.2);
+    /* transform: scale(1.2); */
 }
 
 .fa-heart, .fa-star, .fa-retweet{
@@ -738,6 +827,11 @@ background: #29c5d6;
 
 .fa-heart[data-status="1"]:hover, .fa-star[data-status="1"]:hover, .fa-retweet[data-status="1"]:hover{
     color: #868686;
+}
+
+.dropdown-item{
+    cursor: pointer;
+    user-select: none;
 }
 
 /*===================*/
@@ -937,7 +1031,6 @@ background: #29c5d6;
     */
 
     .container-images{ display: grid; grid-template-columns: 1fr 1fr 1fr; }
-    /* grid-template-rows: 1fr 1fr 1fr 1fr; -> Si no hay las 4 filas, no quiero que aparezcan elementos invisibles. */ 
     .grid-col-1 { grid-row: 1; grid-column: 1; }
     .grid-col-2 { grid-row: 1; grid-column: 2; }
     .grid-col-3 { grid-row: 1; grid-column: 3; }
@@ -958,7 +1051,6 @@ background: #29c5d6;
 
 @media screen and (max-width: 815px){
     .container-images{ display: grid; grid-template-columns: 1fr 1fr; }
-    /* grid-template-rows: 1fr 1fr 1fr 1fr; -> Si no hay las 4 filas, no quiero que aparezcan elementos invisibles. */ 
     .grid-col-1 { grid-row: 1; grid-column: 1; }
     .grid-col-2 { grid-row: 1; grid-column: 2; }
     .grid-col-3 { grid-row: 2; grid-column: 1; }

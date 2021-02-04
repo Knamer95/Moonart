@@ -27,13 +27,14 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     public epilepsy: boolean;
     public share: boolean;
     public feed: number;
+    public scroll: boolean; // If true, shows galleries as scroll. Otherwise it shows them paginated
     public language: Object;
     public lang: number;
     public currentLang: Object;
-    
+
     // @Input()
     // set currentLang(currentLang: Object) {
-        // this._currentLang = currentLang;
+    // this._currentLang = currentLang;
     // }
 
     // get currentLang(): Object { return this._currentLang; }
@@ -44,6 +45,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
         var updateConfig = JSON.parse(updateConfigJSON);
         this.lang = parseInt($("select option:selected").attr("data-id"));
         this.currentLang = this.getLang(this.lang);
+        
         updateConfig.lang = parseInt($("select option:selected").attr("data-id"));
         localStorage.setItem("config", JSON.stringify(updateConfig));
         this.emitter.emit(this.lang);
@@ -64,6 +66,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
         this.epilepsy = false;
         this.share = true;
         this.feed = 15;
+        this.scroll = true;
     }
 
     ngOnInit() {
@@ -78,6 +81,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
         this.color = defaultLoad.color;
         this.share = defaultLoad.share;
         this.feed = defaultLoad.feed;
+        this.scroll = defaultLoad.scroll;
 
         this.render.addClass(document.querySelector("." + this.color), "chosen");
 
@@ -86,6 +90,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
         this._commonService.changeNightModeAttr(this.nightMode);
         // }
 
+        this.scroll = JSON.parse(localStorage.getItem("config")).scroll;
         this.lang = JSON.parse(localStorage.getItem("config")).lang;
         this.currentLang = this.getLang(this.lang);
         this._commonService.changeLangAttr(this.lang);
@@ -107,7 +112,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
             escapeMarkup: function (m) { return m; }
         });
 
-        document.getElementsByClassName("select2")[0].addEventListener('click', ($event) => {
+        document.querySelectorAll(".lang + .select2")[0].addEventListener('click', ($event) => {
             let size = document.getElementsByClassName("select2-results__option").length;
             // console.log(size);
 
@@ -158,6 +163,12 @@ export class SettingsComponent implements OnInit, AfterViewInit {
             }
             updateConfig.feed = this.feed;
         }
+
+        if (variable == "scroll") {
+            this.scroll = this.scroll ? false : true;
+            updateConfig.scroll = this.scroll;
+        }
+
         this.updateDB(updateConfig);
 
         this._commonService.changeNightModeAttr(this.nightMode);
@@ -199,6 +210,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
 
     updateDB(config) {
         config.nightMode = config.nightMode ? 1 : 0;
+        config.scroll = config.scroll ? 1 : 0;
         config.nsfw = config.nsfw ? 1 : 0;
         config.epilepsy = config.epilepsy ? 1 : 0;
         config.share = config.share ? 1 : 0;
@@ -219,11 +231,12 @@ export class SettingsComponent implements OnInit, AfterViewInit {
                 lang: "english",
                 attributes: {
                     title: "Settings",
-                    nightMode: "Night mode",
+                    nightMode: "Mode [Day | Night]",
                     showNsfw: "Show sensitive content",
                     showEpilepsy: "Show flashy elements",
                     shareImages: "Share images",
                     feedElements: "Feed elements",
+                    paginationType: "Gallery display [By page | Scroll]",
                     language: "Language",
                     themes: "Themes"
                 }
@@ -233,11 +246,12 @@ export class SettingsComponent implements OnInit, AfterViewInit {
                 lang: "spanish",
                 attributes: {
                     title: "Ajustes",
-                    nightMode: "Modo noche",
+                    nightMode: "Modo [Día | Noche]",
                     showNsfw: "Mostrar contenido sensible",
                     showEpilepsy: "Mostrar elementos llamativos",
                     shareImages: "Compartir imágenes",
                     feedElements: "Elementos de feed",
+                    paginationType: "Desplegar galeria [Por página | Scroll]",
                     language: "Idioma",
                     themes: "Temas"
                 }

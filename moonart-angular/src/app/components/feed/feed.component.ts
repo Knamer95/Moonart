@@ -183,6 +183,7 @@ export class FeedComponent implements OnInit {
                 else {
                     this.getSharedItems(this.index);
                 }
+                this.sharError = 0;
             },
             error => {
                 this.sharedImages = [];
@@ -249,6 +250,7 @@ export class FeedComponent implements OnInit {
                 // this.element.image.likes = response.likes;
                 // this.nFavs = response.favs;
                 // this.nShares = response.shares;
+                that.iCntError = 0;
             },
             error => {
                 console.log(error);
@@ -270,7 +272,8 @@ export class FeedComponent implements OnInit {
                     noDescription: "User didn't add a description.",
                     sharedBy: "Shared by",
                     by: "by",
-                    the: "The"
+                    the: "",
+                    ago: " ago"
                 }
             },
 
@@ -281,7 +284,8 @@ export class FeedComponent implements OnInit {
                     noDescription: "El usuario no ha agregado ninguna descripción.",
                     sharedBy: "Compartido por",
                     by: "por",
-                    the: "El"
+                    the: "",    // Cambiar a 'El'
+                    ago: "ago"  // Dejar vacío
                 }
             }
         ];

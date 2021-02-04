@@ -51,7 +51,8 @@ export class UserEditComponent implements OnInit {
 
     ngOnInit() {
 
-        this.user.description = this.user.description.replace(/\\n/g, String.fromCharCode(10));
+        if (this.user.description)
+            this.user.description = this.user.description.replace(/\\n/g, String.fromCharCode(10));
 
         this._imageURL = "assets/profile-picture/" + this.identity.image
 

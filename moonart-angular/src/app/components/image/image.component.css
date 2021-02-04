@@ -1,3 +1,4 @@
+/*
 .container-ma{ 
     margin-top: 40px; 
     margin-bottom: 40px; 
@@ -6,6 +7,121 @@
     padding-bottom: 40px;
     width: 80%;
     min-height: 10vh;
+}
+*/
+
+.info-block{
+    padding: 30px 0 !important;
+    background: #ffffff;
+}
+
+
+.more-by-user-container{
+    background: #0000001f;
+}
+
+
+.grid-actions{
+    display: grid;
+    grid-template-columns: auto auto auto 1fr; 
+    /* grid-template-columns: 130px 290px 130px 1fr; */
+    /* grid-column-gap: 52px; */
+}
+
+.interactions-container{
+    padding: 30px 0;
+    font-family: monospace;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.like-container, .fav-container, .share-container{
+    display: inline-block;
+    cursor: pointer;
+}
+
+.like-container[data-status='1'], .like-container:hover{
+    color: #c70000;
+}
+
+.fav-container[data-status='1'], .fav-container:hover{
+    color: #cbcb00;
+}
+
+.share-container[data-status='1'], .share-container:hover{
+    color: #12baaa;
+}
+
+.edit-button, .fa-ellipsis-h{
+    cursor: pointer;
+}
+
+.edit-button:hover, .fa-ellipsis-h:hover, .grid-actions-right [aria-expanded="true"] .fa-ellipsis-h{
+    color: turquoise;
+}
+
+.dropdown-item i{
+    margin-right: 10px;
+}
+
+.grid-actions-right{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    text-align: right;
+    grid-column-gap: 20px;
+    padding-right: 30px;
+}
+
+.counter .fas,
+.counter .far{
+    cursor: default;
+}
+
+.grid-user-info{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto;
+    grid-column-gap: 16px;
+    /* align-items: center; */
+    font-family: sans-serif;
+    padding-bottom: 2rem !important;
+}
+
+.author-img{
+    grid-row: 1;
+    grid-column: 1;
+}
+
+.author-img img{
+    width: 85px;
+}
+
+.grid-user-description{
+    grid-row: 1;
+    grid-column: 2;
+    display: grid;
+    grid-template-rows: auto auto;
+}
+
+.title{
+    grid-row: 1;
+    /* align-self:  */
+    font-size: 25px;
+    font-weight: bold;
+    font-family: sans-serif;
+}
+
+.author{
+    font-size: 25px;
+    align-self: end;
+    font-size: 18px;
+}
+
+.author span,
+.more-by-user-link{
+    color: rgb(193, 121, 0);
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .actions-container{
@@ -18,8 +134,8 @@
     margin-left: 10px;
 }
 
+/*
 .edit, .delete, .ban, .unban{
-    /* position: absolute;  */
     position: relative;
     font-size: 24px;
     cursor: pointer;
@@ -43,31 +159,22 @@
     color: rgb(4, 196, 106);
 }
 
-
 .edit:hover, .delete:hover, .ban:hover, .unban:hover{
     transform: scale(1.1);
 }
-
-.title{
-    font-size: 40px;
-}
-
-.author{
-    font-size: 25px;
-}
-
-.author span{
-    color: rgb(77, 238, 63);
-    cursor: pointer;
-}
+*/
 
 .image{
-    max-width: 640px;
+    /* max-width: 640px; */
     cursor: zoom-in;
+    max-width: 89%;
 }
 
 .image-container{
+    background: linear-gradient(45deg, #ffffff, #f0f0f0);
     align-self: center;
+    padding: 60px 45px 45px 45px;
+    /* width: calc(100% - 90px); */ /* Only necessary if it's margin*/
 }
 
 .nocursor{
@@ -98,17 +205,28 @@
     border-radius: 5px;
 }
 
-.tags-container{
+.tags-container > span,
+.description-container > span,
+.rights-container > span,
+.created-at-container > span {
+    color: grey;
+}
+
+.tags-container > span,
+.description-container > span,
+.rights-container > span,
+.created-at-container > span,
+.comments-container{
     font-size: 20px;
 }
 
 .tags{
     font-size: 15px;
-    padding: 5px;
-    margin-right: 5px; 
-    background: rgb(255, 121, 238);
+    padding: 10px 24px;
+    margin-right: 10px; 
+    background: rgb(133, 133, 133);
     color: white;
-    border-radius: 2px;
+    border-radius: 0px;
     display:inline-block;
     margin-bottom: 5px;
     /* user-select: none; */
@@ -116,36 +234,117 @@
     transition: all 0.3s;
 }
 
-[data-container="night-container"] .tags{
-    background: rgb(182, 2, 159);
-}
-
 .tags:hover{
-    background: rgb(215, 86, 198);
+    background: rgb(92, 92, 92);
 }
 
-[data-container="night-container"] .tags:hover{
-    background: rgb(246, 73, 223);
+.comments-container{
+    /* color: white; */
+    font-weight: bold;
 }
 
-.comments{
-    font-size: 30px; 
+.lower-textarea{
+    background: #eceaea !important;
+}
+
+.add-comment-container{
+    display: grid;
+    grid-template-columns: 115px 1fr;
+    grid-template-rows: auto auto;
+    grid-column-gap: 20px;
+}
+
+.add-comment-container img {
+    grid-row: 1;
+    grid-column: 1;
+    align-self: center;
+    width: 115px;
+    height: 115px;
+}
+
+.add-comment-container textarea {
+    grid-row: 1;
+    grid-column: 2;
+}
+
+.add-comment-container .lower-textarea{
+    grid-row: 2;
+    grid-column: 2;
+
+    position: relative;
+    top: -6px;
+    text-align: right;
+}
+
+.add-comment{
+    padding: 6px 20px;
+    color: #454545;
+    background: none;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 18px;
+    border: none;
+    letter-spacing: 2px;
+    border: none;
+    border-radius: 1px;
+}
+
+.add-comment:disabled{
+    color: #acacac;
+}
+
+.comment,
+.subcomment{
+    width: 100%;
+}
+
+.comment{
+    padding-bottom: 30px;
+}
+
+.w-95{
+    width: 95%;
+}
+
+.comment-container,
+.subcomment-container{
+    display: grid;
+    grid-template-columns: 115px 1fr;
+    grid-column-gap: 20px;
+    align-items: center;
+}
+
+.comment-container{
+    width: 100%;
+}
+
+.subcomment-alignment{
+    display: grid;
+    justify-items: right;
+}
+
+.subcomment-container{
+    width: 100%;
 }
 
 .comment-image,
 .subcomment-image{
-    width: 100px;
-    height: 100px;
+    width: 80px;
     cursor: pointer;
 }
 
 .comment-image-container,
 .subcomment-image-container{
-    display: inline-block;
-    float: right;
-    border: 1px solid #adb80191;
-    border-radius: 999px;
-    overflow: hidden;
+    /* overflow: hidden; */
+    justify-self: end;
+    align-self: baseline;
+    padding-top: 5px;
+}
+
+.comment-id,
+.subcomment-id{
+    background: #eceaea;
+    padding: 20px;
 }
 
 .comment-name,
@@ -166,11 +365,11 @@
 
 .comment-text,
 .subcomment-text{
-    min-height: 64px;
-    background: #fffffc;
-    padding: 7px 12px;
-    border: 1px solid #adb80191;
-    border-radius: 5px;
+    /* min-height: 64px; */
+    /* background: #fffffc; */
+    /* padding: 7px 12px; */
+    /* border: 1px solid #adb80191; */
+    /* border-radius: 5px; */
 }
 
 .comment-text.removed,
@@ -178,9 +377,10 @@
     color: grey;
 }
 
-[data-container="night-container"] .comment-text,
-[data-container="night-container"] .subcomment-text{
-    background: #4d4d4d2e;
+.comment-actions,
+.subcomment-actions{
+    grid-row: 2;
+    grid-column: 2;
 }
 
 .reply-comment{
@@ -203,6 +403,8 @@ textarea{
     width: 100%;
     height: 115px;
     resize: none;
+    border: none;
+    background: #fcfcfc;
 }
 
 .blur{
@@ -231,4 +433,120 @@ textarea{
 .nsfw-epilepsy-alert{
     color: darkred;
     font-size: 14px;
+}
+
+.more-by-user{
+    display: inline-block;
+    padding: 20px 0;
+    font-size: 20px;
+}
+
+.more-by-container{
+    background: linear-gradient(65deg, #ffffff, #f0f0f0);
+    position: relative;
+    padding: 0px 30px;
+}
+
+.more-by-images-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px;
+}
+
+/* https://css-tricks.com/aspect-ratios-grid-items/ */
+.more-by-images-container > [style^='--aspect-ratio']::before {
+    content: "";
+    display: inline-block;
+    width: 1px;
+    height: 0;
+    padding-bottom: calc(100% / (var(--aspect-ratio)));
+}
+
+.more-by-images-container > * {
+    width: 100%;
+    position: relative;
+  }
+
+.more-by-image{
+    overflow: hidden;
+}
+
+.more-by-image-element{
+    /* max-width: 100%; */
+    position: absolute;
+    cursor: pointer;
+}
+
+.aspect-width{
+    max-height: 100%;
+}
+
+.aspect-height{
+    max-width: 100%;
+}
+
+[data-container="night-container"] .lower-textarea{
+    background: #222124 !important;
+}
+
+.container-ma[data-container="light-container"]{
+    /* background: #ffffffb0; */
+}
+
+.container-ma[data-container="night-container"]{
+    /* background: #ffffffb0; */
+}
+
+[data-container="night-container"] .info-block{
+    background: #00000052;
+}
+
+[data-container="night-container"] .more-by-user-container{
+    background: #ffffff0d;
+}
+
+[data-container="night-container"] .tags{
+    /* background: rgb(182, 2, 159); */
+    background: rgb(51, 51, 51);
+}
+
+[data-container="night-container"] .tags:hover{
+    /* Same as day-container --> Otherwise it won't apply, since nonhover night-container is more specific than normal hover */
+    background: rgb(92, 92, 92); 
+    /* background: rgb(246, 73, 223); */
+}
+
+[data-container="night-container"] .add-comment{
+    color: #c9c9c9;
+    /* background: #5a51513b; */
+}
+
+[data-container="night-container"] .comment-id,
+[data-container="night-container"] .subcomment-id{
+    background: #222124;
+    padding: 20px;
+}
+
+[data-container="night-container"] .comment-text,
+[data-container="night-container"] .subcomment-text{
+    /* background: #4d4d4d2e; */
+}
+
+[data-container="night-container"] .image-container{
+    background: linear-gradient(45deg, #121212, #1b1e20);
+}
+
+[data-container="night-container"] .image{
+    box-shadow: 0px 0px 27px 9px black;
+}
+
+[data-container="night-container"] .more-by-container{
+    /* background: linear-gradient(45deg, black, #878787); */
+    background: #0000006e;
+}
+
+[data-container="night-container"] .more-by-theme{
+    width: 100%;
+    height: 100%;
+    /* position: fixed;    */
 }

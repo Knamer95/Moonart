@@ -69,7 +69,6 @@ export class UserService {
     }
 
     getIdentity() {
-
         let identity = JSON.parse(localStorage.getItem('identity'));
 
         if (identity && identity != undefined) {
@@ -118,7 +117,6 @@ export class UserService {
     }
 
     getUserByNick(nick): Observable<any> {
-
         return this._http.get(this.url + 'user/get_user?nick=' + nick);
     }
 
@@ -203,6 +201,7 @@ export class UserService {
                             }
                         }
                     }
+                    this.isFwError = 0;
                 },
                 error => {
                     console.log("getIsFollowing()");

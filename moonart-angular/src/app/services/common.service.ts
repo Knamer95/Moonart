@@ -35,6 +35,7 @@ export class CommonService {
                         if (response.config != null) {
                             config = {
                                 nightMode: response.config.nightMode,
+                                scroll: response.config.scroll,
                                 nsfw: response.config.nsfw,
                                 epilepsy: response.config.epilepsy,
                                 lang: response.config.lang,
@@ -45,12 +46,13 @@ export class CommonService {
                         }
                         else {
                             config = {
-                                nightMode: 0,
-                                nsfw: 0,
-                                epilepsy: 0,
+                                nightMode: false,
+                                scroll: true,
+                                nsfw: false,
+                                epilepsy: false,
                                 color: "zoe",
                                 lang: 1,
-                                share: 1,
+                                share: true,
                                 feed: 15
                             };
                         }
@@ -59,6 +61,7 @@ export class CommonService {
                     }
                     else {
                     }
+                    this.confError = 0;
                 },
                 error => {
                     /*
@@ -76,12 +79,13 @@ export class CommonService {
         }
         else {
             let config = {
-                nightMode: 0,
-                nsfw: 0,
-                epilepsy: 0,
+                nightMode: false,
+                scroll: true,
+                nsfw: false,
+                epilepsy: false,
                 color: "zoe",
                 lang: 1,
-                share: 1,
+                share: true,
                 feed: 15
             }
 
@@ -90,13 +94,14 @@ export class CommonService {
         }
     }
 
-    setUserConfig(that, token, data) { 
+    setUserConfig(that, token, data) {
         that._userService.setConfig(token, data).subscribe(
             response => {
                 if (!response.status || response.status != 'error') {
                     console.log(response);
                     let config = {
                         nightMode: response.config.nightMode,
+                        scroll: response.config.scroll,
                         nsfw: response.config.nsfw,
                         epilepsy: response.config.epilepsy,
                         lang: response.config.lang,
@@ -113,6 +118,8 @@ export class CommonService {
                 else {
                 }
                 // console.log(response);
+
+                this.setCError = 0;
             },
             error => {
                 console.log("setConfig()");
@@ -150,7 +157,7 @@ export class CommonService {
 
         if (!(lang > 0 && lang <= array.length))
             lang = 1;
-        
+
         this.render.setAttribute(document.querySelector(".container-ma"), "data-language", array[(lang - 1)]);
     }
 
@@ -240,6 +247,7 @@ export class CommonService {
     dateFormat(that, lang) {
 
         let str = that;
+        let secondsStr: any, minutesStr: any, hoursStr: any, daysStr: any, weeksStr: any, yearsStr: any;
 
         if (Date.parse(that) > 0) {
 
@@ -283,7 +291,52 @@ export class CommonService {
                 str = mydate.getDate() + " de " + month + " del " + mydate.getFullYear() + " a las " + ("0" + mydate.getHours()).substr(-2) + ":" + ("0" + mydate.getMinutes()).substr(-2);
             else // Default
                 str = mydate.getDate() + engNum + " of " + month + " " + mydate.getFullYear() + " at " + ("0" + mydate.getHours()).substr(-2) + ":" + ("0" + mydate.getMinutes()).substr(-2);
+
+            // Alternative to display seconds, minutes, days, weeks
+
+            let now = new Date;
+
+            // Get total seconds between the times
+            var delta = Math.abs(mydate - now) / 1000;
+            delta = delta > 0 ? delta : 0;  // Added so it won't show negative dates (if server clock is delayed, that could happen) 
+            // An alternative would be getting the current server date too
+            secondsStr = delta + " " + (hours === 1 ? "second" : "seconds");
+
+            var years = Math.floor(delta / (60 * 60 * 24 * 365));
+            yearsStr = years + " " + (years === 1 ? "year" : "years");
+
+            var weeks = Math.floor(delta / (60 * 60 * 24 * 7));
+            weeksStr = weeks + " " + (weeks === 1 ? "week" : "weeks");
+
+            var days = Math.floor(delta / (60 * 60 * 24));
+            daysStr = days + " " + (days === 1 ? "day" : "days");
+
+            // Calculate (and subtract) whole hours
+            var hours = Math.floor(delta / (60 * 60));
+            hoursStr = hours + " " + (hours === 1 ? "hour" : "hours");
+
+            // Calculate (and subtract) whole minutes
+            var minutes = Math.floor(delta / 60);
+            minutesStr = minutes + " " + (minutes === 1 ? "minute" : "minutes");
+
+            // What's left is seconds
+            // var seconds = delta % 60;  // In theory the modulus is not required
+            console.log(`${days} ${hours} ${minutes} ${delta}`)
+
+            if (delta < 60)
+                return secondsStr
+            else if (minutes < 60)
+                return minutesStr
+            else if (hours < 24)
+                return hoursStr
+            else if (days < 7)
+                return daysStr
+            else if (weeks < 54)
+                return weeksStr
+            else
+                return yearsStr
         }
+
         return str;
     }
 

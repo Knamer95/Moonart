@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ImageService } from '../../services/image.service';
 import { CommonService } from '../../services/common.service';
@@ -52,7 +52,7 @@ export class ProfileComponent implements OnInit {
         private render: Renderer2
     ) {
         this.page_title = "Profile";
-        
+
         /* Fixed so if user access a profile from @[+username] (mentions), it will show the proper username. e.g: @nAO !== @Nao */
         this.urlname = window.location.href.split("/");
         for (let i = 0; i < this.urlname.length; i++) {
@@ -150,26 +150,31 @@ export class ProfileComponent implements OnInit {
         );
     }
 
-    getUserData(){
+    getUserData() {
         this._userService.getUserByNick(this.urlname).subscribe(
             response => {
                 // console.log(response);
                 if (response.status == "success") {
-                    console.log(response);
+                    // console.log(response);
                     this._imageURL = "assets/profile-picture/" + response.user_info.image;
                     this.found = true;
                     this.username = response.user_info.nick
                     this.description = response.user_info.description;
-                    this.description = this._commonService.noscript(this.description);
-                    this.description = this._commonService.formatText(this.description);
-                    console.log(this.description);
+
+                    if (this.description) {
+                        this.description = this._commonService.noscript(this.description);
+                        this.description = this._commonService.formatText(this.description);
+                        // console.log(this.description);
+                    }
 
                     this._userService.getUserFollows(response.user_info.id).subscribe(
                         response => {
-                            if (response.status == "success"){
+                            if (response.status == "success") {
                                 this.followers = response.followers;
                                 this.following = response.following;
                             }
+
+                            this.fllwError = 0;
                         },
                         error => {
                             console.log("getUserFollows()");
@@ -184,6 +189,7 @@ export class ProfileComponent implements OnInit {
                 else {
                     this.found = false;
                 }
+                this.userError = 0;
             },
             error => {
                 console.log("getUserByNick()");

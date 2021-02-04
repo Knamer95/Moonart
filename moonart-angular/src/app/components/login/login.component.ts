@@ -44,9 +44,10 @@ export class LoginComponent implements OnInit {
         if (localStorage.getItem("config") == "undefined" || localStorage.getItem("config") == null) {
 
             let config = {
-                nightMode: 0,
-                nsfw: 0,
-                epilepsy: 0,
+                nightMode: false,
+                scroll: true,
+                nsfw: false,
+                epilepsy: false,
                 color: "zoe",
                 lang: 1,
                 share: true,
@@ -141,9 +142,10 @@ export class LoginComponent implements OnInit {
 
                     this.isFirst = true;
                     this.config = {
-                        nightMode: 0,
-                        nsfw: 0,
-                        epilepsy: 0,
+                        nightMode: false,
+                        scroll: true,
+                        nsfw: false,
+                        epilepsy: false,
                         color: "zoe",
                         lang: 1,
                         share: true,

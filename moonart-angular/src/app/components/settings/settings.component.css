@@ -4,7 +4,7 @@
   border-radius: 5px; 
   padding-top: 30px;
   padding-bottom: 40px;
-  width: 30%;
+  width: 800px;
   min-height: 70vh;
 }
 
@@ -26,8 +26,8 @@ input[type="checkbox"].switch:not(.night):checked{
   background: #0effb7;
 }
 
-input[type="checkbox"].night:checked{
-  background: #24244e;
+[data-container="night-container"] input[type="checkbox"].switch:checked{
+  background: #24244e !important;
 }
 
 input[type="checkbox"].switch:after{
@@ -97,6 +97,11 @@ input[type="number"] {
 }
 
 input[type="text"], input[type="number"]{
+  border: 1px solid #5656568c;
+  background: #ffffff14 !important;
+}
+
+[data-container="night-container"] input[type="text"], [data-container="night-container"] input[type="number"]{
   border: 1px solid #ffffff8c;
   background: #ffffff14 !important;
 }

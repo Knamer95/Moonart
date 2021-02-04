@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ImageService } from '../../services/image.service';
 import { CommonService } from '../../services/common.service';
@@ -13,6 +13,7 @@ import { Renderer2 } from '@angular/core';
       <div id="image-box">
         <div #imageParent class="image-parent" id="hover-parent">
           <a [routerLink]="['/images', image[0].id]" class="image-wrapper">
+            <div class="gradient-mask"></div>
             <img src="assets/public/{{image[0].url}}" class="image-element" id="id-{{image[0].id}}" (mouseleave)="_imageService.out($event, this, null);">
           </a>
           <span class="image-description">
@@ -79,6 +80,9 @@ export class LikesComponent implements OnInit {
   public nightMode: boolean;
   public nsfw: boolean;
   public epilepsy: boolean;
+  public scroll: boolean;
+  public isLast: boolean;
+  public loaded: boolean;
   public username: any;
   public id: string;
   public url: string;
@@ -100,9 +104,14 @@ export class LikesComponent implements OnInit {
     }
     this.interaction = "liked";
     this.page = 1;
+    this.scroll = true; // Depends on user settings
   }
 
   ngOnInit() {
+    this.images = [];
+    this.isLast == false;
+    this.loaded == false;
+
     this.loadUser();
     this._userService.userInfo(this, this.username);
     this._route.params.subscribe(params => {
@@ -116,33 +125,54 @@ export class LikesComponent implements OnInit {
       if (localStorage.getItem("config") != null || localStorage.getItem("config") != undefined) {
         this.nsfw = JSON.parse(localStorage.getItem("config")).nsfw;
         this.epilepsy = JSON.parse(localStorage.getItem("config")).epilepsy;
+        this.scroll = JSON.parse(localStorage.getItem("config")).scroll;
       }
     });
 
     this._userService.getUserByNick(this.username).subscribe(
       response => {
-          console.log(response);
-          this.id = response.user_info.id;
-          this.getLikedPics();
+        // console.log(response);
+        this.id = response.user_info.id;
+        this.getLikedPics();
       },
       error => {
-          console.log(error);
+        console.log(error);
       }
-  );
+    );
+  }
+
+  @HostListener("window:scroll", ['$event'])
+  doSomethingOnWindowsScroll($event: Event) { // Copied from home.component.ts -> If possible, make this a common function of image.service.ts
+
+    var d = document.documentElement;
+    var zoom = 0.8; // Establecido en CSS
+    var offset = d.scrollTop + window.innerHeight;
+    var height = d.offsetHeight * zoom;
+
+    // console.log('offset = ' + offset);
+    // console.log('height = ' + height);
+
+    if (offset >= (height - 5) && this.isLast == false && this.loaded == true) { // 5 is the margin of error
+      this.loaded = false; // Checker so it doesn't skip more than one page
+      this.page = this.page ? this.page : 1;
+
+      this.page++;
+      this.getLikedPics();
+    }
   }
 
   loadUser() {
     this.identity = this._userService.getIdentity();
     this.token = this._userService.getToken();
-    if (this.identity==null){
+    if (this.identity == null) {
       this.identity = {
-          id: 0,
-          nick: 'guest'
+        id: 0,
+        nick: 'guest'
       };
-  }
+    }
   }
 
-  getLikedPics(){
+  getLikedPics() {
     if (this.username != this.identity.nick) {
       this._imageService.showProfileInteractions(this, this.page, this.nsfw, this.epilepsy, this.id, this.interaction, this.username);
     }
@@ -152,14 +182,14 @@ export class LikesComponent implements OnInit {
     }
   }
 
-  nextPage(param){
-    if (param == "++"){
+  nextPage(param) {
+    if (param == "++") {
       this.page++;
     }
-    else if (param == "--"){
+    else if (param == "--") {
       this.page--;
     }
-    else{
+    else {
       this.page = param;
     }
     this.ngOnInit();

@@ -103,7 +103,7 @@ export class ImageService {
     checkInteractions(token, data): Observable<any> {
         let json = JSON.stringify(data);
         let params = 'json=' + json;
-        console.log(data);
+        // console.log(data);
 
         let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
             .set('Authorization', token);
@@ -168,30 +168,45 @@ export class ImageService {
         this.getAllImages(page, nsfw, epilepsy, user, isProfileUser).subscribe(
             response => {
                 console.log(response);
-                that.images = response.images;
 
-                var number_pages = [];
-                for (let i = 1; i <= response.total_pages; i++) {
-                    number_pages.push(i);
-                }
+                if (!that.scroll) {
+                    that.images = response.images;
 
-                that.number_pages = number_pages;
-                that.total_pages = response.total_pages;
-                if (page >= 2) {
-                    that.prev_page = page - 1;
+
+                    var number_pages = [];
+                    for (let i = 1; i <= response.total_pages; i++) {
+                        number_pages.push(i);
+                    }
+
+                    that.number_pages = number_pages;
+                    that.total_pages = response.total_pages;
+                    if (page >= 2) {
+                        that.prev_page = page - 1;
+                    }
+                    else {
+                        that.prev_page = 1;
+                    }
+
+                    if (page < response.total_pages) {
+                        that.next_page = page + 1;
+                    }
+                    else {
+                        that.next_page = response.total_pages;
+                    }
                 }
                 else {
-                    that.prev_page = 1;
+                    for (let i = 0; i < response.images.length; i++) {
+                        that.images.push(response.images[i]);
+                    }
+
+                    that.loaded = true;
+                    that.isLast = that.images.length == response.total_items ? true : false;
                 }
 
-                if (page < response.total_pages) {
-                    that.next_page = page + 1;
-                }
-                else {
-                    that.next_page = response.total_pages;
-                }
-
+                // console.log(that.images);
                 this.getInteractions(that);
+
+                that.imagError = 0;
             },
             error => {
                 console.log("getAllImages()");
@@ -209,30 +224,42 @@ export class ImageService {
         this.getSearchImages(page, nsfw, epilepsy, querySelector, search).subscribe(
             response => {
                 console.log(response);
-                that.images = response.images;
 
-                var number_pages = [];
-                for (let i = 1; i <= response.total_pages; i++) {
-                    number_pages.push(i);
-                }
+                if (!that.scroll) {
+                    that.images = response.images;
 
-                that.number_pages = number_pages;
-                that.total_pages = response.total_pages;
-                if (page >= 2) {
-                    that.prev_page = page - 1;
+                    var number_pages = [];
+                    for (let i = 1; i <= response.total_pages; i++) {
+                        number_pages.push(i);
+                    }
+
+                    that.number_pages = number_pages;
+                    that.total_pages = response.total_pages;
+                    if (page >= 2) {
+                        that.prev_page = page - 1;
+                    }
+                    else {
+                        that.prev_page = 1;
+                    }
+
+                    if (page < response.total_pages) {
+                        that.next_page = page + 1;
+                    }
+                    else {
+                        that.next_page = response.total_pages;
+                    }
                 }
                 else {
-                    that.prev_page = 1;
-                }
+                    for (let i = 0; i < response.images.length; i++) {
+                        that.images.push(response.images[i]);
+                    }
 
-                if (page < response.total_pages) {
-                    that.next_page = page + 1;
-                }
-                else {
-                    that.next_page = response.total_pages;
+                    that.loaded = true;
+                    that.isLast = that.images.length == response.total_items ? true : false;
                 }
 
                 this.getInteractions(that);
+                that.searError = 0;
             },
             error => {
                 console.log("getSearchImages()");
@@ -247,32 +274,43 @@ export class ImageService {
 
 
     showProfileInteractions(that, page, nsfw, epilepsy, user_id, interaction, user = null) {
-
         this.getProfileImages(page, nsfw, epilepsy, user_id, interaction, user = "").subscribe(
             response => {
-                that.images = response.images;
                 console.log(response);
 
-                var number_pages = [];
-                for (let i = 1; i <= response.total_pages; i++) {
-                    number_pages.push(i);
-                }
+                if (!that.scroll) {
+                    that.images = response.images;
 
-                that.number_pages = number_pages;
-                that.total_pages = response.total_pages;
-                if (page >= 2) {
-                    that.prev_page = page - 1;
+                    var number_pages = [];
+                    for (let i = 1; i <= response.total_pages; i++) {
+                        number_pages.push(i);
+                    }
+
+                    that.number_pages = number_pages;
+                    that.total_pages = response.total_pages;
+                    if (page >= 2) {
+                        that.prev_page = page - 1;
+                    }
+                    else {
+                        that.prev_page = 1;
+                    }
+
+                    if (page < response.total_pages) {
+                        that.next_page = page + 1;
+                    }
+                    else {
+                        that.next_page = response.total_pages;
+                    }
                 }
                 else {
-                    that.prev_page = 1;
+                    for (let i = 0; i < response.images.length; i++) {
+                        that.images.push(response.images[i]);
+                    }
+
+                    that.loaded = true;
+                    that.isLast = that.images.length == response.total_items ? true : false;
                 }
 
-                if (page < response.total_pages) {
-                    that.next_page = page + 1;
-                }
-                else {
-                    that.next_page = response.total_pages;
-                }
                 this.getInteractions(that);
             },
             error => {
@@ -284,23 +322,30 @@ export class ImageService {
     getInteractions(that, unique = null, env = null) {  // Called by showAllImages, showAllFavs... 'that' is 'this' of the element that calls it 
         // (home.component, images.component...)
         if (that.identity != null && that.identity.nick != 'guest') {
-            var less = false;
-            console.log(that.images.length);
+            var less: boolean = false;
+            var intImages: Array<any>;
+
+            // console.log(that.images.length);
             if (unique) {
-                that.images.length = 1;
+                intImages = that.image;
+                intImages.length = 1;
+                // console.log(that.image);
+            }
+            else{
+                intImages = that.images;
             }
 
-            for (let i = 0; i < that.images.length; i++) {
+            for (let i = 0; i < intImages.length; i++) {
 
                 var checkLoader = function checkLoader(those, i, chckError = 0) {
                     var imageId, selector;
 
                     if (unique) {
-                        imageId = that.images.id;
+                        imageId = intImages.id;
                         selector = ".image-actions";
                     }
                     else {
-                        imageId = that.images[i][0].id;
+                        imageId = intImages[i][0].id;
                         selector = "#id-" + imageId;
                     }
 
@@ -320,33 +365,62 @@ export class ImageService {
                             if (document.querySelector(selector)) {
 
                                 if (response.liked) {
-                                    that.render.addClass(document.querySelector(selector).parentElement
-                                        .parentElement.querySelector(".image-heart"), "image-liked");
+                                    that.render.addClass(document.querySelector(selector).parentElement.parentElement.querySelector(".image-heart"), "image-liked");
                                 }
                                 if (response.faved) {
-                                    that.render.addClass(document.querySelector(selector).parentElement
-                                        .parentElement.querySelector(".image-star"), "image-faved");
+                                    that.render.addClass(document.querySelector(selector).parentElement.parentElement.querySelector(".image-star"), "image-faved");
                                 }
                                 if (response.shared) {
-                                    that.render.addClass(document.querySelector(selector).parentElement
-                                        .parentElement.querySelector(".image-arrows"), "image-shared");
+                                    that.render.addClass(document.querySelector(selector).parentElement.parentElement.querySelector(".image-arrows"), "image-shared");
                                 }
                             }
-                            else if (env === 'imageComponent' || env === 'feedComponent') {
-                                if (response.liked)
+                            else if (env === 'imageComponent') {
+                                if (response.liked) {
+                                    that.render.setAttribute(document.querySelector(".like-container"), "data-status", "1");
+                                    document.querySelector(".like-container span").textContent = "LIKED";
+                                    document.querySelector(".like-container i").classList.remove("far");
+                                    document.querySelector(".like-container i").classList.add("fas");
+                                } else {
+                                    that.render.setAttribute(document.querySelector(".like-container"), "data-status", "0");
+                                    document.querySelector(".like-container span").textContent = "LIKE";
+                                    document.querySelector(".like-container i").classList.remove("fas");
+                                    document.querySelector(".like-container i").classList.add("far");
+                                }
+                                if (response.faved) {
+                                    that.render.setAttribute(document.querySelector(".fav-container"), "data-status", "1");
+                                    document.querySelector(".fav-container span").textContent = "ADDED TO FAVOURITES";
+                                    document.querySelector(".fav-container i").classList.remove("far");
+                                    document.querySelector(".fav-container i").classList.add("fas");
+                                } else {
+                                    that.render.setAttribute(document.querySelector(".fav-container"), "data-status", "0");
+                                    document.querySelector(".fav-container span").textContent = "ADD TO FAVOURITES";
+                                    document.querySelector(".fav-container i").classList.remove("fas");
+                                    document.querySelector(".fav-container i").classList.add("far");
+                                }
+                                if (response.shared) {
+                                    that.render.setAttribute(document.querySelector(".share-container"), "data-status", "1");
+                                    document.querySelector(".share-container span").textContent = "SHARED";
+                                } else {
+                                    that.render.setAttribute(document.querySelector(".share-container"), "data-status", "0");
+                                    document.querySelector(".share-container span").textContent = "SHARE";
+                                }
+                            }
+                            else if (env === 'feedComponent') {
+                                if (response.liked) {
                                     that.render.setAttribute(document.querySelector(".fa-heart"), "data-status", "1");
-                                else
+                                } else {
                                     that.render.setAttribute(document.querySelector(".fa-heart"), "data-status", "0");
-
-                                if (response.faved)
+                                }
+                                if (response.faved) {
                                     that.render.setAttribute(document.querySelector(".fa-star"), "data-status", "1");
-                                else
+                                } else {
                                     that.render.setAttribute(document.querySelector(".fa-star"), "data-status", "0");
-
-                                if (response.shared)
+                                }
+                                if (response.shared) {
                                     that.render.setAttribute(document.querySelector(".fa-retweet"), "data-status", "1");
-                                else
+                                } else {
                                     that.render.setAttribute(document.querySelector(".fa-retweet"), "data-status", "0");
+                                }
                             }
 
                             var hasBeen = false;
@@ -429,38 +503,54 @@ export class ImageService {
 
                     that._imageService.interact(that.token, data, estado).subscribe(
                         response => {
-
+                            console.log(env);
                             if (!env) {
-                                if (response.params.liked)
+                                if (response.params.liked) {
                                     that.render.addClass(newTarget.parentElement.querySelector(".image-heart"), "image-liked");
-                                else
+                                } else {
                                     that.render.removeClass(newTarget.parentElement.querySelector(".image-heart"), "image-liked");
-
-                                if (response.params.faved)
+                                }
+                                if (response.params.faved) {
                                     that.render.addClass(newTarget.parentElement.querySelector(".image-star"), "image-faved");
-                                else
+                                } else {
                                     that.render.removeClass(newTarget.parentElement.querySelector(".image-star"), "image-faved");
-
-                                if (response.params.shared)
+                                }
+                                if (response.params.shared) {
                                     that.render.addClass(newTarget.parentElement.querySelector(".image-arrows"), "image-shared");
-                                else
+                                } else {
                                     that.render.removeClass(newTarget.parentElement.querySelector(".image-arrows"), "image-shared");
+                                }
                             }
                             else if (env === 'imageComponent') {
-                                if (response.params.liked)
-                                    that.render.setAttribute(document.querySelector(".fa-heart"), "data-status", "1");
-                                else
-                                    that.render.setAttribute(document.querySelector(".fa-heart"), "data-status", "0");
-
-                                if (response.params.faved)
-                                    that.render.setAttribute(document.querySelector(".fa-star"), "data-status", "1");
-                                else
-                                    that.render.setAttribute(document.querySelector(".fa-star"), "data-status", "0");
-
-                                if (response.params.shared)
-                                    that.render.setAttribute(document.querySelector(".fa-retweet"), "data-status", "1");
-                                else
-                                    that.render.setAttribute(document.querySelector(".fa-retweet"), "data-status", "0");
+                                if (response.params.liked) {
+                                    that.render.setAttribute(document.querySelector(".like-container"), "data-status", "1");
+                                    document.querySelector(".like-container span").textContent = "LIKED";
+                                    document.querySelector(".like-container i").classList.remove("far");
+                                    document.querySelector(".like-container i").classList.add("fas");
+                                } else {
+                                    that.render.setAttribute(document.querySelector(".like-container"), "data-status", "0");
+                                    document.querySelector(".like-container span").textContent = "LIKE";
+                                    document.querySelector(".like-container i").classList.remove("fas");
+                                    document.querySelector(".like-container i").classList.add("far");
+                                }
+                                if (response.params.faved) {
+                                    that.render.setAttribute(document.querySelector(".fav-container"), "data-status", "1");
+                                    document.querySelector(".fav-container span").textContent = "ADDED TO FAVOURITES";
+                                    document.querySelector(".fav-container i").classList.remove("far");
+                                    document.querySelector(".fav-container i").classList.add("fas");
+                                } else {
+                                    that.render.setAttribute(document.querySelector(".fav-container"), "data-status", "0");
+                                    document.querySelector(".fav-container span").textContent = "ADD TO FAVOURITES";
+                                    document.querySelector(".fav-container i").classList.remove("fas");
+                                    document.querySelector(".fav-container i").classList.add("far");
+                                }
+                                if (response.params.shared) {
+                                    that.render.setAttribute(document.querySelector(".share-container"), "data-status", "1");
+                                    document.querySelector(".share-container span").textContent = "SHARED";
+                                } else {
+                                    that.render.setAttribute(document.querySelector(".share-container"), "data-status", "0");
+                                    document.querySelector(".share-container span").textContent = "SHARE";
+                                }
                             }
 
                             if (env) {
