@@ -33,6 +33,10 @@ Implemented changes:
 
 #2021004 Avoid user being able to comment empty comments -> Controll what is being submitted, and also add an ngForm condition of required to the textarea.
 
+#2021006 Visualizing an image doesn't really let you appreciate it, because of the description at the right. Change the design so description is under pic.
+
+#2021007 Feed looks too big, too little info in too much space. Look for better solutions.
+
 
 Pending (priority order):
 
@@ -40,13 +44,7 @@ Pending (priority order):
   Idea: If screen width is 10 units (we would want to fit 4 there... would depend on screen size though). 
   Using 4 as a case, if an image with adjusted height isn't 5 or more, square of 2.5 units, otherwise rectangle of 5/7.5 units -> Problem, would need to save in the image attributes its size in units depending on the media screen size. 
 
-#2021006 Visualizing an image doesn't really let you appreciate it, because of the description at the right. Change the design so description is under pic.
-
-#2021007 Feed looks too big, too little info in too much space. Look for better solutions.
-
 #2021008 Translate comments and documentation to English.
-
-  --- Commit after you reach this part ---
 
 #2021009 Allow user to navigate through artist pictures by pressing next / prev (determine if the pic being shown is the first or last, check for next image taking in account that it's not hidden, or sensitive content if chosen not to show)
 
@@ -74,7 +72,7 @@ Pending (priority order):
 
 #2021020 Regarding issue #2021004, try to use a generic function on image.service.ts, instead of how it's done. It has a scrollable event, maybe it's not possible.
 
-#2021021 Update the general interface (uploading images, logn, etc) so it looks more light. Thinner and more simple buttons.
+#2021021 Update the general interface (uploading images, login, etc) so it looks more light. Thinner and more simple buttons.
 
 #2021022 Fix problem with comments' length. It allows 300 chars, but it's saved as JSON, and emojis are 12 characters, so any comment with more than 300 chars will cause an error. Also add a counter like  (map themso they take 3 characters instead, and save as normal text, not JSON. Also with special chars like ´ `)
 

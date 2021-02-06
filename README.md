@@ -39,7 +39,7 @@ _It's important that the folder is located at the root of the web-server, since 
 D:\Programs\wamp64\www\moonart\moonart-angular> npm install -g @angular/cli@7.3.8
 ```
 
-_`npm install` should install everything from `package-lock.json`. However, some dependencies are not downloadable anymore, so it will cause some errors. I will try to update Moonart so it uses non deprecated libraries in the future. If you have any error, and are unable to fix it, please contact me. (My email can be found below, in #Contribute._
+_`npm install` should install everything from `package-lock.json`. However, some dependencies are not downloadable anymore, so it will cause some errors. I will try to update MoonArt so it uses non deprecated libraries in the future. If you have any error, and are unable to fix it, please contact me. (My email can be found below, in `#Contribute`)._
 
 
 6) Create two virtual hosts. In Windows, it should be located in somewhere like `C:\Windows\System32\drivers\etc`. Add the lines:
@@ -49,9 +49,9 @@ _`npm install` should install everything from `package-lock.json`. However, some
 127.0.0.1 moonart-api.io
 ```
 
-_You will need administrator permissions to edit this file_
+_You will need administrator permissions to edit this file._
 
-7) Change (or create a `httpd-vhosts.conf`) file. This was needed for `WAMP`, it may be different on other platforms. THere's an example of how your file should look like in the `misc` folder. The CORS line must be commented in current `WAMP` versions.
+7) Change (or create a `httpd-vhosts.conf`) file. This was needed for `WAMP`, it may be different on other platforms. There's an example of how your file should look like in the `misc` folder. The CORS line must be commented in current `WAMP` versions.
 
 
 8) Add these lines in `httpd.conf`, after `IfModule dir_module` (to avoid CORS issue)
@@ -81,7 +81,7 @@ Pass: (empty)
 ```
 
 
-10) Extract the files from `moonart/api-rest-symfony/api-rest-symfony.rar` on the `Symfony` root path (`moonart/api-rest-symfony/*here*`). This way, you won't need to install Symfony. If you wanted to, I installed the skeleton, and some libraries that you can find there.
+10) Extract the files from `moonart/api-rest-symfony/api-rest-symfony.rar` on the `Symfony` root path (`moonart/api-rest-symfony/*here*`). This way, you won't need to install `Symfony`. If you wanted to, I installed the skeleton, and some libraries that you can find there.
 
 And you should be ready to go!
 
@@ -91,7 +91,7 @@ Notes:
 
 If you were running your web-server, you may need to reload it. 
 
-You may encounter a problem the first time you log in into an account. Reloading the page fixes it, and it doesn't seem to happen ever again, even if you log in other accounts. If the images aren't loading, please check the console. It may be due to Cross-Origin requests being blocked. (In `WAMP`, adding the lines from point 8 solved it for me)
+You may encounter a problem the first time you log in into an account. Reloading the page fixes it, and it doesn't seem to happen ever again, even if you log in other accounts. If the images aren't loading, please check the console. It may be due to `Cross-Origin` requests being blocked. (In `WAMP`, adding the lines from point 8 solved it for me)
 
 I will give the choice to the user to set the paths of the webpage in a future version (using set vhosts or not), instead of forcing my two virtual hosts and making things overcomplicated...
 
@@ -108,9 +108,9 @@ Run the `Angular` project from the terminal:
 ng serve --live-reload false
 ```
 
-The reason of setting live reloading to false is that in a developer environment, `Angular` reloads every time it detects some changes. Yhis means that if you upload an image (which will be saved in /api-rest-symfony/public), it will consider this a change, and it will reload the script, and it won't redirect to home after uploading it, like it should.
+The reason of setting live reloading to false is that in a developer environment, `Angular` reloads every time it detects some changes. Yhis means that if you upload an image (which will be saved in `moonart/api-rest-symfony/public`), it will consider this a change, and it will reload the script, and it won't redirect to home after uploading it, like it should.
 
-If something is not working properly, feel free to message me! The email is specified below, in #Contribute.
+If something is not working properly, feel free to message me! The email is specified below, in `#Contribute`.
 
 
 ## Deployment 📦
