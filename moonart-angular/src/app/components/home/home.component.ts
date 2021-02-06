@@ -18,8 +18,9 @@ export class HomeComponent implements OnInit {
     public identity: any;
     public token: string;
     public images: Array<Object>;
-    public estado: boolean;
+    public status: boolean;
     public page: number;
+    public hasElements: boolean;
     public next_page: number;
     public prev_page: number;
     public number_pages: number;
@@ -65,6 +66,8 @@ export class HomeComponent implements OnInit {
 
             this._commonService.changeNightModeAttr(this.nightMode);
         }
+
+        this.hasElements = true; // If false or unset, it will show the message of no elements found until the AJAX call is done
 
         this.lang = JSON.parse(localStorage.getItem("config")).lang;
 
@@ -117,7 +120,7 @@ export class HomeComponent implements OnInit {
                 this.nsfw = JSON.parse(localStorage.getItem("config")).nsfw;
                 this.epilepsy = JSON.parse(localStorage.getItem("config")).epilepsy;
             }
-            this._imageService.showAllImages(this, this.page, this.nsfw, this.epilepsy);
+            this._imageService.showAllImages(this, this.page, this.nsfw, this.epilepsy, null, null, "pageImages");
         });
     }
 
@@ -133,6 +136,8 @@ export class HomeComponent implements OnInit {
                 lang: "english",
                 attributes: {
                     title: "Latest",
+                    suchEmpty: "Such empty!",
+                    tip: "There are no pictures yet. Why not be the first one?",
                     by: "By",
                     previous: "Previous",
                     next: "Next"
@@ -143,6 +148,8 @@ export class HomeComponent implements OnInit {
                 lang: "spanish",
                 attributes: {
                     title: "Novedades",
+                    suchEmpty: "¡Qué vacío!",
+                    tip: "No hay imágenes todavía. ¿Por qué no ser el primero?",
                     by: "Por",
                     previous: "Anterior",
                     next: "Siguiente"

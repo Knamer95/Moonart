@@ -84,7 +84,7 @@
     font-size: 16px;
     /* position: absolute;
     bottom: -5px; */
-    color: rgba(120, 120, 120, 0.685);
+    color: rgb(0 0 0 / 69%);
     position: relative;
     bottom: -5px;
     text-align: right;
@@ -104,4 +104,13 @@
 
 .image-container{
     margin: 0;
+}
+
+[data-container="night-container"] .date{
+    color: rgb(255 255 255 / 69%)
+}
+
+[data-container="night-container"] .tweet{
+    border-top: 1px solid rgb(65, 65, 65);
+    border-bottom: 1px solid rgb(65, 65, 65);
 }

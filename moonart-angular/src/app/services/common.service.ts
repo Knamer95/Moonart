@@ -244,99 +244,102 @@ export class CommonService {
             this._router.navigateByUrl("/profile/" + link)
     }
 
-    dateFormat(that, lang) {
+    dateFormat(that, lang, from) {
 
         let str = that;
         let secondsStr: any, minutesStr: any, hoursStr: any, daysStr: any, weeksStr: any, yearsStr: any;
 
         if (Date.parse(that) > 0) {
-
             let mydate = new Date(that);
 
-            let month = [
-                ["January", "Enero"],
-                ["February", "Febrero"],
-                ["March", "Marzo"],
-                ["April", "Abril"],
-                ["May", "Mayo"],
-                ["June", "Junio"],
-                ["July", "Julio"],
-                ["August", "Agosto"],
-                ["September", "Septiembre"],
-                ["October", "Octubre"],
-                ["November", "Noviembre"],
-                ["December", "Diciembre"]
-            ][mydate.getMonth()][lang - 1];
+            if (from === "loadImage") {
 
-            let engNum = "";
+                let month = [
+                    ["January", "Enero"],
+                    ["February", "Febrero"],
+                    ["March", "Marzo"],
+                    ["April", "Abril"],
+                    ["May", "Mayo"],
+                    ["June", "Junio"],
+                    ["July", "Julio"],
+                    ["August", "Agosto"],
+                    ["September", "Septiembre"],
+                    ["October", "Octubre"],
+                    ["November", "Noviembre"],
+                    ["December", "Diciembre"]
+                ][mydate.getMonth()][lang - 1];
 
-            switch (mydate.getDate()) {
-                case 1: case 21: case 31:
-                    engNum = "st";
-                    break;
-                case 2: case 22:
-                    engNum = "nd";
-                    break;
-                case 3: case 23:
-                    engNum = "rd";
-                    break;
-                default:
-                    engNum = "th";
-                    break;
+                let engNum = "";
+
+                switch (mydate.getDate()) {
+                    case 1: case 21: case 31:
+                        engNum = "st";
+                        break;
+                    case 2: case 22:
+                        engNum = "nd";
+                        break;
+                    case 3: case 23:
+                        engNum = "rd";
+                        break;
+                    default:
+                        engNum = "th";
+                        break;
+                }
+                if (lang === 1)
+                    str = mydate.getDate() + engNum + " of " + month + " of " + mydate.getFullYear() + " at " + ("0" + mydate.getHours()).substr(-2) + ":" + ("0" + mydate.getMinutes()).substr(-2);
+                else if (lang === 2)
+                    str = mydate.getDate() + " de " + month + " del " + mydate.getFullYear() + " a las " + ("0" + mydate.getHours()).substr(-2) + ":" + ("0" + mydate.getMinutes()).substr(-2);
+                else // Default
+                    str = mydate.getDate() + engNum + " of " + month + " " + mydate.getFullYear() + " at " + ("0" + mydate.getHours()).substr(-2) + ":" + ("0" + mydate.getMinutes()).substr(-2);
+
+            } else {
+                // Alternative to display seconds, minutes, days, weeks
+
+                let now = new Date;
+
+                // Get total seconds between the times
+                var delta = Math.abs(mydate.getTime() - now.getTime()) / 1000;
+                delta = delta > 0 ? delta : 0;  // Added so it won't show negative dates (if server clock is delayed, that could happen)
+                // An alternative would be getting the current server date too
+
+                var seconds = Math.floor(delta);
+                secondsStr = seconds + " " + (seconds === 1 ? "second" : "seconds");
+
+                var years = Math.floor(delta / (60 * 60 * 24 * 365));
+                yearsStr = years + " " + (years === 1 ? "year" : "years");
+
+                var weeks = Math.floor(delta / (60 * 60 * 24 * 7));
+                weeksStr = weeks + " " + (weeks === 1 ? "week" : "weeks");
+
+                var days = Math.floor(delta / (60 * 60 * 24));
+                daysStr = days + " " + (days === 1 ? "day" : "days");
+
+                // Calculate (and subtract) whole hours
+                var hours = Math.floor(delta / (60 * 60));
+                hoursStr = hours + " " + (hours === 1 ? "hour" : "hours");
+
+                // Calculate (and subtract) whole minutes
+                var minutes = Math.floor(delta / 60);
+                minutesStr = minutes + " " + (minutes === 1 ? "minute" : "minutes");
+
+                // What's left is seconds
+                // var seconds = delta % 60;  // In theory the modulus is not required
+                // console.log(`${days} ${hours} ${minutes} ${delta}`)
+
+                if (delta < 60)
+                    return secondsStr
+                else if (minutes < 60)
+                    return minutesStr
+                else if (hours < 24)
+                    return hoursStr
+                else if (days < 7)
+                    return daysStr
+                else if (weeks < 54)
+                    return weeksStr
+                else
+                    return yearsStr
             }
-
-            if (lang === 1)
-                str = mydate.getDate() + engNum + " of " + month + " of " + mydate.getFullYear() + " at " + ("0" + mydate.getHours()).substr(-2) + ":" + ("0" + mydate.getMinutes()).substr(-2);
-            else if (lang === 2)
-                str = mydate.getDate() + " de " + month + " del " + mydate.getFullYear() + " a las " + ("0" + mydate.getHours()).substr(-2) + ":" + ("0" + mydate.getMinutes()).substr(-2);
-            else // Default
-                str = mydate.getDate() + engNum + " of " + month + " " + mydate.getFullYear() + " at " + ("0" + mydate.getHours()).substr(-2) + ":" + ("0" + mydate.getMinutes()).substr(-2);
-
-            // Alternative to display seconds, minutes, days, weeks
-
-            let now = new Date;
-
-            // Get total seconds between the times
-            var delta = Math.abs(mydate.getTime() - now.getTime()) / 1000;
-            delta = delta > 0 ? delta : 0;  // Added so it won't show negative dates (if server clock is delayed, that could happen)
-            // An alternative would be getting the current server date too
-            secondsStr = delta + " " + (hours === 1 ? "second" : "seconds");
-
-            var years = Math.floor(delta / (60 * 60 * 24 * 365));
-            yearsStr = years + " " + (years === 1 ? "year" : "years");
-
-            var weeks = Math.floor(delta / (60 * 60 * 24 * 7));
-            weeksStr = weeks + " " + (weeks === 1 ? "week" : "weeks");
-
-            var days = Math.floor(delta / (60 * 60 * 24));
-            daysStr = days + " " + (days === 1 ? "day" : "days");
-
-            // Calculate (and subtract) whole hours
-            var hours = Math.floor(delta / (60 * 60));
-            hoursStr = hours + " " + (hours === 1 ? "hour" : "hours");
-
-            // Calculate (and subtract) whole minutes
-            var minutes = Math.floor(delta / 60);
-            minutesStr = minutes + " " + (minutes === 1 ? "minute" : "minutes");
-
-            // What's left is seconds
-            // var seconds = delta % 60;  // In theory the modulus is not required
-            // console.log(`${days} ${hours} ${minutes} ${delta}`)
-
-            if (delta < 60)
-                return secondsStr
-            else if (minutes < 60)
-                return minutesStr
-            else if (hours < 24)
-                return hoursStr
-            else if (days < 7)
-                return daysStr
-            else if (weeks < 54)
-                return weeksStr
-            else
-                return yearsStr
         }
-
         return str;
     }
 

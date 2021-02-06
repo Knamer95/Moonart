@@ -164,10 +164,13 @@ export class ImageService {
 
     // Common functions to multiple components
 
-    showAllImages(that, page, nsfw, epilepsy, user = null, isProfileUser = false) {
+    showAllImages(that, page, nsfw, epilepsy, user = null, isProfileUser = false, $from = "") {
         this.getAllImages(page, nsfw, epilepsy, user, isProfileUser).subscribe(
             response => {
                 console.log(response);
+                if ($from === "pageImages")
+                    that.hasElements = (response.images.length > 0 || page > 1) ? true : false; // There should never be a totalSize equal to 0 after scrolling, since it returns isLast
+
 
                 if (!that.scroll) {
                     that.images = response.images;
@@ -212,7 +215,7 @@ export class ImageService {
                 console.log("getAllImages()");
                 console.log("Ero..." + " attempt: " + that.imagError);
                 if (that.imagError < 5) {
-                    this.showAllImages(that, page, nsfw, epilepsy, user = null);
+                    this.showAllImages(that, page, nsfw, epilepsy, user, false, "showAllImages");
                     that.imagError++;
                 }
             }
@@ -319,7 +322,7 @@ export class ImageService {
         );
     }
 
-    getInteractions(that, unique = null, env = null) {  // Called by showAllImages, showAllFavs... 'that' is 'this' of the element that calls it 
+    getInteractions(that, unique = null, env = null) {  // Called by , showAllFavs... 'that' is 'this' of the element that calls it 
         // (home.component, images.component...)
         if (that.identity != null && that.identity.nick != 'guest') {
             var less: boolean = false;

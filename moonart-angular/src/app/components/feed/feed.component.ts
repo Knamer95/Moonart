@@ -5,6 +5,14 @@ import { CommonService } from '../../services/common.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Renderer2 } from '@angular/core';
 
+/**
+ * 
+ * The share feed is ordered by shared time, not by image upload time! On the back-end it checks if they have been repeated, with a set number...
+ * This means that if it' hasn't been shared in the last x (being x the number of elements shown), it will show it again. So if an image has been
+ * shared in those x elements more than once, it'll only show it once. Otherwise it'll show more than once. Needs to be changed so it checks the shown
+ * ones on a bigger scale. Like 100. More than that should be fine to repeat it. (Send an array of the current shown images)
+ * 
+ */
 
 @Component({
     selector: 'app-feed',
@@ -21,11 +29,6 @@ export class FeedComponent implements OnInit {
     public images;
     public imageId: any;
 
-    // public page;
-    // public next_page;
-    // public prev_page;
-    // public number_pages;
-    // public total_pages;
     public nightMode: boolean;
     public nsfw: boolean;
     public epilepsy: boolean;
@@ -33,6 +36,8 @@ export class FeedComponent implements OnInit {
     public followStatus: string;
     public element: number;
     public found: boolean;
+    public hasElements: boolean;
+    public times: number; // Keeps the number of times it has loaded new items
     public description: string;
     public isFollowing: boolean;
     public _imageURL: string;
@@ -58,14 +63,14 @@ export class FeedComponent implements OnInit {
     }
 
     ngOnInit() {
-
         this.loadUser();
         if (localStorage.getItem("config") != null && localStorage.getItem("config") != "undefined") {
-
             this.nightMode = JSON.parse(localStorage.getItem("config")).nightMode;
             this._commonService.changeNightModeAttr(this.nightMode);
-
         }
+        this.hasElements = true; // If false or unset, it will show the message of no elements found until the AJAX call is done
+        this.times = 0;
+
         this.loaded = true;
         this.index = 0;
         this.isLast = false;
@@ -127,57 +132,65 @@ export class FeedComponent implements OnInit {
         let quantity = JSON.parse(localStorage.getItem("config")).feed;
         this._imageService.getShared(this.token, index, quantity, this.nsfw, this.epilepsy).subscribe(
             response => {
+
+                console.log(response);
                 if (response.is_last == true) {
                     this.isLast = true;
                 }
+
                 if (response.status == "success") {
-                    let counter = 0;
-                    for (let i = 0; i < response.element.length; i++) {
+                    if (this.times === 0)
+                        this.hasElements = response.element.length > 0 ? true : false;
 
-                        this.sharedImages.push(response.element[i]);
-                        counter++;
-                    }
+                    if (this.hasElements || this.times > 0) {
+                        this.times++;
 
-                    // this.sharedImages[0].image.name; // Image name
-                    // this.sharedImages[0].image.url; // Image url
-                    // this.sharedImages[0].image.createdAt; // Image date
-                    // this.sharedImages[0].image.description; // Image description
-                    // this.sharedImages[0].image.user.nick; // Nick of the image owner user
-                    // this.sharedImages[0].user.nick; // Nick of the user that shared the image
+                        let counter = 0;
+                        for (let i = 0; i < response.element.length; i++) {
 
-                    // this.sharedImages = response;
-
-                    for (let i = 0; i < this.sharedImages.length; i++) {
-
-                        let descr = this.sharedImages[i].image.description;
-
-                        let date = this.sharedImages[i].image.createdAt;
-
-                        date = this._commonService.dateFormat(date, this.lang);
-                        this.sharedImages[i].image.createdAt = date;
-
-                        this.sharedImages[i].image.description = descr;
-                        this.sharedImages[i].image.formattedDescription = descr; // We add a new attr instead of modifying the main one.
-                                                                                 // Otherwise, it caches, and going from feed to image, 
-                                                                                 // and then back to feed, would cause a bad formatting.
-
-                        if (this.sharedImages[i].image.description != null) {
-                            this.sharedImages[i].image.formattedDescription = this._commonService.noscript(this.sharedImages[i].image.formattedDescription);
-                            this.sharedImages[i].image.formattedDescription = this._commonService.formatText(this.sharedImages[i].image.formattedDescription);
+                            this.sharedImages.push(response.element[i]);
+                            counter++;
                         }
 
-                        var nick = this.sharedImages[i].image.user.nick;
-                        var userclass = "user-" + nick;
-                        this._userService.checkFollowing(this, nick, userclass);
-                        this.imageInteractions(i);
-                    }
-                    this.loaded = true;
-                    this.index = response.index;
+                        // this.sharedImages[0].image.name; // Image name
+                        // this.sharedImages[0].image.url; // Image url
+                        // this.sharedImages[0].image.createdAt; // Image date
+                        // this.sharedImages[0].image.description; // Image description
+                        // this.sharedImages[0].image.user.nick; // Nick of the image owner user
+                        // this.sharedImages[0].user.nick; // Nick of the user that shared the image
 
-                    console.log(this.sharedImages[0].image.description);
+                        // this.sharedImages = response;
 
-                    if (response.isLast == true) {
-                        this.isLast = true;
+                        for (let i = 0; i < this.sharedImages.length; i++) {
+
+                            let descr = this.sharedImages[i].image.description;
+
+                            let date = this.sharedImages[i].image.createdAt;
+
+                            date = this._commonService.dateFormat(date, this.lang, "getSharedItems");
+                            this.sharedImages[i].image.createdAt = date;
+
+                            this.sharedImages[i].image.description = descr;
+                            this.sharedImages[i].image.formattedDescription = descr; // We add a new attr instead of modifying the main one.
+                            // Otherwise, it caches, and going from feed to image, 
+                            // and then back to feed, would cause a bad formatting.
+
+                            if (this.sharedImages[i].image.description != null) {
+                                this.sharedImages[i].image.formattedDescription = this._commonService.noscript(this.sharedImages[i].image.formattedDescription);
+                                this.sharedImages[i].image.formattedDescription = this._commonService.formatText(this.sharedImages[i].image.formattedDescription);
+                            }
+
+                            var nick = this.sharedImages[i].image.user.nick;
+                            var userclass = "user-" + nick;
+                            this._userService.checkFollowing(this, nick, userclass);
+                            this.imageInteractions(i);
+                        }
+                        this.loaded = true;
+                        this.index = response.index;
+
+                        if (response.isLast == true) {
+                            this.isLast = true;
+                        }
                     }
                 }
                 else {
@@ -216,7 +229,7 @@ export class FeedComponent implements OnInit {
                 this.sharedImages[index].image.userFav = response.userFav;
                 this.sharedImages[index].image.userShare = response.userShare;
 
-                console.log(this.sharedImages[index]);
+                // console.log(this.sharedImages[index]);
             },
             error => {
                 this.imageInteractions(index);
@@ -269,6 +282,8 @@ export class FeedComponent implements OnInit {
                 lang: "english",
                 attributes: {
                     title: "Feed",
+                    suchEmpty: "Such empty!",
+                    followTip: "You don't follow any user, or the users you follow haven't shared anything yet...",
                     noDescription: "User didn't add a description.",
                     sharedBy: "Shared by",
                     by: "by",
@@ -281,6 +296,8 @@ export class FeedComponent implements OnInit {
                 lang: "spanish",
                 attributes: {
                     title: "Feed",
+                    suchEmpty: "¡Qué vacío!",
+                    followTip: "No sigues a ningún usuario, o éstos no han compartido nada todavía...",
                     noDescription: "El usuario no ha agregado ninguna descripción.",
                     sharedBy: "Compartido por",
                     by: "por",

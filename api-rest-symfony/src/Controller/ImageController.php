@@ -474,11 +474,12 @@ class ImageController extends AbstractController
 
                 $em->remove($image);
                 $em->flush();
-                unlink($path);  // Borramos la imagen
+                $result = unlink($path);  // Borramos la imagen
 
                 $data = [
                     'status'    => 'success',
                     'messsage'  => 'Imagen eliminada correctamente.',
+                    'result'    => ($result ? true : false),
                     'id'        => $id
                 ];
             }
@@ -676,6 +677,12 @@ class ImageController extends AbstractController
             $total = 0;
             $all = [];
             $deleted = false;
+            $num_iterations = 0;
+            $new_index = "";
+            $duplicated = "";
+            $merged = [];
+            $is_last = false;
+            $arr_return = [];
 
             // Metemos todas las imágenes de cada user compartidas
             for($i = 0; $i < sizeof($followed_users); $i++){
@@ -688,96 +695,92 @@ class ImageController extends AbstractController
                 $total = $total + sizeof($user_shared[$i]);
             }
 
-            // Las juntamos para que estén en el mismo nivel. Arr[0][0] => Arr[0]; Arr[0][1] => Arr[1]
-            $merged = call_user_func_array('array_merge', $all);
+            if ($all){ // There might not be elements to show if the user is not following anyone, or the users they follow haven't shared anything!
+                // Las juntamos para que estén en el mismo nivel. Arr[0][0] => Arr[0]; Arr[0][1] => Arr[1]
+                $merged = call_user_func_array('array_merge', $all);
 
-            usort($merged, array($this, "cmp"));
-            $merged = array_reverse ($merged);
+                usort($merged, array($this, "cmp"));
+                $merged = array_reverse ($merged);
 
-            $to_delete = [];
+                $to_delete = [];
 
-            // Filtramos si el user tiene filtros activados (nsfw == false = no mostrar contenido sensible = filtro activado)
-            for($i = 0; $i < sizeof($merged); $i++){
+                // We filter if the user has active filters (nsfw == false => Don't show sensitive content = filter activated)
+                for($i = 0; $i < sizeof($merged); $i++){
 
-                if($merged[$i]->getImage()->getStatus() != "published"){
-                    array_push($to_delete, $i);
-                    // unset($merged[$i]);  // No funciona bien así
-                }
-
-                if($merged[$i]->getImage()->getNsfw() == true && $nsfw == "false"){
-                    array_push($to_delete, $i);
-                    // unset($merged[$i]);  // No funciona bien así
-                }
-
-                if($merged[$i]->getImage()->getEpilepsy() == true && $epilepsy == "false"){
-
-                    array_push($to_delete, $i);
-                }
-            }
-
-
-            for($i = 0; $i < sizeof($to_delete); $i++){
-                unset($merged[$to_delete[$i]]);
-            }
-
-            // $array = ['El-1', 'El-2', 'El-3', 'El-4']    -> Antes del unset
-            // unset($array[2]);
-            // $array = ['El-1', '    ', 'El-3', 'El-4']    -> Después del unset
-            // echo $array[1] => unset borra el índice. Eso significa que no existe $array de 1, así que da error.
-
-            $merged = array_values($merged);    // Reindexea los huecos vacíos
-
-            $arr_return = [];
-
-            $num_iterations = 0;
-            $is_last = false;
-            $duplicado = "";
-
-            for($i = $index; $i < sizeof($merged); $i++){
-
-                $num_iterations++;
-                array_push($arr_return, $merged[$i]);
-                
-                if($i > 0){
-
-                    $arr_return_length = 0;
-                    if (sizeof($arr_return) > 1){
-                        $arr_return_length = sizeof($arr_return) - 1;
-                    }
-                    else if (sizeof($arr_return) == 0){
-                        $arr_return_length = sizeof($arr_return);
+                    if($merged[$i]->getImage()->getStatus() != "published"){
+                        array_push($to_delete, $i);
+                        // unset($merged[$i]);  // Doesn't work properly like this
                     }
 
-                    for($j = 0; $j < $arr_return_length; $j++){  // -1 porque no se tiene que comparar consigo mismo
-                        
-                        if($arr_return[$j]->getImage() == $merged[$i]->getImage()){
-                            array_pop($arr_return);
-                            $duplicado .= "Duplicado en: [" . $i . ", " . $j . "]. ";
+                    if($merged[$i]->getImage()->getNsfw() == true && $nsfw == "false"){
+                        array_push($to_delete, $i);
+                        // unset($merged[$i]);
+                    }
+
+                    if($merged[$i]->getImage()->getEpilepsy() == true && $epilepsy == "false"){
+
+                        array_push($to_delete, $i);
+                    }
+                }
+
+
+                for($i = 0; $i < sizeof($to_delete); $i++){
+                    unset($merged[$to_delete[$i]]);
+                }
+
+                // $array = ['El-1', 'El-2', 'El-3', 'El-4']    -> Antes del unset
+                // unset($array[2]);
+                // $array = ['El-1', '    ', 'El-3', 'El-4']    -> Después del unset
+                // echo $array[1] => unset borra el índice. Eso significa que no existe $array de 1, así que da error.
+
+                $merged = array_values($merged);    // Reindexea los huecos vacíos
+
+                for($i = $index; $i < sizeof($merged); $i++){
+
+                    $num_iterations++;
+                    array_push($arr_return, $merged[$i]);
+                    
+                    if($i > 0){
+
+                        $arr_return_length = 0;
+                        if (sizeof($arr_return) > 1){
+                            $arr_return_length = sizeof($arr_return) - 1;
+                        }
+                        else if (sizeof($arr_return) == 0){
+                            $arr_return_length = sizeof($arr_return);
+                        }
+
+                        for($j = 0; $j < $arr_return_length; $j++){  // -1 porque no se tiene que comparar consigo mismo
+                            
+                            if($arr_return[$j]->getImage() == $merged[$i]->getImage()){
+                                array_pop($arr_return);
+                                $duplicated .= "Duplicated on: [" . $i . ", " . $j . "]. ";
+                            }
                         }
                     }
+
+                    if(sizeof($arr_return) == $items_to_show){
+                        break;
+                    }
+
+                    if($i == (sizeof($merged) -1)){
+                        $is_last = true;
+                    }
                 }
 
-                if(sizeof($arr_return) == $items_to_show){
-                    break;
-                }
+                $new_index = $num_iterations + $index;
+        }
 
-                if($i == (sizeof($merged) -1)){
-                    $is_last = true;
-                }
-            }
-
-            $new_index = $num_iterations + $index;
-            
-            $data = [
-                'status'            => 'success',
-                'messsage'          => 'Correcto.',
-                'num_iterations'    => $num_iterations,
-                'index'             => $new_index,
-                'veces'             => $duplicado,
-                'total_size'        => sizeof($merged),
-                'isLast'            => $is_last,
-                'element'           => $arr_return,
-            ];
+        $data = [
+            'status'            => 'success',
+            'messsage'          => 'Correcto.',
+            'num_iterations'    => $num_iterations,
+            'index'             => $new_index,
+            'veces'             => $duplicated,
+            'total_size'        => sizeof($merged),
+            'isLast'            => $is_last,
+            'element'           => $arr_return,
+        ];
 
         }
         return $this->ajson($data);

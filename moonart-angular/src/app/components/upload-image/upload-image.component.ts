@@ -68,12 +68,12 @@ export class UploadImageComponent implements OnInit {
         if (files.length === 0)
             return;
 
-        console.log("size:" + files[0].size); // *Change* -> Add limitations, deactivate button if they are not fullfilled
+        // console.log("size:" + files[0].size); // *Change* -> Add limitations, deactivate button if they are not fullfilled
         // https://stackoverflow.com/questions/29280473/how-can-i-use-angluarjs-to-disable-a-button-if-a-value-is-bigger-than-255
 
         var mimeType = files[0].type;
         if (mimeType.match(/image\/*/) == null) {
-            console.log("Sólo se admiten imágenes.");
+            console.log("Only images allowed"); // Change to display in a proper message
             return;
         }
 
@@ -132,9 +132,9 @@ export class UploadImageComponent implements OnInit {
 
         this.image.rights = this._rights; // Assign the _rights value. If in the html model we assign it to the field image.rights, it loads with nothing selected
 
-        console.log(this._rights);
+        // console.log(this._rights);
         // console.log(this._file);
-        console.log(this.image);
+        // console.log(this.image);
 
         this._imageService.upload(this.token, this.image).subscribe(
             response => {
@@ -149,7 +149,6 @@ export class UploadImageComponent implements OnInit {
                             action: "share",
                             method: "POST"
                         }
-                        console.log(data);
                         this._imageService.interact(this.token, data, estado).subscribe(
                             response => {
                                 if (response.status == "success") {

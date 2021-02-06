@@ -150,11 +150,11 @@ export class ImagesComponent implements OnInit {
       }
 
       if (this.username != this.identity.nick) {
-        this._imageService.showAllImages(this, this.page, this.nsfw, this.epilepsy, this.username);
+        this._imageService.showAllImages(this, this.page, this.nsfw, this.epilepsy, this.username, false, "pageImages-2");
       }
 
       else {
-        this._imageService.showAllImages(this, this.page, "true", "true", this.username, true);
+        this._imageService.showAllImages(this, this.page, "true", "true", this.username, true, "pageImages-2");
       }
     });
   }

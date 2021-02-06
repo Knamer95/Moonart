@@ -168,6 +168,7 @@
     /* max-width: 640px; */
     cursor: zoom-in;
     max-width: 89%;
+    max-height: 1000px;
 }
 
 .image-container{
@@ -290,7 +291,7 @@
 }
 
 .add-comment:disabled{
-    color: #acacac;
+    color: #acacac !important;
 }
 
 .comment,
@@ -549,4 +550,12 @@ textarea{
     width: 100%;
     height: 100%;
     /* position: fixed;    */
+}
+
+[data-container="night-container"] .nsfw-epilepsy-alert{
+    color: #ff5d5d;
+}
+
+[data-container="night-container"] .add-comment:disabled{
+    color: #767676 !important
 }

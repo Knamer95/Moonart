@@ -176,8 +176,8 @@ export class ImageComponent implements OnInit {
                         that.image.description = that._commonService.formatText(that.image.description);
                     }
 
-                    that.image.createdAt = that._commonService.dateFormat(that.image.createdAt, this.lang);
-
+                    that.image.createdAt = that._commonService.dateFormat(that.image.createdAt, this.lang, "loadImage");
+                    
                     // that.image.rights = that.image.rights.charAt(0).toUpperCase() + that.image.rights.slice(1);
 
                     switch (that.image.rights) {
@@ -287,7 +287,7 @@ export class ImageComponent implements OnInit {
 
                     // console.log(this.comments[i].user);
 
-                    this.comments[i].createdAt = this._commonService.dateFormat(this.comments[i].createdAt, this.lang);
+                    this.comments[i].createdAt = this._commonService.dateFormat(this.comments[i].createdAt, this.lang, "getAllComments");
                     try {
                         this.comments[i].comment = JSON.parse(this.comments[i].comment);
                     }
@@ -512,11 +512,11 @@ export class ImageComponent implements OnInit {
             }
 
             if (this.username != this.identity.nick) {
-                this._imageService.showAllImages(this, 1, this.nsfw, this.epilepsy, this.username);
+                this._imageService.showAllImages(this, 1, this.nsfw, this.epilepsy, this.username, false, "getMoreImages");
             }
 
             else {
-                this._imageService.showAllImages(this, 1, "true", "true", this.username, true);
+                this._imageService.showAllImages(this, 1, "true", "true", this.username, false, "getMoreImages");
             }
         });
     }
@@ -567,6 +567,8 @@ export class ImageComponent implements OnInit {
                     report: "Report",
                     edit: "Edit",
                     cancel: "Cancel",
+                    the: "",
+                    ago: " ago",
                     deletedComment: "This comment was deleted.",
                     deleteModalTitle: "Delete image?",
                     deleteModalBody: "The image will be deleted permanently.",
@@ -612,6 +614,8 @@ export class ImageComponent implements OnInit {
                     report: "Reportar",
                     edit: "Editar",
                     cancel: "Cancelar",
+                    the: "",
+                    ago: " ago",
                     deletedComment: "Este comentario fue borrado.",
                     deleteModalTitle: "¿Borrar imagen?",
                     deleteModalBody: "La imagen se borrará permanentemente.",

@@ -78,5 +78,12 @@ Pending (priority order):
 
 #2021022 Fix problem with comments' length. It allows 300 chars, but it's saved as JSON, and emojis are 12 characters, so any comment with more than 300 chars will cause an error. Also add a counter like  (map themso they take 3 characters instead, and save as normal text, not JSON. Also with special chars like ´ `)
 
+#2021023 Maybe save the name of the file that is uploaded, so when it's downloaded, it can be downloaded with that name, instead of the random one.
+
+#2021024 .webp format doesn't seem to be allowed. Look at it, and the other non admitted formats. Either fix it or prevent user from uploading them.
+
+#2021025 Allow emotes on everywhere (description, image description, comments (already allowed). Not on usernames, but maybe on names... and maybe display name instead of username when commenting, if it's not that way already.
+
+#2021026 Add the possibility to like comments maybe? And report.
 
 #20210xx Possible future version for phones with Cordova.

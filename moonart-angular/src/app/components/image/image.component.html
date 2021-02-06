@@ -177,7 +177,7 @@
           </div>
           <div class="mb-5 pb-2" *ngIf="this.image.status == 'hidden'"></div>
 
-          <div class="row no-padding">
+          <div class="row no-padding" *ngIf="identity.nick !== 'guest'">
             <form [formGroup]="formVar" (ngSubmit)="onSubmit(formVar)" #newCommentForm="ngForm"
               class="col-md-12 mb-4 no-padding" *ngIf="this.image.status != 'hidden'">
               <div class="add-comment-container pb-5">
@@ -206,7 +206,7 @@
                   <div class="mb-1">
                     <span class="comment-name"
                       [routerLink]="['/profile', comment.user.nick]">{{comment.user.nick}}</span><span
-                      class="comment-date"> - {{comment.createdAt}}</span>
+                      class="comment-date"> - {{this.currentLang.attributes.the}}{{comment.createdAt}}{{this.currentLang.attributes.ago}}</span>
                   </div>
                   <div class="comment-text mt-2" [ngClass]="{'removed': comment.status == 'deleted'}"
                     [innerHTML]="comment.comment | safe: 'html'"></div>
@@ -233,7 +233,7 @@
                       <div class="mb-1">
                         <span class="subcomment-name"
                           [routerLink]="['/profile', subcomment.user.nick]">{{subcomment.user.nick}}</span><span
-                          class="subcomment-date"> - {{subcomment.createdAt}}</span>
+                          class="subcomment-date"> - {{this.currentLang.attributes.the}}{{subcomment.createdAt}}{{this.currentLang.attributes.ago}}</span>
                       </div>
                       <div class="subcomment-text mt-2" [ngClass]="{'removed': subcomment.status == 'deleted'}"
                         [innerHTML]="subcomment.comment | safe: 'html'"></div>
