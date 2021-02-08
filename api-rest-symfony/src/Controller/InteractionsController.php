@@ -20,19 +20,19 @@ use App\Services\ImageUploader;
 class InteractionsController extends AbstractController
 {
     private function ajson($data){
-        // Serializar datos con servicio serializer
+        // Serialize data with serializer service
         $json = $this->get('serializer')->serialize($data, 'json');
 
-        // Response con httpfoundation
+        // Response with httpfoundation
         $response = new Response();
 
-        // Asignar contenido a la respuesta
+        // Assign content to the response
         $response->setContent($json);
 
-        // Indicar formato de respuesta
+        // Specify response format
         $response->headers->set('Content-Type', 'application/json');
 
-        //Devolver la respuesta
+        // Return response
         return $response;
     }
 
@@ -42,7 +42,6 @@ class InteractionsController extends AbstractController
         $authCheck = $jwt_auth->checkToken($token);
 
         if ($authCheck){
-
 
             $json = $request->get('json', null);
             $params = json_decode($json);
@@ -86,13 +85,13 @@ class InteractionsController extends AbstractController
         // Array por defecto para devolver
         $data = [
             'status'    => 'error',
-            'message'   => 'No se ha podido agregar la interacción.'
+            'message'   => 'The interaction could not be added.'
         ];
 
-        // Recoger cabecera de autentificación
+        // Get authentication header 
         $token = $request->headers->get('Authorization');
 
-        // Comprobar el token
+        // Check token
         $authCheck = $jwt_auth->checkToken($token);        
 
         if ($authCheck){
@@ -176,7 +175,7 @@ class InteractionsController extends AbstractController
 
                     $data = [
                         'status'    => 'success',
-                        'message'   => 'Datos:',
+                        'message'   => 'Data:',
                         'params'    => $interactions
                     ];
                 }
@@ -190,11 +189,11 @@ class InteractionsController extends AbstractController
 
     public function countInteractions(Request $request){
 
-        // Respuesta por defecto
+        // Default response
 
         $data = [
             'status'    => 'error',
-            'messsage'  => 'No se pueden mostrar los detalles.'
+            'messsage'  => 'The details could not be shown.'
         ];
 
         $em = $this->getDoctrine()->getManager();            
@@ -270,8 +269,8 @@ class InteractionsController extends AbstractController
 
                 $data = [
                     'status'        => 'success',
-                    'messsage'      => 'Detalles de la imagen',
-                    // 'imagen'        => $image,
+                    'messsage'      => 'Image details',
+                    // 'image'        => $image,
                     'likes'         => $likes,
                     'favs'          => $favs,
                     'shares'        => $shares,

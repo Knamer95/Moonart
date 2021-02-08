@@ -10,12 +10,12 @@ export class AppComponent{
   constructor(private renderer: Renderer2) { }
 
   addMyClass(){
-    //this.myButton.nativeElement.classList.add("my-class"); //BAD PRACTICE
+    //this.myButton.nativeElement.classList.add("my-class"); // BAD PRACTICE
     this.renderer.addClass(this.myButton.nativeElement, "my-class");
   }
 
   removeMyClass(){
-    //this.myButton.nativeElement.classList.remove("my-class"); //BAD PRACTICE
+    //this.myButton.nativeElement.classList.remove("my-class"); // BAD PRACTICE
     this.renderer.removeClass(this.myButton.nativeElement, "my-class");
   }
 

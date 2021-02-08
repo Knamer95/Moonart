@@ -123,6 +123,7 @@ export class SearchComponent implements OnInit {
     }
 
     pageSearch() {
+        this.images = [];
         this._route.params.subscribe(params => {
             if (!this.scroll) {
 

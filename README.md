@@ -23,7 +23,7 @@ In order to make the project work, you'll need to follow the next steps:
 
 
 3) Download the project code, and place it inside the web-server. (In `WAMP`'s case, it should look like `/wamp64/www/moonart/*folders*`).
-_It's important that the folder is located at the root of the web-server, since I used absolute paths, and the folder containing the folders `api-rest-symfony` and `moonart-angular` has to be named `moonart` (root folder)_
+_It's important that the folder is located at the root of the web-server, since I used absolute paths in the vhost config and in some parts of the code (I will change those to relative), and the folder containing the folders `api-rest-symfony` and `moonart-angular` has to be named `moonart` (root folder)_
 
 
 4) Navigate through the terminal until you reach the `Angular` project folder.

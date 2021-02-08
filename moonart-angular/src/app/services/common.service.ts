@@ -35,6 +35,7 @@ export class CommonService {
                         if (response.config != null) {
                             config = {
                                 nightMode: response.config.nightMode,
+                                navBarAlwaysOnTop: true, // Change once it's implemented
                                 scroll: response.config.scroll,
                                 nsfw: response.config.nsfw,
                                 epilepsy: response.config.epilepsy,
@@ -47,6 +48,7 @@ export class CommonService {
                         else {
                             config = {
                                 nightMode: false,
+                                navBarAlwaysOnTop: true,
                                 scroll: true,
                                 nsfw: false,
                                 epilepsy: false,
@@ -80,6 +82,7 @@ export class CommonService {
         else {
             let config = {
                 nightMode: false,
+                navBarAlwaysOnTop: true,
                 scroll: true,
                 nsfw: false,
                 epilepsy: false,
@@ -101,6 +104,7 @@ export class CommonService {
                     console.log(response);
                     let config = {
                         nightMode: response.config.nightMode,
+                        navBarAlwaysOnTop: true, // Change once it's implemented
                         scroll: response.config.scroll,
                         nsfw: response.config.nsfw,
                         epilepsy: response.config.epilepsy,
@@ -143,12 +147,12 @@ export class CommonService {
         if (nightMode == true) {
             this.render.setAttribute(document.querySelector(".container-ma"), "data-container", array[1]);
             this.render.setAttribute(document.body, "data-mode", array[3]);
-            this.render.setAttribute(document.querySelector(".navbar"), "data-navbar", "navbar-night");
+            this.render.setAttribute(document.querySelector(".nav-container"), "data-navbar", "navbar-night");
         }
         else {
             this.render.setAttribute(document.querySelector(".container-ma"), "data-container", array[0]);
             this.render.setAttribute(document.body, "data-mode", array[2]);
-            this.render.setAttribute(document.querySelector(".navbar"), "data-navbar", "navbar-day");
+            this.render.setAttribute(document.querySelector(".nav-container"), "data-navbar", "navbar-day");
         }
     }
 
@@ -161,6 +165,11 @@ export class CommonService {
         this.render.setAttribute(document.querySelector(".container-ma"), "data-language", array[(lang - 1)]);
     }
 
+    /*
+     *
+     * Basic function to prevent script injection
+     * 
+     */
     noscript(string) {
         // string = string.replace(/\<script\>/g, "Not today..."); // Avoid script injection
         // string = string.replace(/\<\/script\>/g, "... but good try."); // on DB
@@ -173,6 +182,11 @@ export class CommonService {
         return string;
     }
 
+    /*
+     *
+     * Function to add the link to the @ users. Should look up at Angular sanitization
+     * 
+     */
     formatText(str) {
         let index = 0;
         str = str.replace(/\\n/g, "<br>");
@@ -237,6 +251,11 @@ export class CommonService {
         return str;
     }
 
+    /*
+     *
+     * Function to redirect to a profile of an user that has been inserted as plain text (a comment mentioning an user for example) 
+     * 
+     */
     redirectToProfile(event) {
         const link = event.target.getAttribute('data-link');
 
@@ -244,7 +263,15 @@ export class CommonService {
             this._router.navigateByUrl("/profile/" + link)
     }
 
-    dateFormat(that, lang, from) {
+    /*
+     *
+     * Function to format the date. Depending on the type, it will return different types:
+     *  - Timestamp: Returns a full timestamp of the picture
+     *  - Lapsed: Returns the lapsed time between the date and now
+     * 
+     */
+
+    dateFormat(that, lang, type) {
 
         let str = that;
         let secondsStr: any, minutesStr: any, hoursStr: any, daysStr: any, weeksStr: any, yearsStr: any;
@@ -252,7 +279,7 @@ export class CommonService {
         if (Date.parse(that) > 0) {
             let mydate = new Date(that);
 
-            if (from === "loadImage") {
+            if (type === "timestamp") {
 
                 let month = [
                     ["January", "Enero"],
@@ -343,10 +370,34 @@ export class CommonService {
         return str;
     }
 
-    displayNotification(e) {
+    /* 
+     *
+     * Function to display popups. The alert element has a transition of 0.5 seconds, which is what makes opacity changes look like a fadein-fadeout
+     * Important that if it redirects, that the timeout until redirection is bigger than the one stated here (2000ms), so this timeout runs.
+     * 
+     * Otherwise, it won't do the animation anymore... could look for different approaches too if this turns out to be inconvenient :)
+     * 
+     */
+    displayNotification(e, status = null) {
+        console.log(status);
+
         setTimeout(function () {
-            e.status = "";
-        }, 3000);
+            try {
+                let alert = <HTMLElement>document.getElementsByClassName("alert")[0];
+                alert.style.opacity = "1";
+            }
+            catch (err) {
+            }
+        }, 0);
+
+        setTimeout(function () {
+            try {
+                let alert = <HTMLElement>document.getElementsByClassName("alert")[0];
+                alert.style.opacity = "0";
+            }
+            catch (err) {
+            }
+        }, 2000);
     }
 
     loadUser() {

@@ -68,6 +68,7 @@ span{
   width: 40px;
   height: 40px;
   border: 1px solid rgba(136, 136, 136, 0.685);
+  margin: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
 }

@@ -19,19 +19,19 @@ class UserController extends AbstractController
 
     private function ajson($data){
 
-        // Serializar datos con servicio serializer
+        // Serialize data with serializer service
         $json = $this->get('serializer')->serialize($data, 'json');
 
-        // Response con httpfoundation
+        // Response with httpfoundation
         $response = new Response();
 
-        // Asignar contenido a la respuesta
+        // Assign content to the response
         $response->setContent($json);
 
-        // Indicar formato de respuesta
+        // Specify response format
         $response->headers->set('Content-Type', 'application/json');
 
-        //Devolver la respuesta
+        // Return response
         return $response;
     }
 
@@ -76,18 +76,18 @@ class UserController extends AbstractController
         // Decodificar el JSON
         $params = json_decode($json); // Si el segundo parámetro es true, lo convierte a array asociativo. (Cuidado)
 
-        // Respuesta por defecto
+        // Default response
         $data = [
             'status'    => 'error',
-            'messsage'  => 'El usuario no se ha creado.',
+            'messsage'  => 'The user was not created.',
         ];
 
-        /* Ejemplo para pasar a PostMan {"name":"Marie","nick":"Marie99","password":"marieposa","email":"marieposa@gmail.com"} */
+        /* Example for postman PostMan {"name":"Marie","nick":"Marie99","password":"marieposa","email":"marieposa@gmail.com"} */
 
-        // Comprobar y validar datos
+        // Check and validate data
         if ($json != null){
             
-            $name = (!empty($params->name)) ? $params->name : null; // Si no está vacía, le asignamos name, y si no, null
+            $name = (!empty($params->name)) ? $params->name : null; // If not empty, assign name. Otherwise, null
             $nick = (!empty($params->nick)) ? $params->nick : null;
             $password = (!empty($params->password)) ? $params->password : null;
             $email = (!empty($params->email)) ? $params->email : null;
@@ -100,20 +100,20 @@ class UserController extends AbstractController
             if (!empty($name) && !empty($nick) && !empty($email) && count($validate_email) == 0 
                 && !empty($password)){
 
-                // Si la validación es correcta, crear el objeto del usuario
+                // If validation is correct, create user object
                 $user = new User();
                 $user->setName($name);
                 $user->setNick($nick);
                 $user->setPassword($password);
                 $user->setEmail($email);
-                // $user->setRole('role_user');                 // Ya lo hace la base de datos, no hace falta
-                $user->setCreatedAt(new \Datetime('now'));   // hacerlo de nuevo.
+                // $user->setRole('role_user'); // The database already does this, not needed to do it again
+                $user->setCreatedAt(new \Datetime('now'));
           
-                // Cifrar la contraseña
+                // Encode the password
                 $pwd = hash('sha256', $password);
                 $user->setPassword($pwd);
 
-                // Comprobar si el usuario existe (duplicados)
+                // Check if the user exists (duplicates)
                 $doctrine = $this->getDoctrine();
                 $em = $doctrine->getManager();
 
@@ -126,14 +126,14 @@ class UserController extends AbstractController
                     'nick'  => $nick
                 ));
 
-                // Si no existe, guardarlo en la db
+                // If not, save it on DB
                 if (count($isset_email) == 0 && count($isset_nick) == 0){
                     $em->persist($user);
                     $em->flush();
 
                     $data = [
                         'status'    => 'success',
-                        'messsage'  => 'El usuario se ha creado correctamente.',
+                        'messsage'  => 'User created successfully.',
                         'user'      => $user
                     ];
                 }
@@ -141,29 +141,29 @@ class UserController extends AbstractController
                     if (count($isset_email) != 0){
                         $data = [
                             'status'    => 'error',
-                            'messsage'  => 'El email ya existe.',
+                            'messsage'  => 'That email is already taken.',
                         ];
                     }
 
                     if (count($isset_nick) != 0){
                         $data = [
                             'status'    => 'error',
-                            'messsage'  => 'El nick ya existe.',
+                            'messsage'  => 'That nickname is already taken.',
                         ];
                     }
 
                     if (count($isset_email) != 0 && count($isset_nick) != 0){
                         $data = [
                             'status'    => 'error',
-                            'messsage'  => 'El nick y el email ya existen.',
+                            'messsage'  => 'That nick and email are already taken.',
                         ];
                     }
                 }
             }
         }
 
-        // Hacer respuesta en JSON
-        return $this->ajson($data); // ajson es una función definida por nosotros para serializar.
+        // JSON response
+        return $this->ajson($data); // ajson is a function defined by us to serialize the data
         // return new JsonResponse($data);
     }
 
@@ -171,17 +171,17 @@ class UserController extends AbstractController
 
     public function login(Request $request, JwtAuth $jwt_auth){
 
-        // Recibir los datos por POST
+        // Get POST data
         $json = $request->get('json', null);
         $params = json_decode($json);
 
-        // Array por defecto para devolver
+        // Default array to return
         $data = [
             'status'    => 'error',
-            'message'   => 'El usuario no se ha podido identificar.'
+            'message'   => 'The user could not be identified.'
         ];
 
-        // Comprobar y validar datos
+        // Check and validate data
         if ($json != null){
 
             $login = (!empty($params->login)) ? $params->login : null;
@@ -190,10 +190,10 @@ class UserController extends AbstractController
 
             if (!empty($login) && !empty($password)){
 
-                // Cifrar la contraseña
-                $pwd = hash('sha256',$password);
+                // Encode pass
+                $pwd = hash('sha256', $password);
 
-                // Si todo es válido, llamaremos a un servicion para identificar al usuario (jwt, token, o objeto)
+                // If everything is valid, we call a service to identify the user (jwt, token, or objet)
                 if($getToken){
                     $signup = $jwt_auth->signup($login, $pwd, $getToken);
                 }
@@ -207,7 +207,7 @@ class UserController extends AbstractController
             }
         }
 
-        // Si nos devuelve bien los datos, respuesta HTTP
+        // If it returns correct data, HTTP response
         return $this->ajson($data);
     }
 
@@ -215,44 +215,44 @@ class UserController extends AbstractController
 
     public function update(Request $request, JwtAuth $jwt_auth){
 
-        // Los valores de $user se definen en Controller/User.php
+        // The $user values are defined in Controller/User.php
 
-        // Recoger la cabecera de autentificación
+        // Get authentication header
         $token = $request->headers->get('Authorization');
 
-        // Crear un método para comprobar si el token es correcto
+        // Create a method to check if the token is correct
         $authCheck = $jwt_auth->checkToken($token);
 
-        // Respuesta por defecto
+        // Default response
         $data = [
             'status'    => 'error',
-            'message'   => 'El usuario no se ha podido actualizar.',
+            'message'   => 'The user could not be updated.',
             'token'     => $token,
             'authCheck' => $authCheck
         ];
 
-        // Si es correcto, hacer la actualización del usuario
+        // If it's correct, update the user
         if ($authCheck){
 
-            // Actualizar al usuario
+            // Update user
 
-            // Conseguir entity manager
+            // Get entity manager
             $em = $this->getDoctrine()->getManager();
 
-            // Conseguir los datos del usuario identificado
+            // Get identified user data
             $identity = $jwt_auth->checkToken($token, true);
 
-            // Conseguir el usuario a actualizar completo
+            // Get the completeuser to update
             $user_repo = $this->getDoctrine()->getRepository(User::class);
             $user = $user_repo->findOneBy([
                 'id' => $identity->sub
             ]);
 
-            // Recoger datos por POST
+            // Get POST data
             $json = $request->get('json', null);
             $params = json_decode($json);
 
-            // Comprobar y validar los datos
+            // Check and validate data
             if(!empty($json)){
                 // $data = $params->imageToUpload->filename;
                 // return $this->ajson($data); 
@@ -264,7 +264,7 @@ class UserController extends AbstractController
                     $imageName = $image_name . "." . $extension;
                 }
 
-                $name = (!empty($params->name)) ? $params->name : null; // Si no está vacía, le asignamos name, y si no, null
+                $name = (!empty($params->name)) ? $params->name : null; // If not empty, assigns name. Otherwise, null
                 $nick = (!empty($params->nick)) ? $params->nick : null;
                 $email = (!empty($params->email)) ? $params->email : null;
                 $password = (!empty($params->password)) ? $params->password : null;
@@ -272,7 +272,7 @@ class UserController extends AbstractController
                 $user_image = (!empty($params->user_image)) ? $params->user_image : null;
                 $image_to_upload = (!empty($params->imageToUpload)) ? $params->imageToUpload : null;
 
-                /*  NO SE PUEDE CAMBIAR EL EMAIL
+                /*  EMAIL CANNOT BE CHANGED
                 $validator = Validation::createValidator();
                 $validate_email = $validator->validate($email, [
                     new Email()
@@ -283,9 +283,9 @@ class UserController extends AbstractController
 
                 if (!empty($name) || !empty($nick) || !empty($user_image) || !(empty($description))
                     || !empty($password) || !empty($image_to_upload)){
-                        // Esto comprueba que hayan cambios.
+                        // This checks if there are changes.
 
-                    // Asignar nuevos datos al objeto del usuario
+                    // Assign new data to the user object
                     if (!empty($name)){
                         $user->setName($name);
                     }
@@ -295,7 +295,7 @@ class UserController extends AbstractController
                     if (!empty($nick)){
                         $user->setNick($nick);
 
-                        // Comprobar duplicados
+                        // Check duplicates
                         $isset_user = $user_repo->findOneBy([
                             'nick'  => $nick
                         ]);
@@ -330,20 +330,20 @@ class UserController extends AbstractController
 
                         }
 
-                        // Guardar cambios en la base de datos
+                        // Save changes in the database
                         $em->persist($user);
                         $em->flush();
 
                         $data = [
                             'status'    => 'success',
-                            'message'   => 'El usuario se ha actualizado.',
+                            'message'   => 'The user has been updated successfully.',
                             'user'      => $user
                         ];
                     }
                     else{
                         $data = [
                             'status'    => 'error',
-                            'message'   => 'El usuario no se ha podido actualizar. Email o nick en uso.',
+                            'message'   => 'The user could not be updated. Email or nick in use.',
 
                         ];
                     }
@@ -351,7 +351,7 @@ class UserController extends AbstractController
             }
         }
         
-        return $this->ajson($data); // Los valores de $user se definen en Controller/User.php
+        return $this->ajson($data); // The $user values are defined in Controller/User.php
     }
 
 
@@ -362,7 +362,7 @@ class UserController extends AbstractController
         $authCheck = $jwt_auth->checkToken($token);
         $data = [
             'status'    => 'error',
-            'message'   => 'La configuración no se ha podido guardar.',
+            'message'   => 'The config could not be saved.',
             'token'     => $token,
             'authCheck' => $authCheck
         ];
@@ -397,7 +397,7 @@ class UserController extends AbstractController
                 ]);
 
 
-                if (!($config && is_object($config))){ // Si no existe una config, la crea.
+                if (!($config && is_object($config))){ // If config does not exist, it creates one.
                     $config = new Config();
                 }
 
@@ -416,13 +416,13 @@ class UserController extends AbstractController
 
                 $data = [
                     'status'    => 'success',
-                    'message'   => 'La configuración se ha guardado.',
+                    'message'   => 'Config saved successfully.',
                     'config'      => $config
                 ];
             }
         }
 
-        return $this->ajson($data); // Los valores de $user se definen en Controller/User.php
+        return $this->ajson($data);
     }
 
 
@@ -434,7 +434,7 @@ class UserController extends AbstractController
 
         $data = [
             'status'    => 'error',
-            'message'   => 'Configuración no encontrada'
+            'message'   => 'Config not found.'
         ];
 
         if ($authCheck){
@@ -464,7 +464,7 @@ class UserController extends AbstractController
    
         $data = [
             'status'    => 'error',
-            'message'   => 'Usuario no encontrado'
+            'message'   => 'User not found.'
         ];
 
         $params = $request->get('nick', null);
@@ -495,7 +495,7 @@ class UserController extends AbstractController
 
         $data = [
             'status'    => 'error',
-            'message'   => 'Contraseña no guardada'
+            'message'   => 'Password not saved.'
         ];
 
         $json = $request->get('json', null);
@@ -516,13 +516,13 @@ class UserController extends AbstractController
             if($user->getPassword() == $old_pass_hash){
                 $data = [
                     'status'        => 'success',
-                    'message'       => 'Las contraseñas coinciden'
+                    'message'       => 'The passwords match.'
                 ];
             }
             else{
                 $data = [
                     'status'        => 'error',
-                    'message'       => 'La contraseña actual introducida es incorrecta'
+                    'message'       => 'The current introduced password is incorrect.'
                 ];
             }
 
@@ -532,7 +532,7 @@ class UserController extends AbstractController
         else{
             $data = [
                 'status'        => 'error',
-                'message'       => 'Usuario no encontrado. Por favor, inténtelo más tarde'
+                'message'       => 'User not found. Please, try again later.'
             ];
         }
         return $this->ajson($data);

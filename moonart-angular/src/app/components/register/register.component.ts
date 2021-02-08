@@ -52,19 +52,20 @@ export class RegisterComponent implements OnInit {
                     }
                     else {
                         this.status = 'error';
-                        this._commonService.displayNotification(this);
                     }
                     console.log(response);
+
+                    this._commonService.displayNotification(this, this.status);
                 },
                 error => {
                     this.status = 'error';
-                    this._commonService.displayNotification(this);
+                    this._commonService.displayNotification(this, this.status);
                     console.log(error);
                 }
             );
         }
         else {
-            console.log("Las contraseñas no coinciden.")
+            console.log("The passwords don't match.")
         }
     }
 

@@ -9,7 +9,10 @@ Known bugs:
 
 - Commenting after replying to a comment will comment on that comment too. Make it so commenting on a subcomment displays another textarea, different to the main one, used to comment without replying.
 
-Solved: 
+
+---
+
+Fixed bugs: 
 
 - Search: Clicking on pagination  -> Redirects to /home (in live repo it worked properly, so it won't be noticeable)
 
@@ -19,7 +22,11 @@ Solved:
 	Search 2: 'b' -> Results: 'a' (searches 'b' and displays results)
 	
 	The search worked, but the string specifying what your search was wouldn't update. Probably due to the implementation of language vars.
-	
+
+- Search with scroll activated would not clear the previous results, and this caused images to stay on the search (adding elements to array, without resetting it on each search)
+
+
+---
 
 Implemented changes:
 
@@ -37,14 +44,16 @@ Implemented changes:
 
 #2021007 Feed looks too big, too little info in too much space. Look for better solutions.
 
+#2021008 Translate comments and documentation to English.
+
+
+---------
 
 Pending (priority order):
 
 #2021005 Make gallery images align better (either each image occupies 1/3rd | 1/4th (cut square), or script like DeviantArt that chooses images for each row according to their length.
   Idea: If screen width is 10 units (we would want to fit 4 there... would depend on screen size though). 
   Using 4 as a case, if an image with adjusted height isn't 5 or more, square of 2.5 units, otherwise rectangle of 5/7.5 units -> Problem, would need to save in the image attributes its size in units depending on the media screen size. 
-
-#2021008 Translate comments and documentation to English.
 
 #2021009 Allow user to navigate through artist pictures by pressing next / prev (determine if the pic being shown is the first or last, check for next image taking in account that it's not hidden, or sensitive content if chosen not to show)
 
@@ -83,5 +92,15 @@ Pending (priority order):
 #2021025 Allow emotes on everywhere (description, image description, comments (already allowed). Not on usernames, but maybe on names... and maybe display name instead of username when commenting, if it's not that way already.
 
 #2021026 Add the possibility to like comments maybe? And report.
+
+#2021027 Date formats are wrong in Spanish. (ex. 5th of Enero 2021)
+
+#2021028 Implement profile comments.
+
+#2021029 Allow user to choose the usage of virtual hosts or not, and remove absolute paths where possible.
+
+#2021030 (Idk if this one is only possible for a live server) -> Allow user to register using Google API.
+
+#2021031 Add guide in a PDF explaining what can be done in MoonArt
 
 #20210xx Possible future version for phones with Cordova.

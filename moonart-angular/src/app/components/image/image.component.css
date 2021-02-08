@@ -538,12 +538,14 @@ textarea{
 }
 
 [data-container="night-container"] .image{
-    box-shadow: 0px 0px 27px 9px black;
+    box-shadow: 0px 0px 17px 1px #151515;
 }
 
 [data-container="night-container"] .more-by-container{
     /* background: linear-gradient(45deg, black, #878787); */
-    background: #0000006e;
+    /* background: #0000006e; */
+    /* background: linear-gradient(333deg, black, #17312c); */
+    background: linear-gradient(333deg, black, #0a1e23);
 }
 
 [data-container="night-container"] .more-by-theme{

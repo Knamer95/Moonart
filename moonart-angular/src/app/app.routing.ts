@@ -23,7 +23,7 @@ const appRoutes: Routes = [
     {path: 'home', component: HomeComponent},
     {path: 'home/:page', component: HomeComponent},
     {path: 'feed', component: FeedComponent, canActivate: [IdentityGuard]},
-    {path: 'discover', component: DiscoverComponent},
+    // {path: 'discover', component: DiscoverComponent}, // Since it's not implemented (and it may never be...), we disable it so user can't access from route
     {path: 'search', component: SearchComponent},
     {path: 'search/:page', component: SearchComponent},
     {path: 'upload-image', component: UploadImageComponent, canActivate: [IdentityGuard]},

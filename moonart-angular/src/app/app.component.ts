@@ -22,6 +22,7 @@ export class AppComponent implements OnInit, DoCheck {
     public token: string;
     public config: any;
     public configJSON: string;
+    public navHeight: number;
     public i: number;
     public searchQuery;
     public navStatus: number;
@@ -47,6 +48,7 @@ export class AppComponent implements OnInit, DoCheck {
         this.lang = JSON.parse(localStorage.getItem("config")).lang ? JSON.parse(localStorage.getItem("config")).lang : 1;
         this.currentLang = this.getLang(this.lang);
 
+        this.navHeight = $(".clip").height();
         this.navStatus = 1;
     }
 
@@ -63,7 +65,7 @@ export class AppComponent implements OnInit, DoCheck {
 
     changeColor(color) {
         let array = ["red", "green", "blue", "violet", "orange", "yellow", "light", "zoe"];
-        this.render.setAttribute(document.querySelector(".nav-background"), "data-theme", color);
+        this.render.setAttribute(document.querySelector(".nav-background > div"), "data-theme", color);
 
         let elements = document.querySelectorAll(".themed");
 
@@ -88,8 +90,7 @@ export class AppComponent implements OnInit, DoCheck {
         that.i++;
     }
 
-    toggle() {
-
+    toggle() {        
         if ($(".menu-toggle").css("display") != "none") {
             let elements = document.querySelectorAll("[data-view]");
 
@@ -103,13 +104,11 @@ export class AppComponent implements OnInit, DoCheck {
                 $(".nav-background, .clip").animate({
                     height: $(".nav-container").height() + 20
                 });
-                console.log("A");
             }
             else {
                 $(".nav-background, .clip").animate({
-                    height: "110px"
+                    height: this.navHeight
                 });
-                console.log("B");
             }
 
             this.navStatus = (this.navStatus + 1) % 2;

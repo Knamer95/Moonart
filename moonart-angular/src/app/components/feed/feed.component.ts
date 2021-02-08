@@ -167,7 +167,7 @@ export class FeedComponent implements OnInit {
 
                             let date = this.sharedImages[i].image.createdAt;
 
-                            date = this._commonService.dateFormat(date, this.lang, "getSharedItems");
+                            date = this._commonService.dateFormat(date, this.lang, "lapsed");
                             this.sharedImages[i].image.createdAt = date;
 
                             this.sharedImages[i].image.description = descr;
@@ -301,8 +301,8 @@ export class FeedComponent implements OnInit {
                     noDescription: "El usuario no ha agregado ninguna descripción.",
                     sharedBy: "Compartido por",
                     by: "por",
-                    the: "",    // Cambiar a 'El'
-                    ago: "ago"  // Dejar vacío
+                    the: "",    // Change to 'El'
+                    ago: "ago"  // Leave empty
                 }
             }
         ];

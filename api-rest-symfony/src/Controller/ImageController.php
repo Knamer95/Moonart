@@ -23,19 +23,19 @@ use App\Services\ImageUploader;
 class ImageController extends AbstractController
 {
     private function ajson($data){
-        // Serializar datos con servicio serializer
+        // Serialize data with serializer service
         $json = $this->get('serializer')->serialize($data, 'json');
 
-        // Response con httpfoundation
+        // Response with httpfoundation
         $response = new Response();
 
-        // Asignar contenido a la respuesta
+        // Assign content to the response
         $response->setContent($json);
 
-        // Indicar formato de respuesta
+        // Specify response format
         $response->headers->set('Content-Type', 'application/json');
 
-        //Devolver la respuesta
+        // Return response
         return $response;
     }
 
@@ -59,10 +59,10 @@ class ImageController extends AbstractController
         // Default response
         $data = [
             'status'    => 'error',
-            'messsage'  => 'La imagen no se ha subido.',
+            'messsage'  => 'Image not uploaded.',
         ];
 
-        // Recoger token
+        // Get token
         $token = $request->headers->get('Authorization', null);
 
         // Check if it's correct
@@ -138,7 +138,7 @@ class ImageController extends AbstractController
 
                         $data = [
                             'status'    => 'success',
-                            'messsage'  => 'La imagen se ha subido correctamente.',
+                            'messsage'  => 'Image uploaded successfully.',
                             'image'     => $image
                         ];
                     }
@@ -146,7 +146,7 @@ class ImageController extends AbstractController
 
                         $data = [
                             'status'    => 'error',
-                            'messsage'  => 'Imagen no encontrada. Update failed.',
+                            'messsage'  => 'Image not found. Update failed.',
                         ];
 
                         $image = $this->getDoctrine()->getRepository(Image::class)->findOneby([
@@ -170,7 +170,7 @@ class ImageController extends AbstractController
 
                             $data = [
                                 'status'    => 'success',
-                                'messsage'  => 'La imagen se ha actualizado correctamente.',
+                                'messsage'  => 'Image updated successfully.',
                                 'image'     => $image
                             ];
                         }
@@ -186,36 +186,36 @@ class ImageController extends AbstractController
 
     public function images(Request $request, JwtAuth $jwt_auth, PaginatorInterface $paginator){
 
-        // Recoger cabecera de autentificación
+        // Get authentication header 
         $token = $request->headers->get('Authorization');
 
-        // Comprobar el token
+        // Check token
         $authCheck = $jwt_auth->checkToken($token);
 
-        // Si es válido:
+        // If valid:
         if ($authCheck){
 
-            // Conseguir la identidad del usuario
+            // Get user identity
             $identity = $jwt_auth->checkToken($token, true);
 
             $em = $this->getDoctrine()->getManager();            
 
-            // Hacer una consulta para paginar
+            // Query to paginate
             $dql = "SELECT v FROM App\Entity\Image v WHERE v.user = {$identity->sub} ORDER BY v.id DESC";
             $query = $em->createQuery($dql);
 
-            // recoger el parámetro page de la URL
+            // Get page parameter from URL
             $page = $request->query->getInt('page', 1); // Por defecto, 1
             $items_per_page = 5;
 
-            // Invocar paginación
+            // Invoke pagination
             $pagination = $paginator->paginate($query, $page, $items_per_page);
             $total = $pagination->getTotalItemCount();
 
-            // Preparar array de datos para devolver
+            // Prepare data array to return
             $data = [
                 'status'            => 'success',
-                'messsage'          => 'Correcto.',
+                'messsage'          => 'Images loaded successfully.',
                 'total_items'       => $total,
                 'page'              => $page,
                 'items_per_page'    => $items_per_page,
@@ -227,11 +227,11 @@ class ImageController extends AbstractController
         }
         else{
 
-            // Si falla, devolverá esto:
+            // If something fails, it will return this:
 
             $data = [
                 'status'    => 'error',
-                'messsage'  => 'No se pueden mostrar las imágenes actualmente.'
+                'messsage'  => 'Images cannot be displayed currently.'
             ];
         }
         return $this->ajson($data);
@@ -239,11 +239,11 @@ class ImageController extends AbstractController
 
     public function details(Request $request){
 
-        // Respuesta por defecto
+        // Default response
 
         $data = [
             'status'    => 'error',
-            'messsage'  => 'No se pueden mostrar los detalles.'
+            'messsage'  => 'Details cannot be shown.'
         ];
 
         $em = $this->getDoctrine()->getManager();            
@@ -259,25 +259,25 @@ class ImageController extends AbstractController
             if ($image && is_object($image)){
                 $data = [
                     'status'    => 'success',
-                    'messsage'  => 'Detalles de la imagen',
-                    'imagen'        => $image
+                    'messsage'  => 'Image details',
+                    'image'        => $image
                 ];
             }
         }
         return $this->ajson($data);
     }
 
-    // Conseguir todas las imágenes de todos. Para el home)
+    // Get every image. Can be for home (every user), show more (in image details), or profile images
     public function allImages(Request $request, PaginatorInterface $paginator){
 
         $data = [
             'status'    => 'error',
-            'messsage'  => 'Error al cargar las imágenes'
+            'messsage'  => 'Error while loading the images'
         ];
 
         $em = $this->getDoctrine()->getManager();            
 
-        // Hacer una consulta para paginar
+        // Query to paginate
         // $dql = "SELECT v FROM App\Entity\Image v ORDER BY v.id DESC";
         // $query = $em->createQuery($dql);
 
@@ -290,7 +290,7 @@ class ImageController extends AbstractController
         $and = "";
 
         if($nsfw == "true" && $epilepsy == "true"){
-            $where = " WHERE i.id > 0 ";            // Condición que se cumple siempre
+            $where = " WHERE i.id > 0 ";            // Condition that is always fulfilled
         }
 
         else if($nsfw == "true" && $epilepsy == "false"){
@@ -337,24 +337,24 @@ class ImageController extends AbstractController
         //             ORDER BY i.id DESC";
         // $query = $em->createQuery($dql);
 
-        // recoger el parámetro page de la URL
-        $page = $request->query->getInt('page', 1); // Por defecto, 1
+        // Get page parameter from URL
+        $page = $request->query->getInt('page', 1); // By default, 1
         $items_per_page = 24;
 
-        // Invocar paginación
+        // Invoke pagination
         $pagination = $paginator->paginate($query, $page, $items_per_page);
 
         $total = $pagination->getTotalItemCount();
 
-        // Preparar array de datos para devolver
+        // Prepare data array to return
         $data = [
             'status'            => 'success',
-            'messsage'          => 'Correcto.',
+            'messsage'          => 'Images loaded successfully.',
             'total_items'       => $total,
             'page'              => $page,
             'items_per_page'    => $items_per_page,
             'total_pages'       => ceil($total / $items_per_page),
-            'images'            => $pagination, // ¡¡Aquí se envían las imágenes!!
+            'images'            => $pagination, // Here is where images go!!
             'paginator'         => $paginator,
             'is_profile_user'   => $is_profile_user,
             'query'             => $dql,
@@ -363,12 +363,12 @@ class ImageController extends AbstractController
     return $this->ajson($data);
     }
 
-    // Conseguir imágenes que coincidan con la búsqueda
+    // Get images that match the search
     public function searchImages(Request $request, PaginatorInterface $paginator){
 
         $data = [
             'status'    => 'error',
-            'messsage'  => 'Error al cargar las imágenes'
+            'messsage'  => 'Error while loading the images'
         ];
 
         $em = $this->getDoctrine()->getManager();            
@@ -421,15 +421,15 @@ class ImageController extends AbstractController
 
         $query = $em->createQuery($dql);
 
-        $page = $request->query->getInt('page', 1); // Por defecto, 1
+        $page = $request->query->getInt('page', 1); // By default, 1
         $items_per_page = 24;
 
-        // Invocar paginación
+        // Invoke pagination
         $pagination = $paginator->paginate($query, $page, $items_per_page);
 
         $total = $pagination->getTotalItemCount();
 
-        // Preparar array de datos para devolver
+        // Prepare data array to return
         $data = [
             'status'            => 'success',
             'messsage'          => 'Correcto.',
@@ -437,7 +437,7 @@ class ImageController extends AbstractController
             'page'              => $page,
             'items_per_page'    => $items_per_page,
             'total_pages'       => ceil($total / $items_per_page),
-            'images'            => $pagination, // ¡¡Aquí se envían las imágenes!!
+            'images'            => $pagination, // Here is where images go!!
             'paginator'         => $paginator
         ];
     return $this->ajson($data);
@@ -446,16 +446,16 @@ class ImageController extends AbstractController
 
     public function remove(Request $request, JwtAuth $jwt_auth, $id = null){
         
-        // Recoger cabecera de autentificación
+        // Get authentication header 
         $token = $request->headers->get('Authorization');
 
-        // Comprobar el token
+        // Check token
         $authCheck = $jwt_auth->checkToken($token);    
 
-        // Respuesta por defecto
+        // Default response
         $data = [
             'status'    => 'error',
-            'messsage'  => 'No se ha podido borrar la imagen.',
+            'messsage'  => 'Image could not be deleted.',
             'id'        => $id
         ];
 
@@ -474,11 +474,11 @@ class ImageController extends AbstractController
 
                 $em->remove($image);
                 $em->flush();
-                $result = unlink($path);  // Borramos la imagen
+                $result = unlink($path);  // Delete image from the server (some webs don't delete them... comment if you don't want that)
 
                 $data = [
                     'status'    => 'success',
-                    'messsage'  => 'Imagen eliminada correctamente.',
+                    'messsage'  => 'Image deleted successfully.',
                     'result'    => ($result ? true : false),
                     'id'        => $id
                 ];
@@ -495,7 +495,7 @@ class ImageController extends AbstractController
 
         $data = [
             'status'    => 'error',
-            'messsage'  => 'No se ha podido realizar la operación.',
+            'messsage'  => 'The hide operation failed.',
             'id'        => $id
         ];
 
@@ -517,7 +517,7 @@ class ImageController extends AbstractController
 
                 $data = [
                     'status'    => 'success',
-                    'messsage'  => 'Imagen ocultada correctamente.',
+                    'messsage'  => 'Image hidden successfully.',
                     'id'        => $id
                 ];
             }
@@ -542,7 +542,7 @@ class ImageController extends AbstractController
         return $this->ajson($data);
     }
 
-    // Conseguir liked y faved images (Para vista del perfil de user)
+    // Get liked and faved images (For user profile view)
     public function interactedUser(Request $request, PaginatorInterface $paginator){
 
         $data = [
@@ -552,13 +552,13 @@ class ImageController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();            
 
-        // Hacer una consulta para paginar
+        // Query to paginate
 
         $nsfw = $request->query->get('nsfw', "false");
         $epilepsy = $request->query->get('epilepsy', "false");        
         $user_id = $request->query->get('user_id', "null");        
         $interaction = $request->query->get('interaction', "null");   
-        $user = $request->query->get('user', "null");               // El propio usuario puede ver sus propias imágenes, sean sensibles o no.     
+        $user = $request->query->get('user', "null"); // The owner can see their own images, sensitive or not.     
 
         if ($interaction != "null"){
 
@@ -611,51 +611,55 @@ class ImageController extends AbstractController
         $query = $em->createQuery($dql);
 
 
-        // recoger el parámetro page de la URL
+        // Get page parameter from URL
         $page = $request->query->getInt('page', 1); // Por defecto, 1
         $items_per_page = 24;
 
-        // Invocar paginación
+        // Invoke pagination
         $pagination = $paginator->paginate($query, $page, $items_per_page);
 
         $total = $pagination->getTotalItemCount();
 
-        // Preparar array de datos para devolver
+        // Prepare data array to return
         $data = [
             'status'            => 'success',
-            'messsage'          => 'Correcto.',
+            'messsage'          => 'Images loaded successfully.',
             'settings'          => $where,
             'total_items'       => $total,
             'page'              => $page,
             'items_per_page'    => $items_per_page,
             'total_pages'       => ceil($total / $items_per_page),
-            'images'            => $pagination, // ¡¡Aquí se envían las imágenes!!
+            'images'            => $pagination, // Here is where images go!!
             'paginator'         => $paginator
         ];
     }
     return $this->ajson($data);
     }
 
-    // Conseguir todas las imágenes compartidas por usuarios seguidos por un usuario (token)
-    // Mira que no se repita la misma imagen en los que muestra cada vez. Si muestra 10, y aparecen repetidos, los quita. Pero en los siguientes 10 pueden aparecer
-    // elementos que ya hayan salido.
+    /*
+     *
+     * Gets all the images shared by users that the current user is following (token)
+     * Checks that the image is not repeated in each scroll load. If it displays n each time, and finds repeated ones, it removes them, 
+     * but they can reapear in the next scroll call. (This function is called on scroll, when the user reaches the bottom of the page)
+     *
+     */
     public function sharedImages(Request $request, JwtAuth $jwt_auth, PaginatorInterface $paginator){
 
         $data = [
             'status'            => 'error',
-            'message'           => 'No se ha podido obtener las imágenes'
+            'message'           => 'There was an error while trying to get the images.'
         ];
 
-        // Recoger cabecera de autentificación
+        // Get authentication header 
         $token = $request->headers->get('Authorization');
 
-        // Comprobar el token
+        // Check token
         $authCheck = $jwt_auth->checkToken($token);
 
-        // Si es válido:
+        // If valid:
         if ($authCheck){
 
-            // Conseguir la identidad del usuario
+            // Get user identity
             $identity = $jwt_auth->checkToken($token, true);
             $id = $identity->sub;
             $index = $request->query->getInt('index', 0);
@@ -684,7 +688,7 @@ class ImageController extends AbstractController
             $is_last = false;
             $arr_return = [];
 
-            // Metemos todas las imágenes de cada user compartidas
+            // We include every shared image from each user
             for($i = 0; $i < sizeof($followed_users); $i++){
                 $user_shared[$i] = $this->getDoctrine()->getRepository(UserInteractsWithImage::class)->findBy([
                     'user'          => $followed_users[$i]->getFollowed(),
@@ -696,7 +700,7 @@ class ImageController extends AbstractController
             }
 
             if ($all){ // There might not be elements to show if the user is not following anyone, or the users they follow haven't shared anything!
-                // Las juntamos para que estén en el mismo nivel. Arr[0][0] => Arr[0]; Arr[0][1] => Arr[1]
+                // We join them so they are at the same level. Arr[0][0] => Arr[0]; Arr[0][1] => Arr[1]
                 $merged = call_user_func_array('array_merge', $all);
 
                 usort($merged, array($this, "cmp"));
@@ -728,12 +732,12 @@ class ImageController extends AbstractController
                     unset($merged[$to_delete[$i]]);
                 }
 
-                // $array = ['El-1', 'El-2', 'El-3', 'El-4']    -> Antes del unset
+                // $array = ['El-1', 'El-2', 'El-3', 'El-4']    -> Before unset
                 // unset($array[2]);
-                // $array = ['El-1', '    ', 'El-3', 'El-4']    -> Después del unset
-                // echo $array[1] => unset borra el índice. Eso significa que no existe $array de 1, así que da error.
+                // $array = ['El-1', '    ', 'El-3', 'El-4']    -> After unset
+                // echo $array[1] => unset deletes the index. This means there's no $array at 1, so it shows an error.
 
-                $merged = array_values($merged);    // Reindexea los huecos vacíos
+                $merged = array_values($merged);    // Reindexes emtpy spaces
 
                 for($i = $index; $i < sizeof($merged); $i++){
 
@@ -773,7 +777,7 @@ class ImageController extends AbstractController
 
         $data = [
             'status'            => 'success',
-            'messsage'          => 'Correcto.',
+            'messsage'          => 'Images loaded successfully.',
             'num_iterations'    => $num_iterations,
             'index'             => $new_index,
             'veces'             => $duplicated,

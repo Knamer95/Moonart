@@ -129,9 +129,9 @@ export class UserEditComponent implements OnInit {
                             }
                             else {
                                 this.status = "error";
-                                this._commonService.displayNotification(this);
                                 this.checker = false;
                             }
+                            this._commonService.displayNotification(this, response.status);
                         },
                         error => { }
                     );
@@ -154,7 +154,6 @@ export class UserEditComponent implements OnInit {
             response => {
                 if (response && response.status == "success") {
                     this.status = "success";
-                    this._commonService.displayNotification(e);
 
                     this.identity = response.user;
                     this.user = response.user;
@@ -175,14 +174,14 @@ export class UserEditComponent implements OnInit {
                 }
                 else {
                     this.status = "error";
-                    this._commonService.displayNotification(e);
                 }
                 console.log(response);
+                this._commonService.displayNotification(this, this.status);
 
             },
             error => {
                 this.status = "error";
-                this._commonService.displayNotification(e);
+                this._commonService.displayNotification(this, this.status);
                 console.log(error);
             }
         );

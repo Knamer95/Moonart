@@ -1,8 +1,8 @@
-<div class="nav-wrapper">
+<div class="nav-wrapper nav-small"> <!-- data-navbar="not-fixed" -->
     <div class="clip">
-        <div class="nav-background fixed-top" data-theme="zoe" data-view="0">
+        <div class="nav-background" data-view="0"> <!-- No longer where we set the theme, due to some issues -->
 
-            <nav class="navbar navbar-dark fixed-top">
+            <div class="navbar navbar-dark" data-theme="zoe">
                 <div class="nav-container" data-view="0">
 
                     <div class="nav-el-1">
@@ -30,7 +30,7 @@
                             </li>
                             <!--
                 <li class="nav-item">
-                    <a class="nav-link" [routerLink]="['/discover']">Descubre</a>
+                    <a class="nav-link" [routerLink]="['/discover']">Discover</a>
                 </li>
             -->
                             <li class="nav-item mr-auto">
@@ -49,7 +49,7 @@
                     </div>
 
                     <div class="nav-el-4">
-                        <!-- <a class="navbar-brand ml-auto admin" href="#">Administrar</a> -->
+                        <!-- <a class="navbar-brand ml-auto admin" href="#">Administrate</a> -->
                         <ul class="navbar-nav right-position log-reg">
                             <li class="nav-item" *ngIf="!identity || identity.nick == 'guest'">
                                 <a class="nav-link" [routerLink]="['/login']">{{this.currentLang.attributes.login}}</a>
@@ -60,7 +60,7 @@
 
                             <!-- <button class="btn btn-outline-info btn-toggle" onclick="this.blur(); swap();"><i class="fas fa-lightbulb"></i></button> -->
                             <li class="nav-item welcome-container" *ngIf="identity && identity.nick != 'guest'">
-                                <span class="nav-welcome">{{this.currentLang.attributes.welcomeMsg}}, </span>
+                                <span class="nav-welcome">{{this.currentLang.attributes.welcomeMsg}},</span>
                                 <div class="dropdown show">
                                     <button class="btn dropdown-toggle username nav-link nav-item themed" data-theme="zoe"
                                         role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
@@ -77,7 +77,7 @@
                         </ul>
                     </div>
                 </div>
-            </nav> <!-- End of navigation bar -->
+            </div> <!-- End of navigation bar -->
         </div>
     </div>
 </div>
@@ -94,6 +94,6 @@
 
 <!-- <app-settings (emitter)="onEmited($event)" style="display: none;"></app-settings> -->
 <!--
-    This, would add an app-settings instance, which 
+    This would add an app-settings instance, which 
     would be present on every module, repeating on settings module.
 -->

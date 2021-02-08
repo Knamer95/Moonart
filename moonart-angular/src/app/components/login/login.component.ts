@@ -45,6 +45,7 @@ export class LoginComponent implements OnInit {
 
             let config = {
                 nightMode: false,
+                navBarAlwaysOnTop: true,
                 scroll: true,
                 nsfw: false,
                 epilepsy: false,
@@ -70,7 +71,6 @@ export class LoginComponent implements OnInit {
             response => {
                 if (!response.status || response.status != 'error') {
                     this.status = 'success';
-                    this._commonService.displayNotification(this);
 
                     this.identity = response;
 
@@ -79,7 +79,6 @@ export class LoginComponent implements OnInit {
                         response => {
                             if (!response.status || response.status != 'error') {
                                 this.status = 'success';
-                                this._commonService.displayNotification(this);
 
                                 this.token = response;
 
@@ -90,29 +89,27 @@ export class LoginComponent implements OnInit {
                                 localStorage.removeItem("config");
                                 this.updateDB(this.token);
 
-                                setTimeout(() => { this._router.navigate(['home']); }, 1000);
+                                setTimeout(() => { this._router.navigate(['home']); }, 3000);
 
                             }
                             else {
                                 this.status = 'error';
-                                this._commonService.displayNotification(this);
                             }
                         },
                         error => {
                             this.status = 'error';
-                            this._commonService.displayNotification(this);
                         }
                     );
                     form.reset();
                 }
                 else {
                     this.status = 'error';
-                    this._commonService.displayNotification(this);
                 }
+
+                this._commonService.displayNotification(this, this.status);
             },
             error => {
                 this.status = 'error';
-                this._commonService.displayNotification(this);
             }
         );
     }
@@ -143,6 +140,7 @@ export class LoginComponent implements OnInit {
                     this.isFirst = true;
                     this.config = {
                         nightMode: false,
+                        navBarAlwaysOnTop: true,
                         scroll: true,
                         nsfw: false,
                         epilepsy: false,

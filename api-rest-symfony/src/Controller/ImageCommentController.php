@@ -20,19 +20,19 @@ use App\Services\JwtAuth;
 class ImageCommentController extends AbstractController
 {
     private function ajson($data){
-        // Serializar datos con servicio serializer
+        // Serialize data with serializer service
         $json = $this->get('serializer')->serialize($data, 'json');
 
-        // Response con httpfoundation
+        // Response with httpfoundation
         $response = new Response();
 
-        // Asignar contenido a la respuesta
+        // Assign content to the response
         $response->setContent($json);
 
-        // Indicar formato de respuesta
+        // Specify response format
         $response->headers->set('Content-Type', 'application/json');
 
-        //Devolver la respuesta
+        // Return response
         return $response;
     }
 
@@ -42,7 +42,7 @@ class ImageCommentController extends AbstractController
         $authCheck = $jwt_auth->checkToken($token);
         $data = [
             'status'    => 'error',
-            'message'   => 'La conexión ha fallado. Por favor, inténtalo más tarde.',
+            'message'   => 'Connection failed. Please try again later.',
             'token'     => $token,
             'authCheck' => $authCheck
         ];
@@ -59,7 +59,7 @@ class ImageCommentController extends AbstractController
 
             if(!empty($json)){
 
-                $user_id = (!empty($params->userId)) ? $params->userId : null;      //  --> Ya sirve con $identity
+                $user_id = (!empty($params->userId)) ? $params->userId : null;      //  --> $identity is already enough
                 $image_id = (!empty($params->imageId)) ? $params->imageId : null;
                 $parent = (!empty($params->parent)) ? $params->parent : false;
                 $comment = (!empty($params->comment)) ? $params->comment : false;
@@ -93,7 +93,7 @@ class ImageCommentController extends AbstractController
                     
                     $data = [
                         'status'    => 'success',
-                        'message'   => 'Comentario subido correctamente.'
+                        'message'   => 'Comment added successfully.'
                     ];
                 }
             }
@@ -105,7 +105,7 @@ class ImageCommentController extends AbstractController
 
         $data = [
             'status'    => 'error',
-            'message'   => 'La conexión ha fallado. Por favor, inténtalo más tarde.',
+            'message'   => 'Connection failed. Please try again later.',
         ];
 
         $em = $this->getDoctrine()->getManager();
@@ -132,16 +132,16 @@ class ImageCommentController extends AbstractController
 
     public function removeComment(Request $request, JwtAuth $jwt_auth, $id = null){
         
-        // Recoger cabecera de autentificación
+        // Get authentication header 
         $token = $request->headers->get('Authorization');
 
-        // Comprobar el token
+        // Check token
         $authCheck = $jwt_auth->checkToken($token);    
 
-        // Respuesta por defecto
+        // Default response
         $data = [
             'status'    => 'error',
-            'messsage'  => 'No se ha podido borrar el comentario.',
+            'messsage'  => 'The comment could not be deleted.',
             'id'        => $id
         ];
 
@@ -162,7 +162,7 @@ class ImageCommentController extends AbstractController
 
                 $data = [
                     'status'    => 'success',
-                    'messsage'  => 'Comentario eliminado correctamente.',
+                    'messsage'  => 'Comment deleted successfully.',
                     'id'        => $id
                 ];
             }

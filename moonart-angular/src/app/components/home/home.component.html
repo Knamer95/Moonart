@@ -2,7 +2,7 @@
     <div *ngIf="this.hasElements === true; else elseBlock">
     <h1 class="index-title no-select">&nbsp;&nbsp;{{this.currentLang.attributes.title}}</h1>
     <hr>
-    <!-- <div class="espaciado"></div> -->
+    <!-- <div class="spacing"></div> -->
     <div class="container-images">
         <div class="box grid-col-{{i+1}} pb-5" *ngFor="let image of images; let i = index">
             <div id="image-box">

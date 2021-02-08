@@ -17,7 +17,7 @@ class JwtAuth{
 
 
     public function signup($login, $password, $getToken = null){
-        // Comprobar si el usuario existe
+        // Check if user exists
         $signup = false;
 
         $user = $this->manager->getRepository(User::class)->findOneBy([
@@ -28,7 +28,7 @@ class JwtAuth{
         if (is_object($user)){
             $signup = true;
         }
-        else{ // Se puede hacer login con el nick o con el email
+        else{ // User can login with nick or email
             $user = $this->manager->getRepository(User::class)->findOneBy([
                 'nick'     => $login,
                 'password'  => $password
@@ -40,7 +40,7 @@ class JwtAuth{
         }
 
 
-        // Si existe, generar el token de jwt
+        // If it exists, generate the JWT token
         if ($signup){
             $token = [
                 'sub'           => $user->getId(),
@@ -51,10 +51,10 @@ class JwtAuth{
                 'description'   => $user->getDescription(),
                 'image'         => $user->getUserImage(),
                 'iat' => time(),
-                'exp' => time() + (7 * 24 * 60 * 60), // Caduca a la semana
+                'exp' => time() + (7 * 24 * 60 * 60), // Expires in a week
             ];
 
-            // Comprobar el flag getToken. Condicional si nos llega
+            // Check the getToken flag. Conditional if reaches
             $jwt = JWT::encode($token, $this->key, 'HS256');
 
             if ($getToken){
@@ -68,11 +68,11 @@ class JwtAuth{
         else{
             $data = [
                 'status'    => 'error',
-                'message'   => 'Login incorrecto.'
+                'message'   => 'Incorrect login.'
             ];
         }
 
-        // Devolver los datos
+        // Return data
         return $data;
     }
 

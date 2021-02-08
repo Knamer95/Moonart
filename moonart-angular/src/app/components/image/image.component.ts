@@ -75,9 +75,9 @@ export class ImageComponent implements OnInit {
         private elementRef: ElementRef
     ) {
         this.isTags = false;
-        this.loadError = 0;         // Para loadImage();
-        this.isFwError = 0;         // Para follow();
-        this.commError = 0;         // Para getAllComments();
+        this.loadError = 0;         // For loadImage();
+        this.isFwError = 0;         // For follow();
+        this.commError = 0;         // For getAllComments();
         this.iCntError = 0;
         this.found = false;
         this.nLikes = 0;
@@ -160,12 +160,12 @@ export class ImageComponent implements OnInit {
                 if (response.status == "success") {
                     console.log(response);
 
-                    this._commonService.displayNotification(this);
+                    this._commonService.displayNotification(this, response.status);
 
-                    that.username = response.imagen.user.nick;
+                    that.username = response.image.user.nick;
 
                     this._userService.checkFollowing(that);
-                    that.image = response.imagen;
+                    that.image = response.image;
                     // that.images = that.image;
                     // console.log(that.images);
 
@@ -176,7 +176,7 @@ export class ImageComponent implements OnInit {
                         that.image.description = that._commonService.formatText(that.image.description);
                     }
 
-                    that.image.createdAt = that._commonService.dateFormat(that.image.createdAt, this.lang, "loadImage");
+                    that.image.createdAt = that._commonService.dateFormat(that.image.createdAt, this.lang, "timestamp");
                     
                     // that.image.rights = that.image.rights.charAt(0).toUpperCase() + that.image.rights.slice(1);
 
@@ -194,9 +194,9 @@ export class ImageComponent implements OnInit {
                         that.visible = false;
                     }
 
-                    if (response.imagen.tags != null) {
+                    if (response.image.tags != null) {
                         that.isTags = true;
-                        that.tags = response.imagen.tags.trim().split(",");
+                        that.tags = response.image.tags.trim().split(",");
                         // console.log(that.tags[0].charAt(0));
                     }
 
@@ -236,8 +236,11 @@ export class ImageComponent implements OnInit {
     }
 
 
-    // Function to load user and its data
-
+    /*
+     *
+     * Function to load user and its data
+     *
+     */
     loadUser() {
         this.identity = this._userService.getIdentity();
         this.token = this._userService.getToken();
@@ -245,13 +248,16 @@ export class ImageComponent implements OnInit {
     }
 
 
-    // Function to check if the user visualizing the image follows the image owner or not
-
+    /*
+     *
+     * Function to check if the user visualizing the image follows the image owner or not
+     *
+     */
     follow(token, nick) {
         this._userService.follow(token, nick).subscribe(
             response => {
                 if (response.status == "success") {
-                    this._commonService.displayNotification(this);
+                    this._commonService.displayNotification(this, response.status);
                     this._userService.checkFollowing(this);
                 }
                 this.isFwError = 0;
@@ -272,8 +278,11 @@ export class ImageComponent implements OnInit {
     }
 
 
-    // Function to get all comments. It transforms the date to a more readable one
-
+    /*
+     *
+     * Function to get all comments. It transforms the date to a more readable one
+     *
+     */
     getAllComments(imageId) {
         this._imageService.getComments(imageId).subscribe(
             response => {
@@ -283,11 +292,11 @@ export class ImageComponent implements OnInit {
                     this.comments[i].children = [];
                 }
 
-                for (let i = 0; i < this.comments.length; i++) { // Dar formato a las fechas
+                for (let i = 0; i < this.comments.length; i++) { // To dormat dates
 
                     // console.log(this.comments[i].user);
 
-                    this.comments[i].createdAt = this._commonService.dateFormat(this.comments[i].createdAt, this.lang, "getAllComments");
+                    this.comments[i].createdAt = this._commonService.dateFormat(this.comments[i].createdAt, this.lang, "lapsed");
                     try {
                         this.comments[i].comment = JSON.parse(this.comments[i].comment);
                     }
@@ -330,8 +339,11 @@ export class ImageComponent implements OnInit {
 
     }
 
-    // Function onSubmit, for the comment submission. Changes charCode === 10 (linejumps) with \n to store them on the DB
-
+    /*
+     *
+     * Function onSubmit, for the comment submission. Changes charCode === 10 (linejumps) with \n to store them on the DB
+     *
+     */
     onSubmit(form) {
         let comment = this.formVar.value.comment;
 
@@ -356,7 +368,7 @@ export class ImageComponent implements OnInit {
             this._imageService.addComment(this.token, json).subscribe(
                 response => {
                     if (response.status == "success") {
-                        this._commonService.displayNotification(this);
+                        this._commonService.displayNotification(this, response.status);
 
                         form.reset();
                         /*
@@ -390,16 +402,19 @@ export class ImageComponent implements OnInit {
 
     }
 
-    // Function to delete an image. Only roles [role_admin | role_owner] can access this function. If everything goes well, it deletes the image, and redirects home
-
+    /*
+     *
+     * Function to delete an image. Only roles [role_admin | role_owner] can access this function. If everything goes well, it deletes the image, and redirects home
+     *
+     */
     delete(id) {
         this._imageService.delete(this.token, id).subscribe(
             response => {
                 console.log(response);
                 if (response.status == "success") {
-                    this._commonService.displayNotification(this);
+                    this._commonService.displayNotification(this, response.status);
                     this.deleted = true;
-                    setTimeout(() => { this._router.navigate(['home']); }, 1000);
+                    setTimeout(() => { this._router.navigate(['home']); }, 3000);
                 }
             },
             error => {
@@ -419,7 +434,7 @@ export class ImageComponent implements OnInit {
                 console.log(response);
                 if (response.status == "success") {
                     this.ngOnInit();
-                    this._commonService.displayNotification(this);
+                    this._commonService.displayNotification(this, response.status);
                 }
             },
             error => {
@@ -429,17 +444,20 @@ export class ImageComponent implements OnInit {
     }
 
 
-    //  Function to hide an image if role user_role == role_admin || role_mod (Image status is set to hidden, so only the owner can see it at their profile)
-    //  Only if the user hiding it is not the owner, cause it wouldn't make sense otherwise to hide your own image 
-
+    /*
+     *
+     * Function to hide an image if role user_role == role_admin || role_mod (Image status is set to hidden, so only the owner can see it at their profile)
+     * Only if the user hiding it is not the owner, cause it wouldn't make sense otherwise to hide your own image 
+     *
+     */
     hideToggle(id, action) {
         this._imageService.hide(this.token, id, action).subscribe(
             response => {
                 console.log(response);
                 if (response.status == "success") {
-                    this._commonService.displayNotification(this);
+                    this._commonService.displayNotification(this, response.status);
                     this.hidden = true;
-                    setTimeout(() => { this._router.navigate(['home']); }, 1000);
+                    setTimeout(() => { this._router.navigate(['home']); }, 3000);
                 }
             },
             error => {
@@ -453,8 +471,11 @@ export class ImageComponent implements OnInit {
         this._router.navigateByUrl("/search?q=tag:" + tag)
     }
 
-    // Function to stop propagation of events
-
+    /*
+     *
+     * Function to stop propagation of events
+     *
+     */
     doNothing(e) {
         e.stopPropagation();
     }

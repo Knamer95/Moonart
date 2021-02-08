@@ -162,8 +162,13 @@ export class ImageService {
     }
 
 
-    // Common functions to multiple components
-
+    /*
+     *
+     * Common functions to multiple components
+     * Depending on the attributes nsfw and epilepsy (user config), it will display them or not.
+     * If it's an user profile, it will show their images. An user can see their own sensitive pictures, no matter their config
+     *
+     */
     showAllImages(that, page, nsfw, epilepsy, user = null, isProfileUser = false, $from = "") {
         this.getAllImages(page, nsfw, epilepsy, user, isProfileUser).subscribe(
             response => {

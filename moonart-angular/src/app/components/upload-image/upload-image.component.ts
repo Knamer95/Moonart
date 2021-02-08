@@ -152,7 +152,7 @@ export class UploadImageComponent implements OnInit {
                         this._imageService.interact(this.token, data, estado).subscribe(
                             response => {
                                 if (response.status == "success") {
-                                    setTimeout(() => { this._router.navigate(['home']); }, 1000);
+                                    setTimeout(() => { this._router.navigate(['home']); }, 3000);
                                 }
                                 console.log(response);
                             },
@@ -165,12 +165,12 @@ export class UploadImageComponent implements OnInit {
                 }
                 else {
                     this.status = "error";
-                    this._commonService.displayNotification(this);
                 }
+                this._commonService.displayNotification(this, this.status);
             },
             error => {
                 this.status = "error";
-                this._commonService.displayNotification(this);
+                this._commonService.displayNotification(this, this.status);
             }
         );
     }

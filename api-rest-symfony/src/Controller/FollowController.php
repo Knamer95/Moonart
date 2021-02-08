@@ -20,19 +20,19 @@ use App\Services\ImageUploader;
 class FollowController extends AbstractController
 {
     private function ajson($data){
-        // Serializar datos con servicio serializer
+        // Serialize data with serializer service
         $json = $this->get('serializer')->serialize($data, 'json');
 
-        // Response con httpfoundation
+        // Response with httpfoundation
         $response = new Response();
 
-        // Asignar contenido a la respuesta
+        // Assign content to the response
         $response->setContent($json);
 
-        // Indicar formato de respuesta
+        // Specify response format
         $response->headers->set('Content-Type', 'application/json');
 
-        //Devolver la respuesta
+        // Return response
         return $response;
     }
 
@@ -42,7 +42,7 @@ class FollowController extends AbstractController
         $authCheck = $jwt_auth->checkToken($token);
         $data = [
             'status'    => 'error',
-            'message'   => 'La conexión ha fallado. Por favor, inténtalo más tarde.',
+            'message'   => 'Connection failed. Please try again later.',
             'token'     => $token,
             'authCheck' => $authCheck
         ];
@@ -85,7 +85,7 @@ class FollowController extends AbstractController
                     
                     $data = [
                         'status'    => 'success',
-                        'message'   => 'Ahora sigues al usuario.'
+                        'message'   => 'User followed.'
                     ];
                 }
                 else{
@@ -95,7 +95,7 @@ class FollowController extends AbstractController
 
                     $data = [
                         'status'    => 'success',
-                        'message'   => 'Ya no sigues al usuario.'
+                        'message'   => 'User unfollowed.'
                     ];
                 }
             }
@@ -109,7 +109,7 @@ class FollowController extends AbstractController
         $authCheck = $jwt_auth->checkToken($token);
         $data = [
             'status'    => 'error',
-            'message'   => 'La conexión ha fallado. Por favor, inténtalo más tarde.',
+            'message'   => 'Connection error. Please try again later.',
             'token'     => $token,
             'authCheck' => $authCheck
         ];
@@ -164,7 +164,7 @@ class FollowController extends AbstractController
 
         $data = [
             'status'    => 'error',
-            'message'   => 'Usuario no encontrado.'
+            'message'   => 'User not found.'
         ];
 
         $em = $this->getDoctrine()->getManager();
@@ -186,7 +186,7 @@ class FollowController extends AbstractController
 
             $data = [
                 'status'        => 'success',
-                'message'       => 'Usuario encontrado.',
+                'message'       => 'User found.',
                 'followers'     => sizeof($followers),
                 'following'     => sizeof($following),
             ];
