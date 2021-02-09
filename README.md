@@ -108,7 +108,7 @@ Run the `Angular` project from the terminal:
 ng serve --live-reload false
 ```
 
-The reason of setting live reloading to false is that in a developer environment, `Angular` reloads every time it detects some changes. Yhis means that if you upload an image (which will be saved in `moonart/api-rest-symfony/public`), it will consider this a change, and it will reload the script, and it won't redirect to home after uploading it, like it should.
+The reason of setting live reloading to false is that in a developer environment, `Angular` reloads every time it detects some changes. This means that if you upload an image (which will be saved in `moonart/api-rest-symfony/public`), it will consider this a change, and it will reload the script, and it won't redirect to home after uploading it, like it should.
 
 If something is not working properly, feel free to message me! The email is specified below, in `#Contribute`.
 
@@ -123,7 +123,7 @@ You can check how to deploy the project in the `Angular` [documentation](https:/
 I used the following tools:
 
 * [npm](https://www.npmjs.com/) - Package Manager (Angular)
-* [composer](https://getcomposer.org/ - Package Manager  (Symfony)
+* [composer](https://getcomposer.org/) - Package Manager  (Symfony)
 * [Angular 7.2.0](https://angular.io/docs) - As front-end framework
 * [Symfony 4.2.7](https://symfony.com/doc/current/index.html) - As back-end framework
 * [MySQL](https://dev.mysql.com/doc/) - As DB language
@@ -141,7 +141,7 @@ You can find a list of the things that are yet to be implemented, and current kn
 
 I would like to thank:
 
-* [Villanuevand](https://github.com/Villanuevand) for the README.md template. ❤️
+* [Villanuevand](https://github.com/Villanuevand) for the README.md template.
 * `https://pixabay.com/` for providing free to share pictures.
 * [DeviantArt](https://www.deviantart.com/) for the designing ideas (This webpage is based on `DeviantArt` mostly)
 * And special thanks to everyone that made MoonArt possible, my teachers, friends that helped me test things out, etc.
