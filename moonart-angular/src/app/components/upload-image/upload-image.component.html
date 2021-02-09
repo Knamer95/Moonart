@@ -23,7 +23,7 @@
         </div>
       </div>
       <div class="col-md-7">
-        <div class="mb-3">
+        <div class="mb-5 relative image-title-container">
           <label for="name" class="pr-3">{{this.currentLang.attributes.imageTitle}}</label>
           <input type="text" name="name" #name="ngModel" [(ngModel)]="image.name" placeholder="{{this.currentLang.attributes.max30CharsPlaceholder}}"
             maxlength="30" class="form-control title" autofocus required>

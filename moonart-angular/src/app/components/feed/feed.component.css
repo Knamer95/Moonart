@@ -80,13 +80,19 @@
     text-overflow: ellipsis; /* Adds the ... */
 }
 
+.row-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
 .date{
     font-size: 16px;
     /* position: absolute;
     bottom: -5px; */
     color: rgb(0 0 0 / 69%);
     position: relative;
-    bottom: -5px;
+    bottom: -3px;
+    right: 20px;
     text-align: right;
 }
 
@@ -96,6 +102,7 @@
 
 .counter{
     font-size: 20px;
+    margin-left: 15px;
 }
 
 .empty{
@@ -113,4 +120,28 @@
 [data-container="night-container"] .tweet{
     border-top: 1px solid rgb(65, 65, 65);
     border-bottom: 1px solid rgb(65, 65, 65);
+}
+
+/*=============================*/
+/*      CONSIDERED PHONE       */
+/*=============================*/
+@media screen and (max-width: 1150px){
+    .container-ma{
+        margin: 0 !important;
+    }
+
+    .counter{
+        margin-left: 0px;
+    }
+
+    .shared-by {
+        padding-bottom: 20px;
+        position: relative;
+        right: 0;
+        top: 0;
+    }
+
+    .empty {
+        height: 10px;
+    }
 }

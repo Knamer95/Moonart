@@ -71,6 +71,7 @@ span{
   margin: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
+  display: inline-block;
 }
 
 .color:hover{
@@ -114,6 +115,9 @@ input[type="text"], input[type="number"]{
 .orange { background: rgb(247, 217, 172); }
 .yellow { background: rgb(255, 253, 140); }
 .zoe    { background: linear-gradient(45deg, #fcba67, #e65cff75); }
+.light    { background: rgb(255 255 255 / 22%) }
+.monster    { background: linear-gradient( 45deg, #132119 2%, #00ca7f85) }
+.energy    { background: linear-gradient(45deg, #1f2113 -11%, #fff700d6 93%); }
 
 .chosen{box-shadow: 0px 0px 3px 4px rgba(237, 43, 255, 0.295); transform: scale(1.2);}
 .chosen:hover{ transform: scale(1.2); }
@@ -182,4 +186,9 @@ input[type="text"], input[type="number"]{
 
 .select_list_option{
   color: black;
+}
+
+.row-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
 }

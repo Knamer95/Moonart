@@ -1,66 +1,66 @@
 <div class="container-fluid col-md-6 container-ma">
-  <h1 class="index-title no-select">&nbsp;&nbsp;{{this.currentLang.attributes.title}}</h1>
+  <h1 class="index-title no-select">{{this.currentLang.attributes.title}}</h1>
   <hr>
-  <div class="row pl-4">
-    <div class="col-md-9">
-      <span>&nbsp;&nbsp;{{this.currentLang.attributes.nightMode}}</span>
+  <div class="row-grid">
+    <div class="config-title">
+      <span>{{this.currentLang.attributes.nightMode}}</span>
     </div>
-    <div class="col-md-3">
+    <div class="config-value">
       <input type="checkbox" class="switch night" [checked]="nightMode==true" (change)="change($event,'nightMode')">
     </div>
   </div>
 
   <div class="pb-4"></div>
 
-  <div class="row pl-4">
-    <div class="col-md-9">
-      <span>&nbsp;&nbsp;{{this.currentLang.attributes.paginationType}}</span>
+  <div class="row-grid">
+    <div class="config-title">
+      <span>{{this.currentLang.attributes.paginationType}}</span>
     </div>
-    <div class="col-md-3">
+    <div class="config-value">
       <input type="checkbox" class="switch" [checked]="scroll==true" (change)="change($event,'scroll')">
     </div>
   </div>
 
   <div class="pb-4"></div>
 
-  <div class="row pl-4">
-    <div class="col-md-9">
-      <span>&nbsp;&nbsp;{{this.currentLang.attributes.showNsfw}}</span>
+  <div class="row-grid">
+    <div class="config-title">
+      <span>{{this.currentLang.attributes.showNsfw}}</span>
     </div>
-    <div class="col-md-3">
+    <div class="config-value">
       <input type="checkbox" class="switch" [checked]="nsfw==true" (change)="change($event,'nsfw')">
     </div>
   </div>
 
   <div class="pb-4"></div>
 
-  <div class="row pl-4">
-    <div class="col-md-9">
-      <span>&nbsp;&nbsp;{{this.currentLang.attributes.showEpilepsy}}</span>
+  <div class="row-grid">
+    <div class="config-title">
+      <span>{{this.currentLang.attributes.showEpilepsy}}</span>
     </div>
-    <div class="col-md-3">
+    <div class="config-value">
       <input type="checkbox" class="switch" [checked]="epilepsy==true" (change)="change($event,'epilepsy')">
     </div>
   </div>
 
   <div class="pb-4"></div>
 
-  <div class="row pl-4">
-    <div class="col-md-9">
-      <span>&nbsp;&nbsp;{{this.currentLang.attributes.shareImages}}</span>
+  <div class="row-grid">
+    <div class="config-title">
+      <span>{{this.currentLang.attributes.shareImages}}</span>
     </div>
-    <div class="col-md-3">
+    <div class="config-value">
       <input type="checkbox" class="switch" [checked]="share==true" (change)="change($event,'share')">
     </div>
   </div>
 
   <div class="pb-4"></div>
 
-  <div class="row pl-4">
-    <div class="col-md-9">
-      <span>&nbsp;&nbsp;{{this.currentLang.attributes.feedElements}}</span>
+  <div class="row-grid">
+    <div class="config-title">
+      <span>{{this.currentLang.attributes.feedElements}}</span>
     </div>
-    <div class="col-md-3">
+    <div class="config-value">
       <input type="number" class="feed" min="5" max="100" default="5" [(ngModel)]="feed"
         (change)="change($event,'feed')">
     </div>
@@ -68,11 +68,11 @@
 
   <div class="pb-4"></div>
 
-  <div class="row pl-4">
-    <div class="col-md-9">
-      <span class="event-emitter" (click)="updateLang(lang)">&nbsp;&nbsp;{{this.currentLang.attributes.language}}</span>
+  <div class="row-grid">
+    <div class="config-title">
+      <span class="event-emitter" (click)="updateLang(lang)">{{this.currentLang.attributes.language}}</span>
     </div>
-    <div class="col-md-3">
+    <div class="config-value">
       <select class="lang">
         <option data-id="1" data-value="english">English</option>
         <option data-id="2" data-value="spanish">Español</option>
@@ -94,15 +94,24 @@
   <div class="pb-4"></div>
   <div class="pb-4"></div>
 
-  <div class="row pl-4 pb-3">
-    <div class="col-md-12 pl-3">
-      <span>&nbsp;&nbsp;{{this.currentLang.attributes.themes}}</span>
+  <div class="row pb-3">
+    <div class="pl-3">
+      <span>{{this.currentLang.attributes.themes}}</span>
     </div>
   </div>
   <div class="themes-container">
-    <div class="row pl-5 pr-5">
+    <div>
       <div class="color zoe" (click)="pickColor($event, 'zoe')" data-toggle="tooltip" data-placement="top" title="Zoe">
       </div>
+
+      <div class="color light" (click)="pickColor($event, 'light')" data-toggle="tooltip" data-placement="top"
+      title="Light"></div>
+
+      <div class="color monster" (click)="pickColor($event, 'monster')" data-toggle="tooltip" data-placement="top"
+      title="Monster"></div>
+
+      <div class="color energy" (click)="pickColor($event, 'energy')" data-toggle="tooltip" data-placement="top"
+      title="Energy"></div>
 
       <div class="color red" (click)="pickColor($event, 'red')" data-toggle="tooltip" data-placement="top" title="Red">
       </div>
@@ -118,9 +127,7 @@
       <div class="color orange" (click)="pickColor($event, 'orange')" data-toggle="tooltip" data-placement="top"
         title="Orange"></div>
 
-      <div class="color yellow" (click)="pickColor($event, 'yellow')" data-toggle="tooltip" data-placement="top"
-        title="Yellow"></div>
-      <div class="color light" (click)="pickColor($event, 'light')" data-toggle="tooltip" data-placement="top"
-        title="Light"></div>
+      <!-- <div class="color yellow" (click)="pickColor($event, 'yellow')" data-toggle="tooltip" data-placement="top"
+        title="Yellow"></div> -->
     </div>
   </div>

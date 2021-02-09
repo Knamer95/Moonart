@@ -452,6 +452,7 @@ textarea{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 10px;
+    margin-bottom: 40px;
 }
 
 /* https://css-tricks.com/aspect-ratios-grid-items/ */
@@ -560,4 +561,23 @@ textarea{
 
 [data-container="night-container"] .add-comment:disabled{
     color: #767676 !important
+}
+
+@media screen and (max-width: 1150px){
+    .info-block{
+        padding: 30px 30px !important;
+    }
+
+    .interactions-container > div:not(.grid-actions-right) i + span{
+        display: none;
+    }
+
+    .grid-actions-right{
+        padding-right: 0;
+    }
+
+    .interactions-container i:not(.fa-ellipsis-h){
+        font-size: 25px;
+        margin-right: 25px;
+    }
 }

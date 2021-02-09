@@ -72,6 +72,19 @@ _It should look something like this_
 >    Header set Access-Control-Allow-Origin: *
 >\</IfModule\>
 
+_**Note: I changed it so now the httpd.conf part is not needed anymore. The way it works now is by allowing apache on your firewall (Control Panel => Windows Defender Firewall => Allow an app to go through Windows Defender => Allow another app => Search for apache (in my case, C://wamp64/bin/apache/apache2.4.37/bin/httpd.exe)._
+
+_I modified the nelmio\_cors.yaml (moonart/api-rest-symfony/config/packages) file to allow origin and headers from * (this is for a developer environment, don't do this in production)._
+
+_After that, I allowed my network to access the REST API (since that's where the CORS issue happens), adding the line 'Require ip 192.168.1.0' in httpd-vhosts.conf (attached in moonart/misc, you can copy paste it)._
+
+_Then if you want to have access to the server from every device in your network, go to 'moonart/moonart-angular/src/app/services', and add your private IP (mine is commented, it should look like that). There can only be one url, so comment the other one._
+
+_Once all this is done, you can run the Angular server with 'ng serve --host 192.168.1.x --live-reload false', being that your private IP, and you will be able to access to MoonArt from every device in your network!_
+
+_Since your virtual host may only be on one of your devices, you can access to MoonArt from 192.168.1.x:4200 from everywhere. Note that you can't access with moonart.io if you run the project in a host, and vice-versa_
+
+\-\-\-
 
 9) Import the database queries from moonDB.sql (located at the root of the project). I used MySQL Workbench. The credentials are:
 
@@ -85,7 +98,7 @@ Pass: (empty)
 
 And you should be ready to go!
 
--
+\-\-\-
 
 Notes:
 

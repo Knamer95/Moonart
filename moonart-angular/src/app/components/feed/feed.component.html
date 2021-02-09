@@ -48,9 +48,9 @@
               </div>
             </div>
 
-            <div class="row bottom">
+            <div class="row-grid bottom">
 
-              <div class="col-md-6">
+              <div class="">
                 <div class="counter">
                   <i class="fas fa-heart" [attr.data-status]="element.image.userLike"
                     (click)="saveInteraction($event, this.element, 'like')"></i><span>{{element.image.likes}}</span>
@@ -61,7 +61,7 @@
                 </div>
               </div>
 
-              <div class="col-md-6 date no-select">
+              <div class="date no-select">
                 {{this.currentLang.attributes.the}}{{element.image.createdAt}}{{this.currentLang.attributes.ago}}
                 <!-- <br> -->
                 <!-- CE {{element.sharedAt}} -->

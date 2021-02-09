@@ -184,7 +184,7 @@
                 <img [src]="'assets/profile-picture/' + this._imageURL" class="profile-picture">
                 <div class="comment-box-container">
                   <textarea formControlName="comment" maxlength="300" [value]="addComment" id="tarea" #tarea
-                    (input)="this.checkText($event);" [placeholder]="'Add a new comment...'" required></textarea>
+                    (input)="this.checkText($event);" placeholder="{{this.currentLang.attributes.newComment}}" required></textarea>
                 </div>
                 <div class="lower-textarea">
                   <button type="submit" class="add-comment"

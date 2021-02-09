@@ -6,6 +6,11 @@
     padding-bottom: 60px;
 }
 
+.row-grid{
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
 .btn-red-ma{
     background-color: #c9302c; 
     margin-left: 10px; 
@@ -67,10 +72,14 @@ input[type=submit]{
 }
 
 textarea{
-    width: 70%;
+    /* width: 70%; */
     height: 120px;
     padding: 5px 10px;
     resize: none;
+}
+
+textarea:focus{
+    outline: none;
 }
 
 .counter{
@@ -81,4 +90,32 @@ textarea{
 
 .options, .counter{
     user-select: none;
+}
+
+
+/*=============================*/
+/*      CONSIDERED PHONE       */
+/*=============================*/
+@media screen and (max-width: 1150px){
+    .container-ma{
+        padding: 30px 20px 40px 20px;
+    }
+
+    input{
+        width: 100% !important;
+    }
+
+    .options {
+        margin-bottom: 40px;
+        display: flex;
+    }
+
+    .options > div {
+        display: inline-block;
+    }
+
+    .options .chosen {
+        min-width: 110px;
+        margin-right: 20px;
+    }
 }

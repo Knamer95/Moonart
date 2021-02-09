@@ -1,85 +1,136 @@
-<div class="nav-wrapper nav-small"> <!-- data-navbar="not-fixed" -->
-    <div class="clip">
-        <div class="nav-background" data-view="0"> <!-- No longer where we set the theme, due to some issues -->
+<div class="nav-wrapper nav-small">
+    <!-- data-navbar="not-fixed" -->
+    <!-- <div class="clip"> -->
+    <div class="nav-background">
+        <!-- No longer where we set the theme, due to some issues -->
 
-            <div class="navbar navbar-dark" data-theme="zoe">
-                <div class="nav-container" data-view="0">
+        <div class="navbar navbar-dark" data-theme="zoe" data-status="liquid">
+            <div class="nav-container">
 
-                    <div class="nav-el-1">
-                        <a><img class="img-over tremble" src="assets/img/moon2-ico.png"></a>
-                        <span><a [routerLink]="['/home']" class="nav-title">MoonArt</a></span>
-                        <!-->button class="navbar-toggler" type="button" data-toggle="collapse"
+                <div class="nav-el-1">
+                    <a><img class="img-over tremble" src="assets/img/moon2-ico.png"></a>
+                    <span><a [routerLink]="['/home']" class="nav-title">MoonArt</a></span>
+                    <!--button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarColor01"
                         aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                         </button-->
-                        <div class="menu-toggle">
-                            <i class="fas fa-bars" (click)="this.toggle()"></i>
-                        </div>
+                    <div class="menu-toggle">
+                        <i class="fas fa-bars" (click)="this.toggle()"></i>
                     </div>
+                </div>
 
-                    <div class="nav-el-2">
-                        <ul>
-                            <li class="nav-item">
-                                <a class="nav-link" [routerLink]="['/home']" (click)="this.toggle()">{{this.currentLang.attributes.gallery}}<span
-                                        class="sr-only">(current)</span></a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" [routerLink]="['/feed']" (click)="this.toggle()">{{this.currentLang.attributes.feed}}<span
-                                        class="sr-only"></span></a>
-                            </li>
-                            <!--
+                <div class="nav-el-2">
+                    <ul>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/home']"
+                                (click)="this.toggle()">{{this.currentLang.attributes.gallery}}<span
+                                    class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/feed']"
+                                (click)="this.toggle()">{{this.currentLang.attributes.feed}}<span
+                                    class="sr-only"></span></a>
+                        </li>
+                        <!--
                 <li class="nav-item">
                     <a class="nav-link" [routerLink]="['/discover']">Discover</a>
                 </li>
             -->
-                            <li class="nav-item mr-auto">
-                                <a class="nav-link themed" data-theme="zoe" [routerLink]="['/upload-image']" (click)="this.toggle()">{{this.currentLang.attributes.uploadImage}}&nbsp;<i
-                                        class="fas fa-upload"></i></a>
-                            </li>
-                        </ul>
-                    </div>
+                        <li class="nav-item mr-auto">
+                            <a class="nav-link themed" data-theme="zoe" [routerLink]="['/upload-image']"
+                                (click)="this.toggle()">{{this.currentLang.attributes.uploadImage}}&nbsp;<i
+                                    class="fas fa-upload"></i></a>
+                        </li>
+                    </ul>
+                </div>
 
-                    <div class="nav-el-3">
-                        <div class="search-box">
-                            <input type="text" class="text search-input" [(ngModel)]="searchQuery" placeholder="{{this.currentLang.attributes.searchImage}}"
-                                (keyup.enter)="validateSearch()" required pattern="[A-z0-9_-]+" />
-                            <i class="fas fa-search searchbar" (click)="validateSearch()"></i>
-                        </div>
-                    </div>
-
-                    <div class="nav-el-4">
-                        <!-- <a class="navbar-brand ml-auto admin" href="#">Administrate</a> -->
-                        <ul class="navbar-nav right-position log-reg">
-                            <li class="nav-item" *ngIf="!identity || identity.nick == 'guest'">
-                                <a class="nav-link" [routerLink]="['/login']">{{this.currentLang.attributes.login}}</a>
-                            </li>
-                            <li class="nav-item" *ngIf="!identity || identity.nick == 'guest'">
-                                <a class="nav-link" [routerLink]="['/register']">{{this.currentLang.attributes.register}}</a>
-                            </li>
-
-                            <!-- <button class="btn btn-outline-info btn-toggle" onclick="this.blur(); swap();"><i class="fas fa-lightbulb"></i></button> -->
-                            <li class="nav-item welcome-container" *ngIf="identity && identity.nick != 'guest'">
-                                <span class="nav-welcome">{{this.currentLang.attributes.welcomeMsg}},</span>
-                                <div class="dropdown show">
-                                    <button class="btn dropdown-toggle username nav-link nav-item themed" data-theme="zoe"
-                                        role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">{{identity.nick}}</button>
-
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                                        <a class="dropdown-item" id="view-profile" [href]="['/profile/' + identity.nick]">{{this.currentLang.attributes.profile}}</a>
-                                        <a class="dropdown-item" id="edit-profile" [routerLink]="['/edit']">{{this.currentLang.attributes.editProfile}}</a>
-                                        <a class="dropdown-item" id="edit-profile" [routerLink]="['/settings']">{{this.currentLang.attributes.config}}</a>
-                                        <a class="dropdown-item" id="logout" [routerLink]="['/logout/1']">{{this.currentLang.attributes.exit}}</a>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
+                <div class="nav-el-3">
+                    <div class="search-box">
+                        <input type="text" class="text search-input" [(ngModel)]="searchQuery"
+                            placeholder="{{this.currentLang.attributes.searchImage}}" (keyup.enter)="validateSearch()"
+                            required pattern="[A-z0-9_-]+" />
+                        <i class="fas fa-search searchbar" (click)="validateSearch()"></i>
                     </div>
                 </div>
-            </div> <!-- End of navigation bar -->
-        </div>
+
+                <div class="nav-el-4">
+                    <!-- <a class="navbar-brand ml-auto admin" href="#">Administrate</a> -->
+                    <ul class="navbar-nav right-position log-reg">
+                        <li class="nav-item" *ngIf="!identity || identity.nick == 'guest'">
+                            <a class="nav-link" [routerLink]="['/login']">{{this.currentLang.attributes.login}}</a>
+                        </li>
+                        <li class="nav-item" *ngIf="!identity || identity.nick == 'guest'">
+                            <a class="nav-link"
+                                [routerLink]="['/register']">{{this.currentLang.attributes.register}}</a>
+                        </li>
+
+                        <!-- <button class="btn btn-outline-info btn-toggle" onclick="this.blur(); swap();"><i class="fas fa-lightbulb"></i></button> -->
+                        <li class="nav-item welcome-container" *ngIf="identity && identity.nick != 'guest'">
+                            <span class="nav-welcome">{{this.currentLang.attributes.welcomeMsg}},</span>
+                            <div class="dropdown show">
+                                <button class="btn dropdown-toggle username nav-link nav-item themed" data-theme="zoe"
+                                    role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">{{identity.nick}}</button>
+
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                                    <a class="dropdown-item" id="view-profile"
+                                        [href]="['/profile/' + identity.nick]">{{this.currentLang.attributes.profile}}</a>
+                                    <a class="dropdown-item" id="edit-profile"
+                                        [routerLink]="['/edit']">{{this.currentLang.attributes.editProfile}}</a>
+                                    <a class="dropdown-item" id="edit-profile"
+                                        [routerLink]="['/settings']">{{this.currentLang.attributes.config}}</a>
+                                    <a class="dropdown-item" id="logout"
+                                        [routerLink]="['/logout/1']">{{this.currentLang.attributes.exit}}</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="toggle-menu" data-view="0">
+                <ul class="phone-menu">
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/home']"
+                            (click)="this.toggle()">{{this.currentLang.attributes.gallery}}<span
+                                class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/feed']"
+                            (click)="this.toggle()">{{this.currentLang.attributes.feed}}<span
+                                class="sr-only"></span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link themed" data-theme="zoe" [routerLink]="['/upload-image']"
+                            (click)="this.toggle()">{{this.currentLang.attributes.uploadImage}}&nbsp;<i
+                                class="fas fa-upload"></i></a>
+                    </li>
+                    <li class="separator"></li>
+                    <li class="nav-item small" *ngIf="identity && identity.nick != 'guest'">
+                        <a class="nav-link" id="view-profile-2"
+                            [href]="['/profile/' + identity.nick]" (click)="this.toggle()">{{this.currentLang.attributes.profile}}</a></li>
+                    <li class="nav-item small" *ngIf="identity && identity.nick != 'guest'">
+                        <a class="nav-link" id="edit-profile-2"
+                            [routerLink]="['/edit']" (click)="this.toggle()">{{this.currentLang.attributes.editProfile}}</a></li>
+                    <li class="nav-item small" *ngIf="identity && identity.nick != 'guest'">
+                        <a class="nav-link" id="edit-profile-2"
+                            [routerLink]="['/settings']" (click)="this.toggle()">{{this.currentLang.attributes.config}}</a></li>
+                    <li class="nav-item small" *ngIf="identity && identity.nick != 'guest'">
+                        <a class="nav-link" id="logout-2"
+                            [routerLink]="['/logout/1']" (click)="this.toggle()">{{this.currentLang.attributes.exit}}</a></li>
+
+                    <li class="nav-item small" *ngIf="!identity || identity.nick == 'guest'">
+                        <a class="nav-link" [routerLink]="['/login']" (click)="this.toggle()">{{this.currentLang.attributes.login}}</a>
+                    </li>
+                    <li class="nav-item small" *ngIf="!identity || identity.nick == 'guest'">
+                        <a class="nav-link"
+                            [routerLink]="['/register']" (click)="this.toggle()">{{this.currentLang.attributes.register}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div> <!-- End of navigation bar -->
     </div>
+    <!-- </div> -->
 </div>
 <div class="nav-spacing" data-view="0"></div>
 

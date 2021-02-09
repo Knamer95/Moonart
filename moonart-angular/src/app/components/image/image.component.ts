@@ -108,6 +108,7 @@ export class ImageComponent implements OnInit {
         }
 
         this.ngOnInit();
+        window.scrollTo(0, 0);
     }
 
     ngOnInit() {
@@ -565,7 +566,7 @@ export class ImageComponent implements OnInit {
                 attributes: {
                     title: "Image",
                     imageHidden: "This image has been disabled due to infringement of rules. If you think this is a mistake, please contact with a moderator.",
-                    imageDeleted: "Image deleted successfully. You will soon be redirected.",
+                    imageDeleted: "Image deleted successfully. You will be redirected soon.",
                     commentAdded: "Comment added.",
                     description: "Description",
                     noDescription: "User didn't add a description.",
@@ -590,6 +591,7 @@ export class ImageComponent implements OnInit {
                     cancel: "Cancel",
                     the: "",
                     ago: " ago",
+                    newComment: "Add a new comment...",
                     deletedComment: "This comment was deleted.",
                     deleteModalTitle: "Delete image?",
                     deleteModalBody: "The image will be deleted permanently.",
@@ -637,6 +639,7 @@ export class ImageComponent implements OnInit {
                     cancel: "Cancelar",
                     the: "",
                     ago: " ago",
+                    newComment: "Añadir nuevo comentario...",
                     deletedComment: "Este comentario fue borrado.",
                     deleteModalTitle: "¿Borrar imagen?",
                     deleteModalBody: "La imagen se borrará permanentemente.",

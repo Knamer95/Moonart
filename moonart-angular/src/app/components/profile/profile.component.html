@@ -1,29 +1,26 @@
 <div class="container-fluid col-md-12 container-ma deviantart-version">
   <div *ngIf="found==true">
-    <div class="row">
-      <div class="col-md-2 pl-5 ml-3">
+    <div class="row-grid">
+      <div class="pfp-container">
         <img [src]="_imageURL" class="profile-picture">
       </div>
-      <div class="col">
-        <div class="row pt-3 pl-2">
-          <span class="user">{{username}}</span>
-        </div>
-        <div class="row pt-4">
-          <button type="button" class="button button-follow no-follow" *ngIf="this.username != this.identity.nick"
-            (click)="follow(token, username)"></button><!-- {{followStatus}} -->
-          <button type="button" [routerLink]="['/edit']" class="button button-edit edit" *ngIf="this.username == this.identity.nick">{{this.currentLang.attributes.edit}}</button>
-        </div>
+      <div class="user-container">
+        <span class="user">{{username}}</span>
       </div>
-      <div class="col-md-2 pt-4">
-        <div class="row pt-3 followers">{{followers}}<span>{{this.currentLang.attributes.followers}}</span></div>
-        <div class="row pt-4 following">{{following}}<span>{{this.currentLang.attributes.following}}</span></div>
+      <div class="follow-container">
+        <button type="button" class="button button-follow no-follow" *ngIf="this.username != this.identity.nick"
+          (click)="follow(token, username)"></button><!-- {{followStatus}} -->
+        <button type="button" [routerLink]="['/edit']" class="button button-edit edit"
+          *ngIf="this.username == this.identity.nick">{{this.currentLang.attributes.edit}}</button>
       </div>
-      <div class="col-md-6 pt-3">
+      <div class="followers">{{followers}}<span>{{this.currentLang.attributes.followers}}</span></div>
+      <div class="following">{{following}}<span>{{this.currentLang.attributes.following}}</span></div>
+      <div class="description-container">
         <div class="description">
           <span *ngIf="this.description != null else nodesc" [innerHTML]="this.description"></span>
           <ng-template #nodesc>
-              <span>{{this.currentLang.attributes.noDescription}}</span>
-            </ng-template>
+            <span>{{this.currentLang.attributes.noDescription}}</span>
+          </ng-template>
         </div>
       </div>
     </div>
@@ -35,7 +32,7 @@
       <div class="mr-5">
         <span (click)="pickElement($event,2)">{{this.currentLang.attributes.likes}}</span>
       </div>
-      <div class="mr-5" *ngIf="this.username == this.identity.nick">
+      <div class="" *ngIf="this.username == this.identity.nick">
         <span (click)="pickElement($event,3)">{{this.currentLang.attributes.favs}}</span>
       </div>
     </div>

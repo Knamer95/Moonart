@@ -1,7 +1,7 @@
 var HttpsProxyAgent = require('https-proxy-agent');
 var proxyConfig = [{
   context: '/api',
-  target: 'http://localhost/moonart/api-rest-symfony/public:80',
+  target: 'moonart/api-rest-symfony/public:80',
   secure: false
 }];
 

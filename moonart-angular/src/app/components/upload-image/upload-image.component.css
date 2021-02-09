@@ -17,6 +17,7 @@
     height: 120px; 
     width: 100%; 
     min-width: 200px;
+    resize: none;
 }
 
 .min-info{
@@ -58,6 +59,22 @@ label{
 
 .btn-upload{
     padding: 0.475rem 1rem;
-    font-size: 1.5rem;
+    /* font-size: 1.5rem; */
     line-height: 1.7;
+    letter-spacing: 2px;
+}
+
+.invalid-feedback{
+    position: absolute;
+    bottom: -26px;
+}
+
+/*=============================*/
+/*      CONSIDERED PHONE       */
+/*=============================*/
+@media screen and (max-width: 1150px){
+    
+    .image-title-container{
+        margin-top: 20px;
+    }
 }

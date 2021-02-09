@@ -93,23 +93,15 @@ export class AppComponent implements OnInit, DoCheck {
     toggle() {        
         if ($(".menu-toggle").css("display") != "none") {
             let elements = document.querySelectorAll("[data-view]");
+            let status = document.querySelector(".navbar[data-theme]");
+            this.render.setAttribute(status, "data-status", (this.navStatus === 1 ? "solid" : "liquid"));
+
 
             for (let i = 0; i < elements.length; i++) {
                 this.render.setAttribute(elements[i], "data-view", this.navStatus.toString());
             }
 
             // this.render.setAttribute(document.querySelector("[data-toggle]"), "data-toggle", this.navStatus.toString());
-
-            if (parseInt($(".nav-container").attr("data-view")) === 1) {
-                $(".nav-background, .clip").animate({
-                    height: $(".nav-container").height() + 20
-                });
-            }
-            else {
-                $(".nav-background, .clip").animate({
-                    height: this.navHeight
-                });
-            }
 
             this.navStatus = (this.navStatus + 1) % 2;
         }
@@ -139,7 +131,7 @@ export class AppComponent implements OnInit, DoCheck {
                     profile: "Profile",
                     editProfile: "Edit profile",
                     config: "Configuration",
-                    exit: "Exit"
+                    exit: "Log out"
                 }
             },
 
