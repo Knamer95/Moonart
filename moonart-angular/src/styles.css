@@ -1025,7 +1025,7 @@ background: #0093a2;
 .nav-small .nav-title { font-size: 46px !important; padding-left: 5px !important; }
 .nav-small .nav-container[data-view="0"]{ max-height: unset !important; }
 .nav-small #header{ min-height: unset !important; }
-.nav-small .nav-spacing{ height: 80px !important; }
+.nav-small .nav-spacing{ height: 73px !important; }
 .nav-small .clip{ height: 80px; }
 .nav-small .nav-background{ height: unset !important; }
 .nav-small [data-navbar] { box-shadow: none !important; }

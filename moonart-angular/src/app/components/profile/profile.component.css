@@ -36,7 +36,7 @@
     padding: 10px 20px;
     font-size: 18px;
     word-break: break-all;
-	overflow-y: scroll;
+	overflow-y: auto;
     text-overflow: ellipsis;
 }
 
