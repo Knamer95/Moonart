@@ -13,9 +13,10 @@ import { AppComponent } from '../../app.component';
 })
 export class LoginComponent implements OnInit {
 
-    public page_title: string;
+    public pageTitle: string;
     public identity;
     public user: User;
+    public checkData: boolean = false; // Flag to disable form while we check if data is correct
     public token: string;
     public status: string;
     public nightMode: boolean;
@@ -33,7 +34,7 @@ export class LoginComponent implements OnInit {
         private _router: Router,
         private _route: ActivatedRoute
     ) {
-        this.page_title = "Identifícate";
+        this.pageTitle = "Identify";
         this.user = new User(1, '', '', '', '', '', 'ROLE_USER', '', '');
     }
 
@@ -67,6 +68,10 @@ export class LoginComponent implements OnInit {
     }
 
     onSubmit(form) {
+        this.checkData = true;
+        // https://github.com/angular/angular/issues/22556
+        // setTimeout( () => form.form.disable(), 1);
+
         this._userService.signup(this.user).subscribe(
             response => {
                 if (!response.status || response.status != 'error') {
@@ -77,6 +82,7 @@ export class LoginComponent implements OnInit {
                     // Token
                     this._userService.signup(this.user, true).subscribe(
                         response => {
+                            console.log(response);
                             if (!response.status || response.status != 'error') {
                                 this.status = 'success';
 
@@ -88,22 +94,25 @@ export class LoginComponent implements OnInit {
                                 localStorage.setItem('identity', JSON.stringify(this.identity));
                                 localStorage.removeItem("config");
                                 this.updateDB(this.token);
-
                                 setTimeout(() => { this._router.navigate(['home']); }, 3000);
 
                             }
                             else {
                                 this.status = 'error';
+                                this.checkData = false;
                             }
                         },
                         error => {
                             this.status = 'error';
+                            this.checkData = false;
                         }
                     );
-                    form.reset();
+                    // form.reset();
                 }
                 else {
                     this.status = 'error';
+                    this.checkData = false;
+                    // form.reset(); // Uncomment to reset when password is incorrect
                 }
 
                 this._commonService.displayNotification(this, this.status);

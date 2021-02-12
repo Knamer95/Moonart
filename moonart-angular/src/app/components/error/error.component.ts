@@ -11,7 +11,7 @@ import { CommonService } from '../../services/common.service';
 })
 export class ErrorComponent implements OnInit {
 
-  public page_title: string;
+  public pageTitle: string;
   public identity: any;
   public token: string;
   public nightMode: boolean;
@@ -24,7 +24,7 @@ export class ErrorComponent implements OnInit {
     private _imageService: ImageService,
     private _commonService: CommonService
   ) {
-    this.page_title = "Error";
+    this.pageTitle = "Error";
   }
 
   ngOnInit() {

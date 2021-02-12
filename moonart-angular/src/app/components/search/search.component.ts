@@ -12,17 +12,17 @@ import { Renderer2 } from '@angular/core';
 })
 export class SearchComponent implements OnInit {
 
-    public page_title: string;
+    public pageTitle: string;
     public filter: string;
     public identity: any;
     public token: string;
     public images: Array<Object>;
     public estado: boolean;
     public page: number;
-    public next_page: number;
-    public prev_page: number;
-    public number_pages: number;
-    public total_pages: number;
+    public nextPage: number;
+    public prevPage: number;
+    public numberPages: number;
+    public totalPages: number;
     public nightMode: boolean;
     public nsfw: boolean;
     public epilepsy: boolean;
@@ -46,7 +46,7 @@ export class SearchComponent implements OnInit {
         private _router: Router,
         private render: Renderer2
     ) {
-        this.page_title = "  Resultados de: ";
+        this.pageTitle = "  Resultados de: ";
         this.searError = 0;
         this.scroll = true; // Depends on user settings
         this.q = "";
@@ -117,7 +117,7 @@ export class SearchComponent implements OnInit {
         if (tagQuery != -1 || nameQuery != -1) {
             this.filter = this.querySelector;
         }
-        this.page_title = "  Resultados de: " + this.search;
+        this.pageTitle = "  Resultados de: " + this.search;
 
         this.pageSearch();
     }
@@ -131,8 +131,8 @@ export class SearchComponent implements OnInit {
 
                 if (!this.page) {
                     this.page = 1;
-                    this.prev_page = 1;
-                    this.next_page = 2;
+                    this.prevPage = 1;
+                    this.nextPage = 2;
                 }
             }
 

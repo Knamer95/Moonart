@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, Input } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ImageService } from '../../services/image.service';
 import { CommonService } from '../../services/common.service';
@@ -48,16 +48,16 @@ import { Renderer2 } from '@angular/core';
   
   <nav aria-label="Page navigation example">
   <ul class="pagination profile-pagination float-right">
-    <li *ngIf="page != 1 && total_pages > 1">
-      <a class="page-link" (click)="nextPage('--')">Anterior</a>
+    <li *ngIf="page != 1 && totalPages > 1">
+      <a class="page-link" (click)="goToPage('--')">Anterior</a>
     </li>
-    <li *ngFor="let num of number_pages; let i = index">
-      <a class="page-link" *ngIf="i<5" (click)="nextPage(num)" [ngClass]="{'active': num == page}">{{num}}</a>
+    <li *ngFor="let num of numberPages; let i = index">
+      <a class="page-link" *ngIf="i<5" (click)="goToPage(num)" [ngClass]="{'active': num == page}">{{num}}</a>
       <!-- Cambiar para que si p.e estás en la pág 20, salga 18 - 19 - 20 - 21 - 22 -->
     </li>
-    <li *ngIf="page != total_pages && total_pages > 1">
-      <!--  && total_pages > 1 -->
-      <a class="page-link" (click)="nextPage('++')">Siguiente</a>
+    <li *ngIf="page != totalPages && totalPages > 1">
+      <!--  && totalPages > 1 -->
+      <a class="page-link" (click)="goToPage('++')">Siguiente</a>
     </li>
   </ul>
   </nav>
@@ -67,26 +67,27 @@ import { Renderer2 } from '@angular/core';
 })
 export class ImagesComponent implements OnInit {
 
-  public page_title: string;
-  public identity: any;            // Logged user
+  public pageTitle: string;
+  public identity: any;
   public token: string;
-  public images: Array<Object>;
+  public images: Array<Object> = [];
   public estado: boolean;
-  public page: number;
-  public next_page: number;
-  public prev_page: number;
-  public number_pages: number;
-  public total_pages: number;
-  public nightMode: boolean;
-  public nsfw: boolean;
-  public epilepsy: boolean;
-  public scroll: boolean;
-  public isLast: boolean;
-  public loaded: boolean;
-  public username: any;            // Username is the page user
+  public page: number = 1;
+  public nextPage: number;
+  public prevPage: number;
+  public numberPages: number;
+  public totalPages: number;
+  public nightMode: boolean = false;
+  public nsfw: boolean = true;
+  public epilepsy: boolean = true;
+  public scroll: boolean = true;
+  public isLast: boolean = false;
+  public loaded: boolean = false;
+  public isProfileUser: boolean = true;
+  @Input() public username: any;
   public id: string;
   public url: string;
-  public interaction: string;
+  public interaction: string = "user-by";
 
   constructor(
     private _userService: UserService,
@@ -96,21 +97,10 @@ export class ImagesComponent implements OnInit {
     private _router: Router,
     private render: Renderer2
   ) {
-    this.username = window.location.href.split("/");
-    for (let i = 0; i < this.username.length; i++) {
-      if (this.username[i] == "profile" && (i + 1) < this.username.length) {
-        this.username = this.username[i + 1];
-      }
-    }
-    this.page = 1;
-    this.scroll = true; // Depends on user settings
   }
 
   ngOnInit() {
-    this.images = [];
-    this.isLast == false;
-    this.loaded == false;
-
+    console.log(this.username);
     this.loadUser();
     this.pageImages();
   }
@@ -135,27 +125,22 @@ export class ImagesComponent implements OnInit {
     }
   }
 
-  pageImages(){
+  pageImages() {
+
     this._route.params.subscribe(params => {
       if (!this.page) {
         this.page = 1;
-        this.prev_page = 1;
-        this.next_page = 2;
+        this.prevPage = 1;
+        this.nextPage = 2;
       }
 
       if (localStorage.getItem("config") != null || localStorage.getItem("config") != undefined) {
         this.nsfw = JSON.parse(localStorage.getItem("config")).nsfw;
         this.epilepsy = JSON.parse(localStorage.getItem("config")).epilepsy;
-        this.scroll = JSON.parse(localStorage.getItem("config")).scroll; 
+        this.scroll = JSON.parse(localStorage.getItem("config")).scroll;
       }
 
-      if (this.username != this.identity.nick) {
-        this._imageService.showAllImages(this, this.page, this.nsfw, this.epilepsy, this.username, false, "pageImages-2");
-      }
-
-      else {
-        this._imageService.showAllImages(this, this.page, "true", "true", this.username, true, "pageImages-2");
-      }
+      this._imageService.showAllImages(this, this.page, this.scroll);
     });
   }
 
@@ -170,7 +155,7 @@ export class ImagesComponent implements OnInit {
     }
   }
 
-  nextPage(param) {
+  goToPage(param) {
     if (param == "++") {
       this.page++;
     }

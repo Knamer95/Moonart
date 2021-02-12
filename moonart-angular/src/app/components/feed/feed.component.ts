@@ -23,7 +23,7 @@ import { Renderer2 } from '@angular/core';
 
 export class FeedComponent implements OnInit {
 
-    public page_title: string;
+    public pageTitle: string;
     public identity: any;
     public token: string;
     public images;

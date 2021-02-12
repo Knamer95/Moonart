@@ -14,27 +14,27 @@ import * as $ from 'jquery';
 })
 export class HomeComponent implements OnInit {
 
-    public page_title: string;
+    public pageTitle: string = "Latest";
     public identity: any;
     public token: string;
-    public images: Array<Object>;
+    public images: Array<Object> = [];
     public status: boolean;
-    public page: number;
-    public hasElements: boolean;
-    public next_page: number;
-    public prev_page: number;
-    public number_pages: number;
-    public total_pages: number;
-    public nightMode: boolean;
-    public nsfw: boolean;
-    public epilepsy: boolean;
-    public scroll: boolean;
-    public isLast: boolean;
-    public loaded: boolean;
-    public imagError: number;
+    public page: number = 1;
+    public hasElements: boolean = false;
+    public nextPage: number;
+    public prevPage: number;
+    public numberPages: number;
+    public totalPages: number;
+    public nightMode: boolean = false;
+    public nsfw: boolean = true;
+    public epilepsy: boolean = true;
+    public scroll: boolean = true;
+    public isLast: boolean = false;
+    public loaded: boolean = false;
+    public imagError: number = 0;
     public language: Object;
     public currentLang: Object;
-    public lang: number;
+    public lang: number = 1;
     
     @Output() emitter = new EventEmitter();
 
@@ -46,15 +46,15 @@ export class HomeComponent implements OnInit {
         private _router: Router,
         private render: Renderer2
     ) {
-        this.page_title = "  Novedades";
-        this.imagError = 0;
-        this.scroll = true; // Depends on user settings
+        // this.pageTitle = "  Novedades";
+        // this.imagError = 0;
+        // this.scroll = true; // Depends on user settings
     }
 
     ngOnInit() {
-        this.images = [];
-        this.isLast == false;
-        this.loaded == false;
+        // this.images = [];
+        // this.isLast == false;
+        // this.loaded == false;
 
         this.loadUser();
 
@@ -71,8 +71,8 @@ export class HomeComponent implements OnInit {
 
         this.lang = JSON.parse(localStorage.getItem("config")).lang;
 
-        if (!this.lang)
-            this.lang = 1;
+        // if (!this.lang)
+            // this.lang = 1;
 
         this.pageImages();
 
@@ -111,8 +111,8 @@ export class HomeComponent implements OnInit {
 
                 if (!this.page) {
                     this.page = 1;
-                    this.prev_page = 1;
-                    this.next_page = 2;
+                    this.prevPage = 1;
+                    this.nextPage = 2;
                 }
             }
 
@@ -120,7 +120,7 @@ export class HomeComponent implements OnInit {
                 this.nsfw = JSON.parse(localStorage.getItem("config")).nsfw;
                 this.epilepsy = JSON.parse(localStorage.getItem("config")).epilepsy;
             }
-            this._imageService.showAllImages(this, this.page, this.nsfw, this.epilepsy, null, null, "pageImages");
+            this._imageService.showAllImages(this, this.page, this.scroll);
         });
     }
 

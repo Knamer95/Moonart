@@ -47,16 +47,16 @@
 
 <nav aria-label="Page navigation example">
   <ul class="pagination float-right">
-    <li *ngIf="page != 1 && total_pages > 1">
-      <a class="page-link" [routerLink]="['/search', prev_page]" [queryParams]="{q: q}">{{this.currentLang.attributes.previous}}</a>
+    <li *ngIf="page != 1 && totalPages > 1">
+      <a class="page-link" [routerLink]="['/search', prevPage]" [queryParams]="{q: q}">{{this.currentLang.attributes.previous}}</a>
     </li>
-    <li *ngFor="let num of number_pages; let i = index">
+    <li *ngFor="let num of numberPages; let i = index">
       <a class="page-link" *ngIf="i<5" [routerLink]="['/search', num]" [queryParams]="{q: q}" [ngClass]="{'active': num == page}">{{num}}</a>
       <!-- Cambiar para que si p.e estás en la pág 20, salga 18 - 19 - 20 - 21 - 22 -->
     </li>
-    <li *ngIf="page != total_pages && total_pages > 1"> 
-      <!--  && total_pages > 1 -->
-      <a class="page-link" [routerLink]="['/search', next_page]" [queryParams]="{q: q}">{{this.currentLang.attributes.next}}</a>
+    <li *ngIf="page != totalPages && totalPages > 1"> 
+      <!--  && totalPages > 1 -->
+      <a class="page-link" [routerLink]="['/search', nextPage]" [queryParams]="{q: q}">{{this.currentLang.attributes.next}}</a>
     </li>
   </ul>
 </nav>

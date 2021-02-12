@@ -569,7 +569,7 @@ class ImageController extends AbstractController
 
         $is_profile_user = false;
 
-        if ($check_user && is_object($checkUser)){
+        if ($check_user && is_object($check_user)){
             $is_profile_user = true;
         }
         

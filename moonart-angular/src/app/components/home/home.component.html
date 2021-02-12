@@ -42,17 +42,17 @@
     </div>
     <nav aria-label="Page navigation example">
         <ul class="pagination float-right">
-            <li *ngIf="page != 1 && total_pages > 1">
-                <a class="page-link" [routerLink]="['/home', prev_page]">{{this.currentLang.attributes.previous}}</a>
+            <li *ngIf="page != 1 && totalPages > 1">
+                <a class="page-link" [routerLink]="['/home', prevPage]">{{this.currentLang.attributes.previous}}</a>
             </li>
-            <li *ngFor="let num of number_pages; let i = index">
+            <li *ngFor="let num of numberPages; let i = index">
                 <a class="page-link" *ngIf="i<5" [routerLink]="['/home', num]"
                     [ngClass]="{'active': num == page}">{{num}}</a>
                 <!-- Change so if e.g you are at page pág 20, it shows 18 - 19 - 20 - 21 - 22 -->
             </li>
-            <li *ngIf="page != total_pages && total_pages > 1">
-                <!--  && total_pages > 1 -->
-                <a class="page-link" [routerLink]="['/home', next_page]">{{this.currentLang.attributes.next}}</a>
+            <li *ngIf="page != totalPages && totalPages > 1">
+                <!--  && totalPages > 1 -->
+                <a class="page-link" [routerLink]="['/home', nextPage]">{{this.currentLang.attributes.next}}</a>
             </li>
         </ul>
     </nav>

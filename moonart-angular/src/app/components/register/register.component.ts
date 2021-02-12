@@ -11,8 +11,9 @@ import { CommonService } from '../../services/common.service';
 })
 export class RegisterComponent implements OnInit {
 
-    public page_title: string;
+    public pageTitle: string;
     public user: User;
+    public checkData: boolean = false; // Flag to disable form while we check if data is correct
     public status: string;
     public nightMode: boolean;
     public config: any;
@@ -26,7 +27,7 @@ export class RegisterComponent implements OnInit {
         private _userService: UserService,
         private _commonService: CommonService
     ) {
-        this.page_title = "Registrarse";
+        this.pageTitle = "Register";
         this.user = new User(1, '', '', '', '', '', 'ROLE_USER', '', '');
     }
 
@@ -43,15 +44,19 @@ export class RegisterComponent implements OnInit {
     }
 
     onSubmit(form) {
+        this.checkData = true;
+
         if (form.value.password == form.value.password_2) {
             this._userService.register(this.user).subscribe(
                 response => {
                     if (response.status == 'success') {
                         this.status = 'success';
-                        form.reset();
+                        // form.reset();
                     }
                     else {
                         this.status = 'error';
+                        this.checkData = false;
+
                     }
                     console.log(response);
 
@@ -59,13 +64,15 @@ export class RegisterComponent implements OnInit {
                 },
                 error => {
                     this.status = 'error';
+                    this.checkData = false;
                     this._commonService.displayNotification(this, this.status);
                     console.log(error);
                 }
             );
         }
         else {
-            console.log("The passwords don't match.")
+            console.log("The passwords don't match."); // Show on notification instead
+            this.checkData = false;
         }
     }
 
@@ -78,9 +85,9 @@ export class RegisterComponent implements OnInit {
                     messageSuccess1: "You were registered successfully",
                     messageSuccess2: "log in here",
                     messageError: "You were not registered. Check the console to see the error (F12).",
-                    invalidName: "Invalid name.",
-                    invalidUser: "Invalid nick.",
-                    invalidEmail: "Invalid email.",
+                    invalidName: "Invalid name. It must contain at least one character",
+                    invalidUser: "Invalid nick. Must be between 4 and 10 characters. It admits alphanumerics, hyphen, and underscore",
+                    invalidEmail: "Invalid email. Please introduce a valid one.",
                     invalidPassword: "Invalid password. Minimum 8 characters. It must contain a capital letter and a number at least.",
                     register: "Register",
                     placeholderName: "Name",
@@ -98,9 +105,9 @@ export class RegisterComponent implements OnInit {
                     messageSuccess1: "Te has registrado correctamente",
                     messageSuccess2: "identifícate aquí",
                     messageError: "No te has registrado. Consulta la consola para ver el error (F12).",
-                    invalidName: "Nombre no válido.",
-                    invalidUser: "Nick no válido.",
-                    invalidEmail: "Email no válido.",
+                    invalidName: "Nombre no válido. Debe contener al menos un caracter.",
+                    invalidUser: "Nick no válido. Debe tener entre 4 y 10 caracteres. Admite alfanuméricos, guión, y guión bajo.",
+                    invalidEmail: "Email no válido. Por favor introduzca un email válido.",
                     invalidPassword: "Contraseña no válida. Mínimo 8 caracteres. Debe contener al menos una letra mayúscula y un número.",
                     register: "Registrarse",
                     placeholderName: "Nombre",

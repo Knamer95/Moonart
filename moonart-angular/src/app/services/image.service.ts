@@ -39,8 +39,9 @@ export class ImageService {
         return this._http.get(this.url + 'image/list', { headers: headers });
     }
 
-    getAllImages(page, nsfw, epilepsy, user = "", isProfileUser = false): Observable<any> {
-
+    getAllImages(page, nsfw, epilepsy, user, isProfileUser = false): Observable<any> {
+        console.log(this.url + 'image/list/all?page=' + page + '&nsfw=' + nsfw + '&epilepsy=' + epilepsy
+        + '&user=' + user + '&isProfileUser=' + isProfileUser);
         if (!page) {
             page = 1;
         }
@@ -167,39 +168,42 @@ export class ImageService {
      * Common functions to multiple components
      * Depending on the attributes nsfw and epilepsy (user config), it will display them or not.
      * If it's an user profile, it will show their images. An user can see their own sensitive pictures, no matter their config
+     * 
+     * Depending on if it's scroll or not, it will add it to an existing array or a new one
      *
      */
-    showAllImages(that, page, nsfw, epilepsy, user = null, isProfileUser = false, $from = "") {
-        this.getAllImages(page, nsfw, epilepsy, user, isProfileUser).subscribe(
+    showAllImages(that, page, isScroll) {
+        let isProfileUser = typeof that.isProfileUser !== 'undefined' ? that.isProfileUser : null;
+        let user = typeof that.username !== 'undefined' ? that.username : null;
+        this.getAllImages(page, that.nsfw, that.epilepsy, user, isProfileUser).subscribe(
             response => {
                 console.log(response);
-                if ($from === "pageImages")
+                if (typeof that.hasElements !== 'undefined')
                     that.hasElements = (response.images.length > 0 || page > 1) ? true : false; // There should never be a totalSize equal to 0 after scrolling, since it returns isLast
 
 
-                if (!that.scroll) {
+                if (!isScroll) {
                     that.images = response.images;
 
-
-                    var number_pages = [];
+                    var numberPages = [];
                     for (let i = 1; i <= response.total_pages; i++) {
-                        number_pages.push(i);
+                        numberPages.push(i);
                     }
 
-                    that.number_pages = number_pages;
-                    that.total_pages = response.total_pages;
+                    that.numberPages = numberPages;
+                    that.totalPages = response.total_pages;
                     if (page >= 2) {
-                        that.prev_page = page - 1;
+                        that.prevPage = page - 1;
                     }
                     else {
-                        that.prev_page = 1;
+                        that.prevPage = 1;
                     }
 
                     if (page < response.total_pages) {
-                        that.next_page = page + 1;
+                        that.nextPage = page + 1;
                     }
                     else {
-                        that.next_page = response.total_pages;
+                        that.nextPage = response.total_pages;
                     }
                 }
                 else {
@@ -211,7 +215,6 @@ export class ImageService {
                     that.isLast = that.images.length == response.total_items ? true : false;
                 }
 
-                // console.log(that.images);
                 this.getInteractions(that);
 
                 that.imagError = 0;
@@ -220,7 +223,7 @@ export class ImageService {
                 console.log("getAllImages()");
                 console.log("Ero..." + " attempt: " + that.imagError);
                 if (that.imagError < 5) {
-                    this.showAllImages(that, page, nsfw, epilepsy, user, false, "showAllImages");
+                    this.showAllImages(that, page, isScroll);
                     that.imagError++;
                 }
             }
@@ -236,25 +239,25 @@ export class ImageService {
                 if (!that.scroll) {
                     that.images = response.images;
 
-                    var number_pages = [];
+                    var numberPages = [];
                     for (let i = 1; i <= response.total_pages; i++) {
-                        number_pages.push(i);
+                        numberPages.push(i);
                     }
 
-                    that.number_pages = number_pages;
-                    that.total_pages = response.total_pages;
+                    that.numberPages = numberPages;
+                    that.totalPages = response.total_pages;
                     if (page >= 2) {
-                        that.prev_page = page - 1;
+                        that.prevPage = page - 1;
                     }
                     else {
-                        that.prev_page = 1;
+                        that.prevPage = 1;
                     }
 
                     if (page < response.total_pages) {
-                        that.next_page = page + 1;
+                        that.nextPage = page + 1;
                     }
                     else {
-                        that.next_page = response.total_pages;
+                        that.nextPage = response.total_pages;
                     }
                 }
                 else {
@@ -281,33 +284,33 @@ export class ImageService {
     }
 
 
-    showProfileInteractions(that, page, nsfw, epilepsy, user_id, interaction, user = null) {
-        this.getProfileImages(page, nsfw, epilepsy, user_id, interaction, user = "").subscribe(
+    showProfileInteractions(that, page) {
+        this.getProfileImages(page, that.nsfw, that.epilepsy, that.id, that.interaction, that.username).subscribe(
             response => {
                 console.log(response);
 
                 if (!that.scroll) {
                     that.images = response.images;
 
-                    var number_pages = [];
+                    var numberPages = [];
                     for (let i = 1; i <= response.total_pages; i++) {
-                        number_pages.push(i);
+                        numberPages.push(i);
                     }
 
-                    that.number_pages = number_pages;
-                    that.total_pages = response.total_pages;
+                    that.numberPages = numberPages;
+                    that.totalPages = response.total_pages;
                     if (page >= 2) {
-                        that.prev_page = page - 1;
+                        that.prevPage = page - 1;
                     }
                     else {
-                        that.prev_page = 1;
+                        that.prevPage = 1;
                     }
 
                     if (page < response.total_pages) {
-                        that.next_page = page + 1;
+                        that.nextPage = page + 1;
                     }
                     else {
-                        that.next_page = response.total_pages;
+                        that.nextPage = response.total_pages;
                     }
                 }
                 else {
@@ -327,7 +330,7 @@ export class ImageService {
         );
     }
 
-    getInteractions(that, unique = null, env = null) {  // Called by , showAllFavs... 'that' is 'this' of the element that calls it 
+    getInteractions(that, unique = false, env = null) {  // Called by , showAllFavs... 'that' is 'this' of the element that calls it 
         // (home.component, images.component...)
         if (that.identity != null && that.identity.nick != 'guest') {
             var less: boolean = false;
@@ -337,7 +340,7 @@ export class ImageService {
             if (unique) {
                 intImages = that.image;
                 intImages.length = 1;
-                // console.log(that.image);
+                console.log(that.image);
             }
             else{
                 intImages = that.images;
@@ -462,7 +465,7 @@ export class ImageService {
 
 
 
-    saveInteraction(event, that, action, unique = null, env = null, callback = null) { // 'unique' is an optional param, that if true, means it's a single image
+    saveInteraction(event, that, action, unique = false, env = null, callback = null) { // 'unique' is an optional param, that if true, means it's a single image
 
         var id;
         var estado;

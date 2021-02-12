@@ -103,3 +103,5 @@ Pending (priority order):
 #2021031 Add guide in a PDF explaining what can be done in MoonArt
 
 #20210xx Possible future version for phones with Cordova.
+
+#20210xy As idea, make it so after x attempts, acc gets locked.

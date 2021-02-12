@@ -5,7 +5,7 @@
         <img [src]="_imageURL" class="profile-picture">
       </div>
       <div class="user-container">
-        <span class="user">{{username}}</span>
+        <span class="user" >{{userCustom}}</span>
       </div>
       <div class="follow-container">
         <button type="button" class="button button-follow no-follow" *ngIf="this.username != this.identity.nick"
@@ -39,9 +39,11 @@
     <div class="container-fluid col-md-12 profile-navbar-content mt-5">
       <div class="row">
         <div class="col-md-12 images-container">
-          <images-component *ngIf="this.element == 1"></images-component>
-          <likes-component *ngIf="this.element == 2"></likes-component>
-          <favs-component *ngIf="this.element == 3"></favs-component>
+          <!-- https://zeroesandones.medium.com/how-to-pass-data-from-parent-to-child-component-in-angular-9-dc7a0a64256c -->
+          <!-- username is the variable in child (needs to have Input() when declared), urlname is the parent passed variable-->
+          <images-component *ngIf="this.element == 1" [username]="urlname"></images-component>
+          <likes-component *ngIf="this.element == 2" [username]="urlname"></likes-component>
+          <favs-component *ngIf="this.element == 3" [username]="urlname"></favs-component>
         </div> <!-- Here we load the components of the images, Likes and Favs depending on which is selected -->
       </div>
     </div>

@@ -12,7 +12,7 @@ import { Renderer2 } from '@angular/core';
 })
 export class UserEditComponent implements OnInit {
 
-    public page_title: string;
+    public pageTitle: string;
     public user: User;
     public status: string;
     public identity: any;
@@ -40,7 +40,7 @@ export class UserEditComponent implements OnInit {
     ) {
         this.identity = this._userService.getIdentity();
         this.token = this._userService.getToken();
-        this.page_title = "Editar perfil";
+        this.pageTitle = "Editar perfil";
         this.user = new User(this.identity.sub, this.identity.name, this.identity.nick, this.identity.password,
             this.identity.email, this.identity.description, '', '', '');
         this.element = 1;

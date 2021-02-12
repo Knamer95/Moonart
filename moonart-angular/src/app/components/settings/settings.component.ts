@@ -18,7 +18,7 @@ declare var jQuery: any;
 })
 export class SettingsComponent implements OnInit, AfterViewInit {
 
-    public page_title: string;
+    public pageTitle: string;
     public identity: any;
     public token: string;
     public color: string;
@@ -60,7 +60,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
         private render: Renderer2,
         private elementRef: ElementRef
     ) {
-        this.page_title = "  Ajustes";
+        this.pageTitle = "  Ajustes";
         this.nightMode = false;
         this.nsfw = false;
         this.epilepsy = false;

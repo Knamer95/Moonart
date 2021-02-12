@@ -17,14 +17,14 @@ declare var jQuery: any;
 
 export class ImageComponent implements OnInit {
 
-    public page_title: string;
+    public pageTitle: string = "Image";
     public identity: any;
     public token: string;
     public imageId: any;
-    public tarea: any;
-    public nightMode: boolean;
-    public nsfw: boolean;
-    public epilepsy: boolean;
+    public tarea: any; // Textarea
+    public nightMode: boolean = false;
+    public nsfw: boolean = true;
+    public epilepsy: boolean = true;
     public username: string;
     public followStatus: string;
     public description: string;
@@ -32,13 +32,13 @@ export class ImageComponent implements OnInit {
     public isFollowing: boolean;
     public _imageURL: string; // The image of the logged in user
     public image: Object;
-    public images: Array<Object>;
-    public images2: Array<Object>;
+    public images: Array<Object> = [];
+    // public images2: Array<Object>;
     public moreImagesLoaded: boolean = false; // Flag to avoid loading them every time
     public tags: Array<string>;
-    public isTags: boolean;
-    public role: string;
-    public addComment: string;
+    public isTags: boolean = false;
+    public role: string = "role_user";
+    public addComment: string = "";
     public parent = null;
     public comments: any;
     public commentsLength: number;
@@ -46,19 +46,19 @@ export class ImageComponent implements OnInit {
     public deleted: boolean;
     public hidden: boolean;
     public visible: boolean;
-    public found: boolean;
-    public nLikes: number;
-    public nFavs: number;
-    public nShares: number;
+    public found: boolean = false;
+    public nLikes: number = 0;
+    public nFavs: number = 0;
+    public nShares: number = 0;
     public commentToDelete: string;
     public customAlert: string;
 
     formVar: FormGroup;
-    public commError: number;
-    public isFwError: number;
-    public loadError: number;
-    public iCntError: number;
-    public moreError: number;
+    public commError: number = 0;
+    public isFwError: number = 0;
+    public loadError: number = 0;
+    public iCntError: number = 0;
+    public moreError: number = 0;
     public chckError: number = 0;
     public language: Object;
     public lang: number;
@@ -74,17 +74,6 @@ export class ImageComponent implements OnInit {
         private fb: FormBuilder,
         private elementRef: ElementRef
     ) {
-        this.isTags = false;
-        this.loadError = 0;         // For loadImage();
-        this.isFwError = 0;         // For follow();
-        this.commError = 0;         // For getAllComments();
-        this.iCntError = 0;
-        this.found = false;
-        this.nLikes = 0;
-        this.nShares = 0;
-        this.nFavs = 0;
-        this.addComment = "";
-
         this.image = {
             url: '',
             description: '',
@@ -96,24 +85,8 @@ export class ImageComponent implements OnInit {
         }
     }
 
-    reload(newImg) {
-        this.imageId = newImg[0].id;
-
-        if (window.history.replaceState) {
-            //prevents browser from storing history with each change:
-            window.history.replaceState('page', 'Title', '/images/' + this.imageId);
-        }
-        else{
-            window.history.pushState('page', 'Title', '/images/' + this.imageId);
-        }
-
-        this.ngOnInit();
-        window.scrollTo(0, 0);
-    }
-
     ngOnInit() {
 
-        this.page_title = "Image";
         this.loadUser();
 
         if (!this.imageId) {
@@ -132,7 +105,8 @@ export class ImageComponent implements OnInit {
         this.loadImage(this);
 
         if (localStorage.getItem("config") != null && localStorage.getItem("config") != "undefined") {
-
+            this.nsfw = JSON.parse(localStorage.getItem("config")).nsfw;
+            this.epilepsy = JSON.parse(localStorage.getItem("config")).epilepsy;
             this.nightMode = JSON.parse(localStorage.getItem("config")).nightMode;
             this._commonService.changeNightModeAttr(this.nightMode);
         }
@@ -146,6 +120,26 @@ export class ImageComponent implements OnInit {
         this.lang = JSON.parse(localStorage.getItem("config")).lang;
         this.currentLang = this.getLang(this.lang);
         this._commonService.changeLangAttr(this.lang);
+    }
+
+    /* 
+     *
+     * Function to load a new image by updating all the data, but without actually reloading the whole script
+     * 
+     */
+    reload(newImg) {
+        this.imageId = newImg[0].id;
+
+        if (window.history.replaceState) {
+            //prevents browser from storing history with each change:
+            window.history.replaceState('page', 'Title', '/images/' + this.imageId);
+        }
+        else{
+            window.history.pushState('page', 'Title', '/images/' + this.imageId);
+        }
+
+        this.ngOnInit();
+        window.scrollTo(0, 0);
     }
 
     ngAfterViewInit() {
@@ -528,18 +522,7 @@ export class ImageComponent implements OnInit {
 
     getMoreImages() {
         this._route.params.subscribe(params => {
-            if (localStorage.getItem("config") != null || localStorage.getItem("config") != undefined) {
-                this.nsfw = JSON.parse(localStorage.getItem("config")).nsfw;
-                this.epilepsy = JSON.parse(localStorage.getItem("config")).epilepsy;
-            }
-
-            if (this.username != this.identity.nick) {
-                this._imageService.showAllImages(this, 1, this.nsfw, this.epilepsy, this.username, false, "getMoreImages");
-            }
-
-            else {
-                this._imageService.showAllImages(this, 1, "true", "true", this.username, false, "getMoreImages");
-            }
+            this._imageService.showAllImages(this, 1, false);
         });
     }
 

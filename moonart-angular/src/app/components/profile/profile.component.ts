@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, Input } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ImageService } from '../../services/image.service';
 import { CommonService } from '../../services/common.service';
@@ -13,20 +13,21 @@ import { Renderer2 } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
 
-    public page_title: string;
+    public pageTitle: string = "User";
     public identity: any;
     public token: string;
     public images: Array<Object>;
     public page: number;
-    public next_page: number;
-    public prev_page: number;
-    public number_pages: number;
-    public total_pages: number;
+    public nextPage: number;
+    public prevPage: number;
+    public numberPages: number;
+    public totalPages: number;
     public nightMode: boolean;
     public nsfw: boolean;
     public epilepsy: boolean;
-    public username: any;
-    public urlname: any;
+    public username: any; // Nick -> Used for login, admits regex [A-z0-9_-]+
+    public userCustom: String; // Name to display -> Admits any
+    @Input() public urlname: any;
     public followStatus: string;
     public element: number;
     public found: boolean;
@@ -42,7 +43,6 @@ export class ProfileComponent implements OnInit {
     public language: Object;
     public lang: number;
     public currentLang: Object;
-
     constructor(
         private _userService: UserService,
         private _imageService: ImageService,
@@ -51,18 +51,16 @@ export class ProfileComponent implements OnInit {
         private _router: Router,
         private render: Renderer2
     ) {
-        this.page_title = "Profile";
 
         /* Fixed so if user access a profile from @[+username] (mentions), it will show the proper username. e.g: @nAO !== @Nao */
-        this.urlname = window.location.href.split("/");
-        for (let i = 0; i < this.urlname.length; i++) {
-            if (this.urlname[i] == "profile" && (i + 1) < this.urlname.length) {
-                this.urlname = this.urlname[i + 1];
-            }
-        }
 
-        // this.username = "Nao";
-        this.followStatus = "Seguir";
+        // Get next element after 'profile'. If it's 0 (not found), we return 'guest' (should not happen)
+        // Could be achieved with an emitter too
+        let url = window.location.href.split("/");
+        let i = url.findIndex((item) => item.toString().toLowerCase() === 'profile') + 1;
+        this.urlname = i ? url[i] : "guest";
+
+        this.followStatus = "Follow";
         this.tab = "images";
         this.followers = 0;
         this.following = 0;
@@ -94,8 +92,8 @@ export class ProfileComponent implements OnInit {
 
             if (!this.page) {
                 this.page = 1;
-                this.prev_page = 1;
-                this.next_page = 2;
+                this.prevPage = 1;
+                this.nextPage = 2;
             }
             /*
             if (localStorage.getItem("config") != null || localStorage.getItem("config") != undefined) {
@@ -155,10 +153,11 @@ export class ProfileComponent implements OnInit {
             response => {
                 // console.log(response);
                 if (response.status == "success") {
-                    // console.log(response);
+                    console.log(response);
                     this._imageURL = "assets/profile-picture/" + response.user_info.image;
                     this.found = true;
-                    this.username = response.user_info.nick
+                    this.userCustom = response.user_info.name;
+                    this.username = response.user_info.nick;
                     this.description = response.user_info.description;
 
                     if (this.description) {

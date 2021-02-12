@@ -285,7 +285,7 @@ ul{ margin-left:2em; }
 
 .nav-link:hover, 
 /* .nav-link:focus, */
-.btn:focus{
+.dropdown-toggle:focus{
     background: rgb(255 255 255 / 22%) !important;
     outline: 0;
     /* background-color: rgba(0, 0, 0, 0.2) !important; border-radius: 5px; */

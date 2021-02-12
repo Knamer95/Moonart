@@ -55,8 +55,8 @@
 
         <div class="form-group">
           <label for="nick">{{this.currentLang.attributes.user}}</label>
-          <input type="text" name="nick" #nick="ngModel" [(ngModel)]="user.nick" class="form-control" pattern="[A-z0-9_-]+"
-            placeholder="{{this.currentLang.attributes.user}}">
+          <input type="text" name="nick" #nick="ngModel" [(ngModel)]="user.nick" class="form-control" pattern="^[A-z0-9_-]{1,10}$"
+            placeholder="{{this.currentLang.attributes.user}}" maxlength="10">
 
           <small *ngIf="!nick.valid && nick.touched" class="invalid-feedback d-block">
             {{this.currentLang.attributes.invalidUser}}
