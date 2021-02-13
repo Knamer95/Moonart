@@ -11,7 +11,7 @@ import { CommonService } from '../../services/common.service';
 })
 export class RegisterComponent implements OnInit {
 
-    public pageTitle: string;
+    public pageTitle: string = "Register";
     public user: User;
     public checkData: boolean = false; // Flag to disable form while we check if data is correct
     public status: string;
@@ -27,12 +27,12 @@ export class RegisterComponent implements OnInit {
         private _userService: UserService,
         private _commonService: CommonService
     ) {
-        this.pageTitle = "Register";
         this.user = new User(1, '', '', '', '', '', 'ROLE_USER', '', '');
     }
 
     ngOnInit() {
-
+        document.title = this.pageTitle;
+        
         // if (localStorage.getItem("user") != null && localStorage.getItem("config") != "undefined") {
         this.nightMode = JSON.parse(localStorage.getItem("config")).nightMode;
         this._commonService.changeNightModeAttr(this.nightMode);

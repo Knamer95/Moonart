@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
     public images: Array<Object> = [];
     public status: boolean;
     public page: number = 1;
-    public hasElements: boolean = false;
+    public hasElements: boolean = true;
     public nextPage: number;
     public prevPage: number;
     public numberPages: number;
@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
     public nightMode: boolean = false;
     public nsfw: boolean = true;
     public epilepsy: boolean = true;
-    public scroll: boolean = true;
+    public scroll: boolean = true; // Depends on user settings
     public isLast: boolean = false;
     public loaded: boolean = false;
     public imagError: number = 0;
@@ -46,15 +46,10 @@ export class HomeComponent implements OnInit {
         private _router: Router,
         private render: Renderer2
     ) {
-        // this.pageTitle = "  Novedades";
-        // this.imagError = 0;
-        // this.scroll = true; // Depends on user settings
     }
 
     ngOnInit() {
-        // this.images = [];
-        // this.isLast == false;
-        // this.loaded == false;
+        document.title = this.pageTitle;
 
         this.loadUser();
 
@@ -70,9 +65,6 @@ export class HomeComponent implements OnInit {
         this.hasElements = true; // If false or unset, it will show the message of no elements found until the AJAX call is done
 
         this.lang = JSON.parse(localStorage.getItem("config")).lang;
-
-        // if (!this.lang)
-            // this.lang = 1;
 
         this.pageImages();
 

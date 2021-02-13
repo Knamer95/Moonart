@@ -1,3 +1,7 @@
+D:
+cd Programs/wamp64/www/moonart/moonart-angular
+ng serve --host 192.168.1.143 --live-reload false
+
 Known bugs:
 
 - If user has no followers, following, images uploaded, liked, faved... console shows error (I think when editing? an user -> description is null, cannot apply functions like replace)
@@ -105,3 +109,15 @@ Pending (priority order):
 #20210xx Possible future version for phones with Cordova.
 
 #20210xy As idea, make it so after x attempts, acc gets locked.
+
+
+Notes
+-----
+
+- In edit profile for example, if you introduce invalid data, it won't tell you until you click outside of the box (change event) for the first time. Then after
+activating it, it will display whenever you type an unsupported character.
+
+It would be a nice idea to support emojis on names, after solving the issue of emoji count. Right now a name is VARCHAR(25).
+
+- Added maxlengths to some parts of user creation and edit so in case user reached them, they know they can't make it bigger (database limitations).
+Another way to do this would be making an API function that returns the database lengths, and define those as maxlengths, since they can be changed.

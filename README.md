@@ -33,13 +33,13 @@ _It's important that the folder is located at the root of the web-server, since 
 ```
 
 
-5) Execute the command `npm install -g @angular/cli@7.3.8` in the console. It's important to specify the version (after the @), or else it will install the latest stable version.
+5) Execute the command `npm install`. This should install everything from `package-lock.json`.
 
 ```
-D:\Programs\wamp64\www\moonart\moonart-angular> npm install -g @angular/cli@7.3.8
+D:\Programs\wamp64\www\moonart\moonart-angular> npm install
 ```
 
-_`npm install` should install everything from `package-lock.json`. However, some dependencies are not downloadable anymore, so it will cause some errors. I will try to update MoonArt so it uses non deprecated libraries in the future. If you have any error, and are unable to fix it, please contact me. (My email can be found below, in `#Contribute`)._
+_If some dependency fails, you can run `-g @angular/cli@7.3.8` in the console instead. It's important to specify the version (after the @), or else it will install the latest Angular version... If you have any error, and are unable to fix it, please contact me. (My email can be found below, in `#Contribute`)._
 
 
 6) Create two virtual hosts. In Windows, it should be located in somewhere like `C:\Windows\System32\drivers\etc`. Add the lines:

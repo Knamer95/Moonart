@@ -13,7 +13,7 @@ import { Renderer2 } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
 
-    public pageTitle: string = "User";
+    public pageTitle: string = "Profile";
     public identity: any;
     public token: string;
     public images: Array<Object>;
@@ -159,6 +159,7 @@ export class ProfileComponent implements OnInit {
                     this.userCustom = response.user_info.name;
                     this.username = response.user_info.nick;
                     this.description = response.user_info.description;
+                    document.title = `${this.userCustom} (@${this.username})`; // Make it string concat if you want IE11 support
 
                     if (this.description) {
                         this.description = this._commonService.noscript(this.description);

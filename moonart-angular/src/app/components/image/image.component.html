@@ -205,7 +205,7 @@
                 <div class="comment-id" [id]="'comment-' + comment.id">
                   <div class="mb-1">
                     <span class="comment-name"
-                      [routerLink]="['/profile', comment.user.nick]">{{comment.user.nick}}</span><span
+                      [routerLink]="['/profile', comment.user.nick]">{{comment.user.name}} (@{{comment.user.nick}})</span><span
                       class="comment-date"> - {{this.currentLang.attributes.the}}{{comment.createdAt}}{{this.currentLang.attributes.ago}}</span>
                   </div>
                   <div class="comment-text mt-2" [ngClass]="{'removed': comment.status == 'deleted'}"

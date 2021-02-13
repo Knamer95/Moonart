@@ -12,7 +12,7 @@ import { Renderer2 } from '@angular/core';
 })
 export class SearchComponent implements OnInit {
 
-    public pageTitle: string;
+    public pageTitle: string = "Search";
     public filter: string;
     public identity: any;
     public token: string;
@@ -57,6 +57,7 @@ export class SearchComponent implements OnInit {
     }
 
     ngOnInit() {
+        document.title = this.pageTitle;
         this.images = [];
         this.isLast == false;
         this.loaded == false;
@@ -117,7 +118,8 @@ export class SearchComponent implements OnInit {
         if (tagQuery != -1 || nameQuery != -1) {
             this.filter = this.querySelector;
         }
-        this.pageTitle = "  Resultados de: " + this.search;
+        this.pageTitle = "  Results: " + this.search;
+        document.title = this.q;
 
         this.pageSearch();
     }

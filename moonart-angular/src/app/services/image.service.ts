@@ -40,8 +40,6 @@ export class ImageService {
     }
 
     getAllImages(page, nsfw, epilepsy, user, isProfileUser = false): Observable<any> {
-        console.log(this.url + 'image/list/all?page=' + page + '&nsfw=' + nsfw + '&epilepsy=' + epilepsy
-        + '&user=' + user + '&isProfileUser=' + isProfileUser);
         if (!page) {
             page = 1;
         }
@@ -340,7 +338,7 @@ export class ImageService {
             if (unique) {
                 intImages = that.image;
                 intImages.length = 1;
-                console.log(that.image);
+                // console.log(that.image);
             }
             else{
                 intImages = that.images;
@@ -514,7 +512,7 @@ export class ImageService {
 
                     that._imageService.interact(that.token, data, estado).subscribe(
                         response => {
-                            console.log(env);
+                            // console.log(env);
                             if (!env) {
                                 if (response.params.liked) {
                                     that.render.addClass(newTarget.parentElement.querySelector(".image-heart"), "image-liked");

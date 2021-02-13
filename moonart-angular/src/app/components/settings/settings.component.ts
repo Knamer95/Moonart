@@ -18,16 +18,16 @@ declare var jQuery: any;
 })
 export class SettingsComponent implements OnInit, AfterViewInit {
 
-    public pageTitle: string;
+    public pageTitle: string = "Settings";
     public identity: any;
     public token: string;
     public color: string;
-    public nightMode: boolean;
-    public nsfw: boolean;
-    public epilepsy: boolean;
-    public share: boolean;
-    public feed: number;
-    public scroll: boolean; // If true, shows galleries as scroll. Otherwise it shows them paginated
+    public nightMode: boolean = false;
+    public nsfw: boolean = true;
+    public epilepsy: boolean = true;
+    public share: boolean = true;
+    public feed: number = 15;
+    public scroll: boolean = true; // If true, shows galleries as scroll. Otherwise it shows them paginated
     public language: Object;
     public lang: number;
     public currentLang: Object;
@@ -60,16 +60,11 @@ export class SettingsComponent implements OnInit, AfterViewInit {
         private render: Renderer2,
         private elementRef: ElementRef
     ) {
-        this.pageTitle = "  Ajustes";
-        this.nightMode = false;
-        this.nsfw = false;
-        this.epilepsy = false;
-        this.share = true;
-        this.feed = 15;
-        this.scroll = true;
     }
 
     ngOnInit() {
+        document.title = this.pageTitle;
+
         this.loadUser();
 
         var defaultLoadJSON = localStorage.getItem("config");

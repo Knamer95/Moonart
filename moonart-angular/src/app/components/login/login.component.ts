@@ -13,7 +13,7 @@ import { AppComponent } from '../../app.component';
 })
 export class LoginComponent implements OnInit {
 
-    public pageTitle: string;
+    public pageTitle: string = "Login";
     public identity;
     public user: User;
     public checkData: boolean = false; // Flag to disable form while we check if data is correct
@@ -34,12 +34,11 @@ export class LoginComponent implements OnInit {
         private _router: Router,
         private _route: ActivatedRoute
     ) {
-        this.pageTitle = "Identify";
         this.user = new User(1, '', '', '', '', '', 'ROLE_USER', '', '');
     }
 
     ngOnInit() {
-
+        document.title = this.pageTitle;
         this.logout();
 
         if (localStorage.getItem("config") == "undefined" || localStorage.getItem("config") == null) {
@@ -82,7 +81,7 @@ export class LoginComponent implements OnInit {
                     // Token
                     this._userService.signup(this.user, true).subscribe(
                         response => {
-                            console.log(response);
+                            // console.log(response);
                             if (!response.status || response.status != 'error') {
                                 this.status = 'success';
 

@@ -12,21 +12,21 @@ import { Renderer2 } from '@angular/core';
 })
 export class UserEditComponent implements OnInit {
 
-    public pageTitle: string;
+    public pageTitle: string = "Edit profile";
     public user: User;
     public status: string;
     public identity: any;
     public token: string;
     public nightMode: boolean;
-    public element: number;
+    public element: number = 1;
     public _imageURL: any;
     fileToUpload: File = null;
     public imagePath: string;
-    public imageSize: boolean;
+    public imageSize: boolean = true;
     public oldPassword: string;
     public confirmPassword: any;
-    public pwdChange: boolean;
-    public newPwd: boolean;
+    public pwdChange: boolean = false;
+    public newPwd: boolean = false;
     public checker: boolean;
     public passMatch: boolean;
     public language: Object;
@@ -40,16 +40,12 @@ export class UserEditComponent implements OnInit {
     ) {
         this.identity = this._userService.getIdentity();
         this.token = this._userService.getToken();
-        this.pageTitle = "Editar perfil";
         this.user = new User(this.identity.sub, this.identity.name, this.identity.nick, this.identity.password,
             this.identity.email, this.identity.description, '', '', '');
-        this.element = 1;
-        this.imageSize = true;
-        this.pwdChange = false;
-        this.newPwd = false;
     }
 
     ngOnInit() {
+        document.title = this.pageTitle;
 
         if (this.user.description)
             this.user.description = this.user.description.replace(/\\n/g, String.fromCharCode(10));

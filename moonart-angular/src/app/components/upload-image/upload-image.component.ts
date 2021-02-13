@@ -15,7 +15,7 @@ export class UploadImageComponent implements OnInit {
     public _rights = "totales"; // Select default value
     public _imageURL: any = "assets/img/preview-icon.png";
     // public _file; // Uploaded file
-    public pageTitle: string;
+    public pageTitle: string = "Upload image";
     public identity: any;
     public token: string;
     public image: Image;
@@ -37,12 +37,13 @@ export class UploadImageComponent implements OnInit {
         private _imageService: ImageService,
         private _commonService: CommonService,
     ) {
-        this.pageTitle = "Subir imagen";
         this.identity = this._userService.getIdentity();
         this.token = this._userService.getToken();
     }
 
     ngOnInit() {
+        document.title = this.pageTitle;
+        
         this.loadUser();
         this.image = new Image(1, this.identity.sub, '', '', '', '', 0, 0, null, null, '', '', '');
 

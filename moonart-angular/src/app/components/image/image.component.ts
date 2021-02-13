@@ -149,6 +149,14 @@ export class ImageComponent implements OnInit {
         // console.log(this.tarea);
     }
 
+    /**
+     * 
+     * Function that loads the current image displayed.
+     * 
+     * In order to prevent errors from VSCode, I used that, because this.image.name for example seems to be invalid, since it's assigned in an AJAX call.
+     * Another way would be to declare the objects with initial attributes from the beginning, but it's the same...
+     * 
+     */
     loadImage(that) {
         that._imageService.getImage(that.imageId).subscribe(
             response => {
@@ -161,6 +169,8 @@ export class ImageComponent implements OnInit {
 
                     this._userService.checkFollowing(that);
                     that.image = response.image;
+                    document.title = that.image.name;
+
                     // that.images = that.image;
                     // console.log(that.images);
 

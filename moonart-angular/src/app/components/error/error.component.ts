@@ -11,7 +11,7 @@ import { CommonService } from '../../services/common.service';
 })
 export class ErrorComponent implements OnInit {
 
-  public pageTitle: string;
+  public pageTitle: string = "Error";
   public identity: any;
   public token: string;
   public nightMode: boolean;
@@ -28,7 +28,8 @@ export class ErrorComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    document.title = this.pageTitle;
+    
     this.loadUser();
     // if (localStorage.getItem("config") != null && localStorage.getItem("config") != "undefined") {
     this.nightMode = JSON.parse(localStorage.getItem("config")).nightMode;

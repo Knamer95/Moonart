@@ -23,29 +23,29 @@ import { Renderer2 } from '@angular/core';
 
 export class FeedComponent implements OnInit {
 
-    public pageTitle: string;
+    public pageTitle: string = "Feed";
     public identity: any;
     public token: string;
     public images;
     public imageId: any;
 
-    public nightMode: boolean;
-    public nsfw: boolean;
-    public epilepsy: boolean;
+    public nightMode: boolean = false;
+    public nsfw: boolean = true;
+    public epilepsy: boolean = true;
     public username: string;
     public followStatus: string;
     public element: number;
     public found: boolean;
-    public hasElements: boolean;
-    public times: number; // Keeps the number of times it has loaded new items
+    public hasElements: boolean = true; // If false or unset, it will show the message of no elements found until the AJAX call is done
+    public times: number = 0; // Keeps the number of times it has loaded new items
     public description: string;
     public isFollowing: boolean;
     public _imageURL: string;
     public sharedImages: any = [];
-    public sharError: number;
-    public index: number;  // Every time scroll reaches the bottom, it executes the query, and a new one is assigned
-    public loaded: boolean;
-    public isLast: boolean;
+    public sharError: number = 0;
+    public index: number = 0;  // Every time scroll reaches the bottom, it executes the query, and a new one is assigned
+    public loaded: boolean = true;
+    public isLast: boolean = false;
     public objectSend: Object;
     public language: Object;
     public lang: number;
@@ -63,20 +63,15 @@ export class FeedComponent implements OnInit {
     }
 
     ngOnInit() {
+        document.title = this.pageTitle;
+
         this.loadUser();
         if (localStorage.getItem("config") != null && localStorage.getItem("config") != "undefined") {
             this.nightMode = JSON.parse(localStorage.getItem("config")).nightMode;
             this._commonService.changeNightModeAttr(this.nightMode);
+            this.nsfw = JSON.parse(localStorage.getItem("config")).nsfw;
+            this.epilepsy = JSON.parse(localStorage.getItem("config")).epilepsy;
         }
-        this.hasElements = true; // If false or unset, it will show the message of no elements found until the AJAX call is done
-        this.times = 0;
-
-        this.loaded = true;
-        this.index = 0;
-        this.isLast = false;
-
-        this.nsfw = JSON.parse(localStorage.getItem("config")).nsfw;
-        this.epilepsy = JSON.parse(localStorage.getItem("config")).epilepsy;
 
         this.getSharedItems(this.index);
         // this._userService.checkFollowing(this);  // A new case has to be done appart
