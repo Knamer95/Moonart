@@ -62,7 +62,9 @@ Pending (priority order):
 
 #2021009 Allow user to navigate through artist pictures by pressing next / prev (determine if the pic being shown is the first or last, check for next image taking in account that it's not hidden, or sensitive content if chosen not to show)
 
-#2021009 Restrict image dimensions adapted to the new specs (on upload, minimum width and height).
+#2021032 Restrict image dimensions adapted to the new specs (on upload, minimum width and height).
+
+#2021033 Problem: if token expires, AJAX calls won't work (as intended), but user won't log out. Check if user token expired when page loads without oversaturating it somehow.
 
 #2021011 Visualize the followers and following in profile when clicking on them. Modal that shows users, with option to go to their profile, with the follow/unfollow button.
 

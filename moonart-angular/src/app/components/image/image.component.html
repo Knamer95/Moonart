@@ -53,7 +53,7 @@
               <div>
                 <div class="fav-container"
                   (click)="_imageService.saveInteraction($event, this, 'fav', true, 'imageComponent');">
-                  <i class="fas fa-star"></i><span>ADD TO FAVOURITES</span>
+                  <i class="far fa-star"></i><span>ADD TO FAVOURITES</span>
                 </div>
               </div>
               <div>
@@ -63,7 +63,7 @@
                 </div>
               </div>
               <div class="grid-actions-right">
-                <div class="edit-container">
+                <div class="edit-container" *ngIf="this.identity.nick == this.image.user.nick">
                   <span class="edit-button">EDIT</span>
                 </div>
                 <div class="more-container" data-theme="zoe" role="button" id="dropdownActions" data-toggle="dropdown"

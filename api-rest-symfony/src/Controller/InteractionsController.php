@@ -41,8 +41,14 @@ class InteractionsController extends AbstractController
         $token = $request->headers->get('Authorization');
         $authCheck = $jwt_auth->checkToken($token);
 
-        if ($authCheck){
+        $data = [
+            'found' => false,
+            'liked' => false,
+            'faved' => false,
+            'shared' => false,
+        ];
 
+        if ($authCheck){
             $json = $request->get('json', null);
             $params = json_decode($json);
 
@@ -63,12 +69,12 @@ class InteractionsController extends AbstractController
 
                     if(!$isset_interactions){
                         $data = [
-                            'found'   => FALSE
+                            'found'   => false
                         ];
                     }
                     else{
                         $data = [
-                            'found'    => TRUE,
+                            'found'    => true,
                             'liked'    => $isset_interactions->getLiked(),
                             'faved'    => $isset_interactions->getFaved(),
                             'shared'   => $isset_interactions->getShared()
