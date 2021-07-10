@@ -172,6 +172,7 @@
 }
 
 .image-container{
+    position: relative;
     background: linear-gradient(45deg, #ffffff, #f0f0f0);
     align-self: center;
     padding: 60px 45px 45px 45px;
@@ -427,7 +428,7 @@ textarea{
     font-weight: bold;
     color: white;
     border-radius: 5px;
-    font-size: 47px;
+    font-size: 36px;
     cursor: pointer;
 }
 

@@ -4,19 +4,40 @@ ng serve --host 192.168.1.143 --live-reload false
 
 Known bugs:
 
+- Position of SHOW (in sensitive/nsfw) is wrong. Make parent position relative, and show span translate(-50%, -50%);
+
+- Translation to Spanish is wrong in Feed. It also lacks an space (weekago)
+
+- When uploading a pic, everything works, except loading the pic from the server. It's like Angular doesn't detect the change, and you need to restart the Angular server... happens
+  on other devices apparently, not on the one MoonArt was made. Also live-reload not working, like it's not taking anything from the Angular and Symfony scopes as changes.
+  * Note: It did work on a CSS file. Case -> Saving CSS from image.component.css, while viewing an image did reload it, test on other files.
+  Probably if you change a file and reload, it doesn't work cause it doesn't update either... check
+
+  Also phone web not working (login, loading images... connection to the server basically)
+
+- Hidden images on profile don't seem to be displayed as whiteish (case -> Moon hiding a Mark picture). Also change the way they are shown.
+
+- The message of a hidden/deleted image should not disappear after the timeout.
+
 - If user has no followers, following, images uploaded, liked, faved... console shows error (I think when editing? an user -> description is null, cannot apply functions like replace)
   This one is fixed, but it may happen with other fields in other parts. Test empty users.
 
 - (Not really bug but) check that every AJAX call that fails retries at least 5 times.
 
-- Deleting subcomment doesn't delete it
+- Deleting subcomment doesn't delete it -> Change the way responding works as well, instead of the main comment box, a new one under the comment you are responding to 
+  (remove @name, add automatically)
 
 - Commenting after replying to a comment will comment on that comment too. Make it so commenting on a subcomment displays another textarea, different to the main one, used to comment without replying.
+
+
 
 
 ---
 
 Fixed bugs: 
+
+- #2021037 To prevent error https://stackoverflow.com/questions/53097776/angular-7-the-access-control-allow-origin-header-contains-multiple-values, edit index.php in Symfony public, and
+  comment the CORS line -> The reason why this happens is that we have two parts of the code defining headers for CORS, one of them a library from Symfony iirc
 
 - Search: Clicking on pagination  -> Redirects to /home (in live repo it worked properly, so it won't be noticeable)
 
@@ -56,6 +77,21 @@ Implemented changes:
 
 Pending (priority order):
 
+#2021038 Add to .gitignore public assets (uploaded pics), Angular src/app/services/globals.ts, and any other needed file
+
+#2021013 Option to edit a picture. There is a button for it but it does nothing. (Tags, title, description)
+
+#2021036 Sanitize data for every part. Right now, you can link an user on your profile, but it doesn't seem to work. Also the case -> Blabla @Nao [line jump] https://www.google.com fails, since
+  it links "@Nao https". A good idea would be to suggest while user is typing (search of users matching the string -> "search%"), and surround that by some HTML, so when the data is sent,
+  there is a way to know what the links are. 
+
+#2021035 Add hierarchy -> 
+  - If admin uploads pic, no one but them should be able to delete the pic
+  - An admin should not be able to hide any admin pic, including their own (deleting should do it for the last one)
+  - A mod should only be able to hide non mods pics
+  - Tl;dr: Make it a tree hierarchy, user should be able to take actions on their own pic, and lower ranks, not on their own one.
+  - Both mods and admins should be able to delete comments from users (that are not above or equal their hierarchy) 
+
 #2021005 Make gallery images align better (either each image occupies 1/3rd | 1/4th (cut square), or script like DeviantArt that chooses images for each row according to their length.
   Idea: If screen width is 10 units (we would want to fit 4 there... would depend on screen size though). 
   Using 4 as a case, if an image with adjusted height isn't 5 or more, square of 2.5 units, otherwise rectangle of 5/7.5 units -> Problem, would need to save in the image attributes its size in units depending on the media screen size. 
@@ -69,8 +105,6 @@ Pending (priority order):
 #2021011 Visualize the followers and following in profile when clicking on them. Modal that shows users, with option to go to their profile, with the follow/unfollow button.
 
 #2021012 When opening an image, open it on the same webpage, with customized interface, not an <a> element that redirects.
-
-#2021013 Option to edit a picture. There is a button for it but it does nothing. (Tags, title, description)
 
 #2021014 Fix problem with comments' length. It allows 300 chars, but it's saved as JSON, and emojis are 12 characters, so any comment with more than 300 chars will cause an error. Also add a counter like  (map them so they take 3 characters  instead, and save as normal text, not JSON. Also with special chars like ยด `)
 
@@ -106,7 +140,9 @@ Pending (priority order):
 
 #2021030 (Idk if this one is only possible for a live server) -> Allow user to register using Google API.
 
-#2021031 Add guide in a PDF explaining what can be done in MoonArt
+#2021031 Add guide in a PDF explaining what can be done in MoonArt.
+
+#2021034 Implement websocket for chatting and to see who is online from your friends.
 
 #20210xx Possible future version for phones with Cordova.
 

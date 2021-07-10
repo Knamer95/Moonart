@@ -4,7 +4,7 @@ use App\Kernel;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
-header('Access-Control-Allow-Origin: *'); // Url del cliente que va a hacer peticiones. En producción igual no queremos que puedan todos (*)
+// header('Access-Control-Allow-Origin: *'); // Url del cliente que va a hacer peticiones. En producción igual no queremos que puedan todos (*)
 header('Access-Control-Allow-Headers: X-API-KEY, ORIGIN, X-Requested_With, Content-Type, Accept, Access-Control-Request-Method, Authorization');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
 header('Allow: GET, POST, OPTIONS, PUT, DELETE');
