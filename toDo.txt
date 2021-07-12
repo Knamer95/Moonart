@@ -77,6 +77,11 @@ Implemented changes:
 
 Pending (priority order):
 
+#2021039 Uploading a new pic doesn't seem to work. Webm may fail too. Look at it and how to support it. ng serve --poll=2000
+https://stackoverflow.com/questions/48092880/ng-serve-not-detecting-file-changes-automatically
+
+#2021040 Updating config from moonart.io doesn't work.
+
 #2021038 Add to .gitignore public assets (uploaded pics), Angular src/app/services/globals.ts, and any other needed file
 
 #2021013 Option to edit a picture. There is a button for it but it does nothing. (Tags, title, description)
