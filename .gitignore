@@ -3,3 +3,4 @@
 **/globals.ts
 api-rest-symfony/public/storage/**
 moonart-angular/src/app/services/global.ts
+**/extra/**
