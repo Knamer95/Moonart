@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { Image } from '../../models/image';
 import { ImageService } from '../../services/image.service';
 import { CommonService } from '../../services/common.service';
+import { emitterTypes } from '../../models/struct';
 
 @Component({
     selector: 'app-upload-image',
@@ -28,7 +29,10 @@ export class UploadImageComponent implements OnInit {
     public nightMode: boolean;
     public language: Object;
     public lang: number;
-    public currentLang: Object;
+    public currentLang: any;
+    public emitType: number;
+
+    @Output() emitter = new EventEmitter();
 
     constructor(
         private _route: ActivatedRoute,
@@ -43,7 +47,7 @@ export class UploadImageComponent implements OnInit {
 
     ngOnInit() {
         document.title = this.pageTitle;
-        
+
         this.loadUser();
         this.image = new Image(1, this.identity.sub, '', '', '', '', 0, 0, null, null, '', '', '');
 
@@ -94,7 +98,7 @@ export class UploadImageComponent implements OnInit {
 
     onSubmit(form) {
 
-        this.image.name =  this._commonService.noscript(this.image.name);
+        this.image.name = this._commonService.noscript(this.image.name);
 
         var nsfw: boolean = Boolean(this.image.nsfw);
         if (nsfw == true) {
@@ -120,7 +124,7 @@ export class UploadImageComponent implements OnInit {
             // this.image.tags = this.image.tags.replace(/ /g, "");
             this.image.tags = this.image.tags.toLowerCase();
             this.image.tags = this.image.tags.trim();
-            this.image.tags =  this._commonService.noscript(this.image.tags);
+            this.image.tags = this._commonService.noscript(this.image.tags);
         }
 
         var epilepsy: boolean = Boolean(this.image.epilepsy);
@@ -153,7 +157,7 @@ export class UploadImageComponent implements OnInit {
                         this._imageService.interact(this.token, data, estado).subscribe(
                             response => {
                                 if (response.status == "success") {
-                                    setTimeout(() => { this._router.navigate(['home']); }, 3000);
+                                    this._router.navigate(['home']);
                                 }
                                 console.log(response);
                             },
@@ -167,11 +171,27 @@ export class UploadImageComponent implements OnInit {
                 else {
                     this.status = "error";
                 }
-                this._commonService.displayNotification(this, this.status);
+
+                let message = this.status = "success" ? this.currentLang.attributes.uploadSuccess : this.currentLang.attributes.uploadError;
+
+                this.emitter.emit({
+                    type: emitterTypes.alert,
+                    status: response.status,
+                    notificationType: response.status,
+                    message: message,
+                    timer: 3000
+                });
             },
             error => {
                 this.status = "error";
-                this._commonService.displayNotification(this, this.status);
+
+                this.emitter.emit({
+                    type: emitterTypes.alert,
+                    status: "error",
+                    notificationType: "error",
+                    message: this.currentLang.attributes.uploadError,
+                    timer: 3000
+                });
             }
         );
     }
@@ -202,7 +222,7 @@ export class UploadImageComponent implements OnInit {
                 lang: "english",
                 attributes: {
                     title: "Upload image",
-                    uploadSuccess: "Image uploaded successfully. You will be redirected soon.",
+                    uploadSuccess: "Image uploaded successfully.",
                     uploadError: "There was an error while uploading the image. Please try again later.",
                     maxSize: "Max 2Mb.",
                     minResolution: "The resolution must be higher than 400x400.",
@@ -228,7 +248,7 @@ export class UploadImageComponent implements OnInit {
                 lang: "spanish",
                 attributes: {
                     title: "Subir imagen",
-                    uploadSuccess: "Imagen subida correctamente. Se te redirigirá en seguida.",
+                    uploadSuccess: "Imagen subida correctamente.",
                     uploadError: "Error al subir la imagen. Inténtalo de nuevo más tarde.",
                     maxSize: "Máximo 2Mb.",
                     minResolution: "Debe ser una resolución superior a 400x400.",

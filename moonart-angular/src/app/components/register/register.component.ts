@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
 import { CommonService } from '../../services/common.service';
+import { emitterTypes } from '../../models/struct';
 
 @Component({
     selector: 'app-register',
@@ -20,8 +21,11 @@ export class RegisterComponent implements OnInit {
     public configJSON: string;
     public userJSON: string;
     public language: Object;
-    public currentLang: Object;
+    public currentLang: any;
     public lang: number;
+    public emitType: number;
+
+    @Output() emitter = new EventEmitter();
 
     constructor(
         private _userService: UserService,
@@ -32,7 +36,7 @@ export class RegisterComponent implements OnInit {
 
     ngOnInit() {
         document.title = this.pageTitle;
-        
+
         // if (localStorage.getItem("user") != null && localStorage.getItem("config") != "undefined") {
         this.nightMode = JSON.parse(localStorage.getItem("config")).nightMode;
         this._commonService.changeNightModeAttr(this.nightMode);
@@ -47,6 +51,7 @@ export class RegisterComponent implements OnInit {
         this.checkData = true;
 
         if (form.value.password == form.value.password_2) {
+
             this._userService.register(this.user).subscribe(
                 response => {
                     if (response.status == 'success') {
@@ -58,19 +63,46 @@ export class RegisterComponent implements OnInit {
                         this.checkData = false;
 
                     }
-                    console.log(response);
 
-                    this._commonService.displayNotification(this, this.status);
+                    let message = response.status === "success" ?
+                        `${this.currentLang.attributes.messageSuccess1}, <a>${this.currentLang.attributes.messageSuccess2}</a>`
+                        :
+                        this.currentLang.attributes.messageError;
+
+                    this.emitter.emit({
+                        type: emitterTypes.alert,
+                        status: response.status,
+                        notificationType: response.status,
+                        message: message,
+                        timer: 3000
+                    });
                 },
                 error => {
                     this.status = 'error';
                     this.checkData = false;
-                    this._commonService.displayNotification(this, this.status);
+
+                    this.emitter.emit({
+                        type: emitterTypes.alert,
+                        status: "error",
+                        notificationType: "error",
+                        message: this.currentLang.attributes.unbannedImage,
+                        timer: 3000
+                    });
+
                     console.log(error);
                 }
             );
         }
         else {
+            
+            this.emitter.emit({
+                type: emitterTypes.alert,
+                status: "error",
+                notificationType: "error",
+                message: this.currentLang.attributes.passwordsDontMatch,
+                timer: 3000
+            });
+
             console.log("The passwords don't match."); // Show on notification instead
             this.checkData = false;
         }
@@ -85,6 +117,7 @@ export class RegisterComponent implements OnInit {
                     messageSuccess1: "You were registered successfully",
                     messageSuccess2: "log in here",
                     messageError: "You were not registered. Check the console to see the error (F12).",
+                    passwordsDontMatch: "The passwords don't match.",
                     invalidName: "Invalid name. It must contain at least one character",
                     invalidUser: "Invalid nick. Must be between 4 and 10 characters. It admits alphanumerics, hyphen, and underscore",
                     invalidEmail: "Invalid email. Please introduce a valid one.",
@@ -105,6 +138,7 @@ export class RegisterComponent implements OnInit {
                     messageSuccess1: "Te has registrado correctamente",
                     messageSuccess2: "identifícate aquí",
                     messageError: "No te has registrado. Consulta la consola para ver el error (F12).",
+                    passwordsDontMatch: "Las contraseñas no coinciden.",
                     invalidName: "Nombre no válido. Debe contener al menos un caracter.",
                     invalidUser: "Nick no válido. Debe tener entre 4 y 10 caracteres. Admite alfanuméricos, guión, y guión bajo.",
                     invalidEmail: "Email no válido. Por favor introduzca un email válido.",

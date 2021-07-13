@@ -1,8 +1,9 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, EventEmitter, Input, Output } from '@angular/core';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
 import { CommonService } from '../../services/common.service';
 import { Renderer2 } from '@angular/core';
+import { emitterTypes } from '../../models/struct';
 
 @Component({
     selector: 'app-user-edit',
@@ -31,7 +32,10 @@ export class UserEditComponent implements OnInit {
     public passMatch: boolean;
     public language: Object;
     public lang: number;
-    public currentLang: Object;
+    public currentLang: any;
+    public emitType: number;
+
+    @Output() emitter = new EventEmitter();
 
     constructor(
         private _userService: UserService,
@@ -127,7 +131,15 @@ export class UserEditComponent implements OnInit {
                                 this.status = "error";
                                 this.checker = false;
                             }
-                            this._commonService.displayNotification(this, response.status);
+
+                            let message = response.status === "success" ? this.currentLang.attributes.profileUpdateSuccess : this.currentLang.attributes.passwordsDontMatch;
+                            this.emitter.emit({
+                                type: emitterTypes.alert,
+                                status: response.status,
+                                notificationType: response.status,
+                                message: message,
+                                timer: 3000
+                            });
                         },
                         error => { }
                     );
@@ -172,12 +184,27 @@ export class UserEditComponent implements OnInit {
                     this.status = "error";
                 }
                 console.log(response);
-                this._commonService.displayNotification(this, this.status);
+
+                let message = response.status === "success" ? this.currentLang.attributes.profileUpdateSuccess : this.currentLang.attributes.profileUpdateError;
+                this.emitter.emit({
+                    type: emitterTypes.alert,
+                    status: response.status,
+                    notificationType: response.status,
+                    message: message,
+                    timer: 3000
+                });
 
             },
             error => {
                 this.status = "error";
-                this._commonService.displayNotification(this, this.status);
+
+                this.emitter.emit({
+                    type: emitterTypes.alert,
+                    status: "error",
+                    notificationType: "error",
+                    message: this.currentLang.attributes.profileUpdateError,
+                    timer: 3000
+                });
                 console.log(error);
             }
         );
@@ -213,6 +240,7 @@ export class UserEditComponent implements OnInit {
                     title: "Edit profile",
                     profileUpdateSuccess: "You have updated your profile successfully.",
                     profileUpdateError: "There was an error while updating the profile.",
+                    passwordsDontMatch: "The passwords don't match.",
                     imageError: "Error, image is too big. Only images smaller than 1Mb.",
                     basic: "Basic",
                     advanced: "Advanced",
@@ -238,6 +266,7 @@ export class UserEditComponent implements OnInit {
                     title: "Editar perfil",
                     profileUpdateSuccess: "Has actualizado tu perfil correctamente.",
                     profileUpdateError: "Error al actualizar la información.",
+                    passwordsDontMatch: "Las contraseñas no coinciden.",
                     imageError: "Error, imagen demasiado grande. Sólo imágenes menores de 1Mb.",
                     basic: "Básico",
                     advanced: "Avanzado",

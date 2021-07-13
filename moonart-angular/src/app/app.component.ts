@@ -27,8 +27,14 @@ export class AppComponent implements OnInit, DoCheck {
     public searchQuery;
     public navStatus: number;
     public language: Object;
-    public currentLang: Object;
+    public currentLang: any;
     public lang: number;
+    public alertStatus: String;
+    public alertMessage: String;
+    public alertsArray: any = []; // Array<Object> = []; <- Leave as any, or create a new interface
+    public alertCounter: number = 0;
+    public position: number = 0;
+
 
     constructor(
         private _userService: UserService,
@@ -38,6 +44,7 @@ export class AppComponent implements OnInit, DoCheck {
     ) {
         this.i = 0;
         this.searchQuery = '';
+        this.alertStatus = 'iddle';
     }
 
     ngOnInit() {
@@ -50,6 +57,8 @@ export class AppComponent implements OnInit, DoCheck {
 
         this.navHeight = $(".clip").height();
         this.navStatus = 1;
+
+        console.log(this.alertsArray);
     }
 
     ngDoCheck() {
@@ -90,7 +99,7 @@ export class AppComponent implements OnInit, DoCheck {
         that.i++;
     }
 
-    toggle() {        
+    toggle() {
         if ($(".menu-toggle").css("display") != "none") {
             let elements = document.querySelectorAll("[data-view]");
             let status = document.querySelector(".navbar[data-theme]");
@@ -157,10 +166,58 @@ export class AppComponent implements OnInit, DoCheck {
         return this.language[(lang - 1)];
     }
 
-    onEmited(lang) {
-        this.lang = lang;
-        this.currentLang = this.getLang(lang);
-        this._commonService.changeLangAttr(lang);
+    /*
+     *
+     * @params
+     *      emit: Emitted element
+     *      emitType: Type of emit (defined at ../../models/struct.ts)
+     *
+     */
+    onEmited(emit) {
+        console.log(emit);
+
+        switch (emit.type) {
+            case 1:
+                this.lang = emit.lang;
+                this.currentLang = this.getLang(emit.lang);
+                this._commonService.changeLangAttr(emit.lang);
+                break;
+
+            case 2:
+                this.alertStatus = emit.notificationType;
+
+                this.position = this.alertsArray.length && this.alertsArray[0].position === 0 ? this.alertsArray[this.alertsArray.length - 1].position + 70 : 0;
+                const newAlert = {
+                    ref: ++this.alertCounter,
+                    type: emit.status,
+                    message: emit.message,
+                    position: this.position
+                }
+                this.alertsArray.push(newAlert);
+
+                const response = new Promise((resolve, reject) => {
+                    this._commonService.displayNotification(newAlert.message, false, this.alertsArray, newAlert.ref, resolve);
+                });
+
+                response.then((val: any) => {
+                    let arr: any = this.alertsArray;
+                    arr = arr.filter(function (item) {
+                        return item.ref !== val.ref
+                    });
+
+                    const initialPosition = arr.length > 0 ? arr[0].position : 0;
+                    for (let i = 0; i < arr.length; i++) {
+                        arr[i].position -= initialPosition;
+                    };
+
+                    this.alertsArray = arr;
+                });
+
+                break;
+
+            default:
+                break;
+        }
     }
 
     // https://stackoverflow.com/questions/38393494/how-to-emit-event-in-router-outlet-in-angular2

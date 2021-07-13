@@ -7,6 +7,7 @@ import * as $ from 'jquery';
 import { UserService } from '../../services/user.service';
 import { CommonService } from '../../services/common.service';
 import { AppComponent } from '../../app.component';
+import { emitterTypes } from '../../models/struct';
 
 declare var jQuery: any;
 
@@ -30,10 +31,11 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     public scroll: boolean = true; // If true, shows galleries as scroll. Otherwise it shows them paginated
     public language: Object;
     public lang: number;
-    public currentLang: Object;
+    public currentLang: any;
+    public emitType: number;
 
     // @Input()
-    // set currentLang(currentLang: Object) {
+    // set currentLang(currentLang: any) {
     // this._currentLang = currentLang;
     // }
 
@@ -48,7 +50,14 @@ export class SettingsComponent implements OnInit, AfterViewInit {
         
         updateConfig.lang = parseInt($("select option:selected").attr("data-id"));
         localStorage.setItem("config", JSON.stringify(updateConfig));
-        this.emitter.emit(this.lang);
+        
+        this.emitter.emit({
+            type: emitterTypes.lang,
+            status: "success",
+            notificationType: "success",
+            lang: this.lang
+        });
+
         $(".event-emitter").click(); // To propagate the emitter, you have to bubble (adding the event to a children element). Then we simulate a click on the element with jQuery.
     }
 

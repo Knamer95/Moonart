@@ -42,7 +42,7 @@ export class ProfileComponent implements OnInit {
     public tab: any;
     public language: Object;
     public lang: number;
-    public currentLang: Object;
+    public currentLang: any;
     constructor(
         private _userService: UserService,
         private _imageService: ImageService,

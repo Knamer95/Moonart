@@ -378,26 +378,38 @@ export class CommonService {
      * Otherwise, it won't do the animation anymore... could look for different approaches too if this turns out to be inconvenient :)
      * 
      */
-    displayNotification(e, status = null) {
-        console.log(status);
+    displayNotification(message, permanent, arr, ref = null, resolve = null) {
+
+        const alertType = permanent ? `.alert-permanent` : `.alert[data-ref='${ref}']`;
+        let alert;
 
         setTimeout(function () {
-            try {
-                let alert = <HTMLElement>document.getElementsByClassName("alert")[0];
-                alert.style.opacity = "1";
-            }
-            catch (err) {
-            }
-        }, 0);
+            alert = <HTMLElement>document.querySelectorAll(`${alertType}`)[0];
+            alert.innerHTML = message;
+            alert.style.opacity = "1";
+        }, 0, alert);
 
-        setTimeout(function () {
-            try {
-                let alert = <HTMLElement>document.getElementsByClassName("alert")[0];
-                alert.style.opacity = "0";
-            }
-            catch (err) {
-            }
-        }, 2000);
+        if (!permanent) {
+            console.log(permanent);
+
+            var timeout;
+
+            timeout = setTimeout(function () {
+                try {
+                    alert.style.opacity = "0";
+
+                    setTimeout(function () {
+                        const response = {
+                            arr: arr,
+                            ref: ref
+                        }
+                        resolve(response);
+                    }, 500, alert); // Once the opacity animation has ended, we clear its value.
+                }
+                catch (err) {
+                }
+            }, 3000, alert);
+        }
     }
 
     loadUser() {

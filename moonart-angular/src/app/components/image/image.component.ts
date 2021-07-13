@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ImageService } from '../../services/image.service';
 import { CommonService } from '../../services/common.service';
@@ -6,6 +6,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Renderer2 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { callbackify } from 'util';
+import { emitterTypes } from '../../models/struct';
 
 declare var jQuery: any;
 
@@ -53,6 +54,8 @@ export class ImageComponent implements OnInit {
     public commentToDelete: string;
     public customAlert: string;
 
+
+
     formVar: FormGroup;
     public commError: number = 0;
     public isFwError: number = 0;
@@ -63,6 +66,10 @@ export class ImageComponent implements OnInit {
     public language: Object;
     public lang: number;
     public currentLang: any;
+    public alertStatus: String;
+    public emitType: number;
+
+    @Output() emitter = new EventEmitter();
 
     constructor(
         private _userService: UserService,
@@ -134,7 +141,7 @@ export class ImageComponent implements OnInit {
             //prevents browser from storing history with each change:
             window.history.replaceState('page', 'Title', '/images/' + this.imageId);
         }
-        else{
+        else {
             window.history.pushState('page', 'Title', '/images/' + this.imageId);
         }
 
@@ -163,7 +170,8 @@ export class ImageComponent implements OnInit {
                 if (response.status == "success") {
                     console.log(response);
 
-                    this._commonService.displayNotification(this, response.status);
+                    // Idk what the purpose of this was, it didn't seem to do anything
+                    // this._commonService.displayNotification(null, false, response.status);
 
                     that.username = response.image.user.nick;
 
@@ -174,6 +182,15 @@ export class ImageComponent implements OnInit {
                     // that.images = that.image;
                     // console.log(that.images);
 
+                    if (that.image.status === 'hidden') {
+                        this.alertStatus = "success";
+
+                        this._commonService.displayNotification(this.currentLang.attributes.hiddenImage, true, null);
+                    }
+                    else {
+                        this.alertStatus = "iddle";
+                    }
+
                     this._imageService.getInteractions(this, true, "imageComponent");
 
                     if (that.image.description != null) {
@@ -182,7 +199,7 @@ export class ImageComponent implements OnInit {
                     }
 
                     that.image.createdAt = that._commonService.dateFormat(that.image.createdAt, this.lang, "timestamp");
-                    
+
                     // that.image.rights = that.image.rights.charAt(0).toUpperCase() + that.image.rights.slice(1);
 
                     switch (that.image.rights) {
@@ -262,7 +279,8 @@ export class ImageComponent implements OnInit {
         this._userService.follow(token, nick).subscribe(
             response => {
                 if (response.status == "success") {
-                    this._commonService.displayNotification(this, response.status);
+                    // No need to display since you can visually see it
+                    // this._commonService.displayNotification(null, false, response.status);
                     this._userService.checkFollowing(this);
                 }
                 this.isFwError = 0;
@@ -373,15 +391,16 @@ export class ImageComponent implements OnInit {
             this._imageService.addComment(this.token, json).subscribe(
                 response => {
                     if (response.status == "success") {
-                        this._commonService.displayNotification(this, response.status);
+                        this.emitter.emit({
+                            type: emitterTypes.alert,
+                            status: response.status,
+                            notificationType: response.status,
+                            message: this.currentLang.attributes.commentAdded,
+                            timer: 3000
+                        });
 
                         form.reset();
-                        /*
-                        this.commentAdded = true;
-                        setTimeout(function(){
-                            this.commentAdded = false;
-                        }, 1000); 
-                        */
+
                         this.getAllComments(this.imageId); // Reloads the comments, so you don't have to reload the page to see the one you added 
                         // console.log(response);
                     }
@@ -415,11 +434,19 @@ export class ImageComponent implements OnInit {
     delete(id) {
         this._imageService.delete(this.token, id).subscribe(
             response => {
-                console.log(response);
+                let message = response.status === "success" ? this.currentLang.attributes.deletedImage : this.currentLang.attributes.deletedImageError;
+
+                this.emitter.emit({
+                    type: emitterTypes.alert,
+                    status: response.status,
+                    notificationType: response.status,
+                    message: message,
+                    timer: 3000
+                });
+
                 if (response.status == "success") {
-                    this._commonService.displayNotification(this, response.status);
                     this.deleted = true;
-                    setTimeout(() => { this._router.navigate(['home']); }, 3000);
+                    this._router.navigate(['home']);
                 }
             },
             error => {
@@ -439,7 +466,14 @@ export class ImageComponent implements OnInit {
                 console.log(response);
                 if (response.status == "success") {
                     this.ngOnInit();
-                    this._commonService.displayNotification(this, response.status);
+
+                    this.emitter.emit({
+                        type: emitterTypes.alert,
+                        status: response.status,
+                        notificationType: response.status,
+                        message: this.currentLang.attributes.deletedComment2,
+                        timer: 3000
+                    });
                 }
             },
             error => {
@@ -460,9 +494,23 @@ export class ImageComponent implements OnInit {
             response => {
                 console.log(response);
                 if (response.status == "success") {
-                    this._commonService.displayNotification(this, response.status);
+
+                    this.alertStatus = "success";
+
+                    // If it's published when we call the function, it hides it, and vice-versa
+                    if (action === "published")
+                        this._commonService.displayNotification(this.currentLang.attributes.hiddenImage, true, null);
+                    else
+                        this.emitter.emit({
+                            type: emitterTypes.alert,
+                            status: response.status,
+                            notificationType: response.status,
+                            message: this.currentLang.attributes.unbannedImage,
+                            timer: 3000
+                        });
+
                     this.hidden = true;
-                    setTimeout(() => { this._router.navigate(['home']); }, 3000);
+                    setTimeout(() => { this._router.navigate(['home']); }, 1500);
                 }
             },
             error => {
@@ -548,7 +596,7 @@ export class ImageComponent implements OnInit {
         }
     }
 
-    prop(el){
+    prop(el) {
         jQuery(el).modal("show");
     }
 
@@ -558,9 +606,11 @@ export class ImageComponent implements OnInit {
                 lang: "english",
                 attributes: {
                     title: "Image",
-                    imageHidden: "This image has been disabled due to infringement of rules. If you think this is a mistake, please contact with a moderator.",
-                    imageDeleted: "Image deleted successfully. You will be redirected soon.",
-                    commentAdded: "Comment added.",
+                    hiddenImage: "This image has been disabled due to infringement of rules. If you think this is a mistake, please contact with a moderator.",
+                    unbannedImage: "Image unbanned successfully.",
+                    deletedImage: "Image deleted successfully.",
+                    deletedImageError: "There was an error while trying to delete the image. Please try again later.",
+                    commentAdded: "Comment added successfully.",
                     description: "Description",
                     noDescription: "User didn't add a description.",
                     rights: "Rights",
@@ -585,7 +635,8 @@ export class ImageComponent implements OnInit {
                     the: "",
                     ago: " ago",
                     newComment: "Add a new comment...",
-                    deletedComment: "This comment was deleted.",
+                    deletedComment: "Comment deleted.",
+                    deletedComment2: "Comment deleted successfully.",
                     deleteModalTitle: "Delete image?",
                     deleteModalBody: "The image will be deleted permanently.",
                     hideModalTitle: "Hide image?",
@@ -606,9 +657,11 @@ export class ImageComponent implements OnInit {
                 lang: "spanish",
                 attributes: {
                     title: "Imagen",
-                    imageHidden: "La imagen ha sido deshabilitada porque inflingía las normas. Si crees que esto es un error, por favor contacta con un moderador.",
-                    imageDeleted: "La imagen se ha borrado correctamente. Se te redirigirá en seguida.",
-                    commentAdded: "Comentario añadido.",
+                    hiddenImage: "La imagen ha sido deshabilitada porque inflingía las normas. Si crees que esto es un error, por favor contacta con un moderador.",
+                    unbannedImage: "Imagen desocultada correctamente.",
+                    deletedImage: "La imagen se ha borrado correctamente.",
+                    deletedImageError: "Ocurrió un error al intentar borrar la imagen. Por favor, inténtelo más tarde.",
+                    commentAdded: "Comentario añadido correctamente.",
                     description: "Descripción",
                     noDescription: "El usuario no ha agregado ninguna descripción.",
                     rights: "Derechos",
@@ -633,7 +686,8 @@ export class ImageComponent implements OnInit {
                     the: "",
                     ago: " ago",
                     newComment: "Añadir nuevo comentario...",
-                    deletedComment: "Este comentario fue borrado.",
+                    deletedComment: "Comentario borrado.",
+                    deletedComment2: "Comentario borrado correctamente.",
                     deleteModalTitle: "¿Borrar imagen?",
                     deleteModalBody: "La imagen se borrará permanentemente.",
                     hideModalTitle: "¿Ocultar imagen?",

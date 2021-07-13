@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
 import { CommonService } from '../../services/common.service';
 import { AppComponent } from '../../app.component';
+import { emitterTypes } from '../../models/struct';
 
 @Component({
     selector: 'app-login',
@@ -24,8 +25,11 @@ export class LoginComponent implements OnInit {
     public configJSON: string;
     public isFirst: boolean;
     public language: Object;
-    public currentLang: Object;
+    public currentLang: any;
     public lang: number;
+    public emitType: number;
+
+    @Output() emitter = new EventEmitter();
 
     constructor(
         private _userService: UserService,
@@ -93,7 +97,7 @@ export class LoginComponent implements OnInit {
                                 localStorage.setItem('identity', JSON.stringify(this.identity));
                                 localStorage.removeItem("config");
                                 this.updateDB(this.token);
-                                setTimeout(() => { this._router.navigate(['home']); }, 3000);
+                                setTimeout(() => { this._router.navigate(['home']); }, 1500);
 
                             }
                             else {
@@ -114,7 +118,15 @@ export class LoginComponent implements OnInit {
                     // form.reset(); // Uncomment to reset when password is incorrect
                 }
 
-                this._commonService.displayNotification(this, this.status);
+                let message = response.status === "success" ? this.currentLang.attributes.messageSuccess : this.currentLang.attributes.messageError;
+
+                this.emitter.emit({
+                    type: emitterTypes.alert,
+                    status: response.status,
+                    notificationType: response.status,
+                    message: message,
+                    timer: 3000
+                });
             },
             error => {
                 this.status = 'error';

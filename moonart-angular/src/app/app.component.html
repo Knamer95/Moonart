@@ -1,3 +1,10 @@
+<!-- <div class="alert alert-success notification" data-type="alert" *ngIf="alertStatus == 'success'"></div> -->
+<!-- <div class="alert alert-danger notification" data-type="alert" *ngIf="alertStatus == 'error'"></div> -->
+
+<!-- https://stackoverflow.com/questions/34542619/how-can-i-write-data-attributes-using-angular -->
+<div *ngFor="let alert of alertsArray; let i = index" class="alert notification" [ngClass]="alert.type"
+    data-type="alert" [attr.data-ref]="alert.ref" [ngStyle]="{'bottom': alert.position+'px'}">{{alert.message}}</div>
+
 <div class="nav-wrapper nav-small">
     <!-- data-navbar="not-fixed" -->
     <!-- <div class="clip"> -->
@@ -107,24 +114,29 @@
                     </li>
                     <li class="separator"></li>
                     <li class="nav-item small" *ngIf="identity && identity.nick != 'guest'">
-                        <a class="nav-link" id="view-profile-2"
-                            [href]="['/profile/' + identity.nick]" (click)="this.toggle()">{{this.currentLang.attributes.profile}}</a></li>
+                        <a class="nav-link" id="view-profile-2" [href]="['/profile/' + identity.nick]"
+                            (click)="this.toggle()">{{this.currentLang.attributes.profile}}</a>
+                    </li>
                     <li class="nav-item small" *ngIf="identity && identity.nick != 'guest'">
-                        <a class="nav-link" id="edit-profile-2"
-                            [routerLink]="['/edit']" (click)="this.toggle()">{{this.currentLang.attributes.editProfile}}</a></li>
+                        <a class="nav-link" id="edit-profile-2" [routerLink]="['/edit']"
+                            (click)="this.toggle()">{{this.currentLang.attributes.editProfile}}</a>
+                    </li>
                     <li class="nav-item small" *ngIf="identity && identity.nick != 'guest'">
-                        <a class="nav-link" id="edit-profile-2"
-                            [routerLink]="['/settings']" (click)="this.toggle()">{{this.currentLang.attributes.config}}</a></li>
+                        <a class="nav-link" id="edit-profile-2" [routerLink]="['/settings']"
+                            (click)="this.toggle()">{{this.currentLang.attributes.config}}</a>
+                    </li>
                     <li class="nav-item small" *ngIf="identity && identity.nick != 'guest'">
-                        <a class="nav-link" id="logout-2"
-                            [routerLink]="['/logout/1']" (click)="this.toggle()">{{this.currentLang.attributes.exit}}</a></li>
+                        <a class="nav-link" id="logout-2" [routerLink]="['/logout/1']"
+                            (click)="this.toggle()">{{this.currentLang.attributes.exit}}</a>
+                    </li>
 
                     <li class="nav-item small" *ngIf="!identity || identity.nick == 'guest'">
-                        <a class="nav-link" [routerLink]="['/login']" (click)="this.toggle()">{{this.currentLang.attributes.login}}</a>
+                        <a class="nav-link" [routerLink]="['/login']"
+                            (click)="this.toggle()">{{this.currentLang.attributes.login}}</a>
                     </li>
                     <li class="nav-item small" *ngIf="!identity || identity.nick == 'guest'">
-                        <a class="nav-link"
-                            [routerLink]="['/register']" (click)="this.toggle()">{{this.currentLang.attributes.register}}</a>
+                        <a class="nav-link" [routerLink]="['/register']"
+                            (click)="this.toggle()">{{this.currentLang.attributes.register}}</a>
                     </li>
                 </ul>
             </div>

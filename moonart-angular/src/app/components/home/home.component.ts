@@ -5,6 +5,7 @@ import { CommonService } from '../../services/common.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Renderer2 } from '@angular/core';
 import * as $ from 'jquery';
+import { emitterTypes } from '../../models/struct';
 
 @Component({
     selector: 'app-home',
@@ -33,8 +34,9 @@ export class HomeComponent implements OnInit {
     public loaded: boolean = false;
     public imagError: number = 0;
     public language: Object;
-    public currentLang: Object;
+    public currentLang: any;
     public lang: number = 1;
+    public emitType: number;
     
     @Output() emitter = new EventEmitter();
 
@@ -55,7 +57,14 @@ export class HomeComponent implements OnInit {
 
         if (localStorage.getItem("config") != null && localStorage.getItem("config") != "undefined") {
             this.lang = JSON.parse(localStorage.getItem("config")).lang;
-            this.emitter.emit(this.lang);
+
+            this.emitter.emit({
+                type: emitterTypes.lang,
+                status: "success",
+                notificationType: "success",
+                lang: this.lang
+            });
+            
             this.nightMode = JSON.parse(localStorage.getItem("config")).nightMode;
             this.scroll = JSON.parse(localStorage.getItem("config")).scroll; 
 

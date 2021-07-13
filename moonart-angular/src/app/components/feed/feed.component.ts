@@ -49,7 +49,7 @@ export class FeedComponent implements OnInit {
     public objectSend: Object;
     public language: Object;
     public lang: number;
-    public currentLang: Object;
+    public currentLang: any;
 
     constructor(
         private _userService: UserService,
