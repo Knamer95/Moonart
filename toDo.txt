@@ -83,6 +83,8 @@ Implemented changes:
 
 Pending (priority order):
 
+#2021044 The issues with AJAX calls seem to get worse. Now when entering to an image/profile, sometimes pics won't load until refreshing (More by, and Gallery). Could be related to uploading issue...
+
 #2021043 Remove the property "zoom: 0.8", and adjust the size of elements, text, etc, properly. Some browsers don't support it!
 
 #2021028 Implement profile comments.

@@ -157,8 +157,6 @@ export class ProfileComponent implements OnInit {
     }
 
     follow(token, nick) {
-        console.log(token);
-        console.log(nick);
         this._userService.follow(token, nick).subscribe(
             response => {
                 if (response.status == "success") {

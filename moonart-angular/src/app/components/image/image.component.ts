@@ -63,6 +63,7 @@ export class ImageComponent implements OnInit {
     public iCntError: number = 0;
     public moreError: number = 0;
     public chckError: number = 0;
+    public imagError: number = 0;
     public language: Object;
     public lang: number;
     public currentLang: any;
