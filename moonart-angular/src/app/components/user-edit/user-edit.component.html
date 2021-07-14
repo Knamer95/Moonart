@@ -27,7 +27,7 @@
             <input type="file" name="file" id="path" #file (change)="fileHandler(file.files)" accept="image/*" style="display:none">
             <img [src]="_imageURL" id="upload-image" class="user-image" (click)="file.click()">
             <textarea name="description" #description="ngModel" [(ngModel)]="user.description" class="form-control"
-              placeholder="Breve descripción sobre ti" maxlength="300" #counterRef>{{this.identity.description}}</textarea>
+              [placeholder]="this.currentLang.attributes.shortDescription" maxlength="300" #counterRef>{{this.identity.description}}</textarea>
             <span class="counter">{{counterRef.value.length}}/300</span>
           </div>
         </div>

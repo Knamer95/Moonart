@@ -5,6 +5,8 @@ import { CommonService } from '../../services/common.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Renderer2 } from '@angular/core';
 
+declare var jQuery: any;
+
 @Component({
     selector: 'app-profile',
     templateUrl: './profile.component.html',
@@ -27,6 +29,7 @@ export class ProfileComponent implements OnInit {
     public epilepsy: boolean;
     public username: any; // Nick -> Used for login, admits regex [A-z0-9_-]+
     public userCustom: String; // Name to display -> Admits any
+
     @Input() public urlname: any;
     public followStatus: string;
     public element: number;
@@ -35,8 +38,10 @@ export class ProfileComponent implements OnInit {
     public isOwner: boolean;
     public isFollowing: boolean;
     public _imageURL: string;
-    public followers: number;
-    public following: number;
+    public nFollowers: number;
+    public nFollowing: number;
+    public followers: Array<Object>;
+    public following: Array<Object>;
     public fllwError: number;
     public userError: number;
     public tab: any;
@@ -51,6 +56,9 @@ export class ProfileComponent implements OnInit {
         private _router: Router,
         private render: Renderer2
     ) {
+        // Force reloading on routerLink:
+        // https://stackoverflow.com/questions/38971660/angular-2-reload-route-on-param-change
+        this._router.routeReuseStrategy.shouldReuseRoute = () => false;
 
         /* Fixed so if user access a profile from @[+username] (mentions), it will show the proper username. e.g: @nAO !== @Nao */
 
@@ -62,13 +70,26 @@ export class ProfileComponent implements OnInit {
 
         this.followStatus = "Follow";
         this.tab = "images";
-        this.followers = 0;
-        this.following = 0;
+        this.nFollowers = 0;
+        this.nFollowing = 0;
+        this.followers = [];
+        this.following = [];
         this.fllwError = 0;
         this.userError = 0;
     }
 
     ngOnInit() {
+        const modalBackdrop = document.getElementsByClassName("modal-backdrop")[0];
+
+        if (modalBackdrop)
+            modalBackdrop.remove();
+
+        const modalSelectors = ["#followersModal", "#followingModal"];
+
+        for (let i = 0; i < modalSelectors.length; i++) {
+            // this.unprop(modalSelectors[i]);
+        }
+
         this.loadUser();
         this.tab = window.location.href.split("/");
         this.tab = this.tab[this.tab.length - 2];
@@ -85,7 +106,7 @@ export class ProfileComponent implements OnInit {
             this.element = 1;
         }
 
-        this.getUserData();
+        this.getUserData(this.urlname, true);
 
         this._route.params.subscribe(params => {
             this.page = +params['page'];
@@ -120,6 +141,7 @@ export class ProfileComponent implements OnInit {
     loadUser() {
         this.identity = this._userService.getIdentity();
         this.token = this._userService.getToken();
+
         if (this.identity == null) {
             this.identity = {
                 id: 0,
@@ -135,11 +157,13 @@ export class ProfileComponent implements OnInit {
     }
 
     follow(token, nick) {
+        console.log(token);
+        console.log(nick);
         this._userService.follow(token, nick).subscribe(
             response => {
                 if (response.status == "success") {
                     this._userService.checkFollowing(this);
-                    this.getUserData();
+                    this.getUserData(this.urlname, true);
                 }
             },
             error => {
@@ -148,12 +172,108 @@ export class ProfileComponent implements OnInit {
         );
     }
 
-    getUserData() {
-        this._userService.getUserByNick(this.urlname).subscribe(
+    /*
+     *
+     * Function to compare the arrays of followers and following, to then show if the user viewing the profile follows them or not
+     * 
+     * @args
+     *   followersP -> Followers from profile 
+     *   followingP -> Following from profile
+     *   followingU -> Following from user (null if user viewing profile is the profile user)
+     */
+    compareFollowers(followersP, followingP, followingU) {
+        // this.followers = arr1;
+        // this.following = arr2;
+
+        if (followingU === null) { // Different to empty array!
+            // If this param is null, it means that logged user != profile user, and so every following is true
+
+            if (followersP.length > 0) {
+                for (let i = 0; i < followingP.length; i++) {
+                    let found = false;
+                    for (let j = 0; j < followersP.length; j++) {
+                        if (followingP[i].follower.nick === followersP[j].followed.nick) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    followersP[i].isFollowedByUser = found;
+                }
+            }
+
+            if (followingP.length > 0) {
+                for (let i = 0; i < followingP.length; i++) {
+                    followingP.isFollowedByUser = true;
+                }
+            }
+        }
+        else {
+            // logged user != profile user
+
+            // Following followed by logged user
+            if (followingP.length > 0) {
+                for (let i = 0; i < followingP.length; i++) {
+                    let found = false;
+                    for (let j = 0; j < followingU.length; j++) {
+                        if (followingP[i].followed.nick === followingU[j].followed.nick) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    followingP[i].isFollowedByUser = found;
+                }
+            }
+
+            // Followers followed by logged user
+            if (followersP.length > 0) {
+                for (let i = 0; i < followersP.length; i++) {
+                    let found = false;
+                    for (let j = 0; j < followingU.length; j++) {
+                        if (followersP[i].follower.nick === followingU[j].followed.nick) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    followersP[i].isFollowedByUser = found;
+                }
+            }
+        }
+
+        this.followers = followersP;
+        this.following = followingP;
+    }
+
+    getLoggedUserData(user, profileFollowers, profileFollowing) {
+        // console.log(`getLoggedUserData: ${user.nick}`);
+
+        this._userService.getUserFollows(user.sub).subscribe(
+            response => {
+                if (response.status == "success") {
+                    // this._userService.checkFollowing(this, nick, userclass);
+                    this.compareFollowers(profileFollowers, profileFollowing, response.following);
+                }
+
+                this.fllwError = 0;
+            },
+            error => {
+                console.log("getUserFollows()");
+                console.log("Ero..." + " attempt: " + this.fllwError);
+                if (this.fllwError < 5) {
+                    this.getLoggedUserData(user, profileFollowers, profileFollowing);
+                    this.fllwError++;
+                }
+            }
+        );
+    }
+
+    getUserData(nick, isProfileUser) {
+        // console.log(`getUserData: ${nick}`);
+        isProfileUser = true;
+
+        this._userService.getUserByNick(nick).subscribe(
             response => {
                 // console.log(response);
                 if (response.status == "success") {
-                    console.log(response);
                     this._imageURL = "assets/profile-picture/" + response.user_info.image;
                     this.found = true;
                     this.userCustom = response.user_info.name;
@@ -170,8 +290,17 @@ export class ProfileComponent implements OnInit {
                     this._userService.getUserFollows(response.user_info.id).subscribe(
                         response => {
                             if (response.status == "success") {
-                                this.followers = response.followers;
-                                this.following = response.following;
+                                this.nFollowers = response.nFollowers;
+                                this.nFollowing = response.nFollowing;
+
+                                // this._userService.checkFollowing(this, nick, userclass);
+
+                                if (nick !== this.identity.nick) {
+                                    const currentUserData = this.getLoggedUserData(this.identity, response.followers, response.following);
+                                }
+                                else {
+                                    this.compareFollowers(response.followers, response.following, null);
+                                }
                             }
 
                             this.fllwError = 0;
@@ -180,7 +309,7 @@ export class ProfileComponent implements OnInit {
                             console.log("getUserFollows()");
                             console.log("Ero..." + " attempt: " + this.fllwError);
                             if (this.fllwError < 5) {
-                                this.getUserData();
+                                this.getUserData(nick, isProfileUser);
                                 this.fllwError++;
                             }
                         }
@@ -195,11 +324,19 @@ export class ProfileComponent implements OnInit {
                 console.log("getUserByNick()");
                 console.log("Ero..." + " attempt: " + this.userError);
                 if (this.userError < 5) {
-                    this.getUserData();
+                    this.getUserData(this.urlname, true);
                     this.userError++;
                 }
             }
         );
+    }
+
+    unprop(el) {
+        jQuery(el).modal("hide");
+    }
+
+    prop(el) {
+        jQuery(el).modal("show");
     }
 
     getLang(lang) {

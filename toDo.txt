@@ -8,23 +8,23 @@ Known bugs:
 
 - Translation to Spanish is wrong in Feed. It also lacks an space (weekago)
 
-- When uploading a pic, everything works, except loading the pic from the server. It's like Angular doesn't detect the change, and you need to restart the Angular server... happens
-  on other devices apparently, not on the one MoonArt was made. Also live-reload not working, like it's not taking anything from the Angular and Symfony scopes as changes.
+- When uploading a pic, everything works, except loading the pic from the server. It's like Angular doesn't detect the change, and you need to restart the Angular server... 
+  Also live-reload not working, like it's not taking anything from the Angular and Symfony scopes as changes.
   * Note: It did work on a CSS file. Case -> Saving CSS from image.component.css, while viewing an image did reload it, test on other files.
   Probably if you change a file and reload, it doesn't work cause it doesn't update either... check
+
+  More info on this: It's not a permissions issue. The upoloaded file does get added, but it doesn't seem to listen to this. When deleting an image from MoonArt, it appears that it detects the change.
+  If you delete the pic in api-rest-symfony/public/storage/images... it also detects the change and recompiles (though it takes a while, sometimes 6k ms)
 
   Also phone web not working (login, loading images... connection to the server basically)
 
 - Hidden images on profile don't seem to be displayed as whiteish (case -> Moon hiding a Mark picture). Also change the way they are shown.
 
-- The message of a hidden/deleted image should not disappear after the timeout.
-
 - If user has no followers, following, images uploaded, liked, faved... console shows error (I think when editing? an user -> description is null, cannot apply functions like replace)
-  This one is fixed, but it may happen with other fields in other parts. Test empty users.
 
 - (Not really bug but) check that every AJAX call that fails retries at least 5 times.
 
-- Deleting subcomment doesn't delete it -> Change the way responding works as well, instead of the main comment box, a new one under the comment you are responding to 
+- Deleting subcomment doesn't delete it -> Change the way replying works as well, instead of the main comment box, a new one under the comment you are responding to 
   (remove @name, add automatically)
 
 - Commenting after replying to a comment will comment on that comment too. Make it so commenting on a subcomment displays another textarea, different to the main one, used to comment without replying.
@@ -50,6 +50,7 @@ Fixed bugs:
 
 - Search with scroll activated would not clear the previous results, and this caused images to stay on the search (adding elements to array, without resetting it on each search)
 
+- The message of a hidden/deleted image should not disappear after the timeout.
 
 ---
 
@@ -73,16 +74,23 @@ Implemented changes:
 
 #2021010 Responsiveness (now for real) -> Adapt to all screens with media queries and BS.
 
+#2021038 Add to .gitignore public assets (uploaded pics), Angular src/app/services/globals.ts, and any other needed file
+
+#2021011 Visualize the followers and following in profile when clicking on them. Modal that shows users, with option to go to their profile, with the follow/unfollow button.
+
+
 ---------
 
 Pending (priority order):
+
+#2021043 Remove the property "zoom: 0.8", and adjust the size of elements, text, etc, properly. Some browsers don't support it!
+
+#2021028 Implement profile comments.
 
 #2021039 Uploading a new pic doesn't seem to work. Webm may fail too. Look at it and how to support it. ng serve --poll=2000
 https://stackoverflow.com/questions/48092880/ng-serve-not-detecting-file-changes-automatically
 
 #2021040 Updating config from moonart.io doesn't work.
-
-#2021038 Add to .gitignore public assets (uploaded pics), Angular src/app/services/globals.ts, and any other needed file
 
 #2021013 Option to edit a picture. There is a button for it but it does nothing. (Tags, title, description)
 
@@ -106,8 +114,6 @@ https://stackoverflow.com/questions/48092880/ng-serve-not-detecting-file-changes
 #2021032 Restrict image dimensions adapted to the new specs (on upload, minimum width and height).
 
 #2021033 Problem: if token expires, AJAX calls won't work (as intended), but user won't log out. Check if user token expired when page loads without oversaturating it somehow.
-
-#2021011 Visualize the followers and following in profile when clicking on them. Modal that shows users, with option to go to their profile, with the follow/unfollow button.
 
 #2021012 When opening an image, open it on the same webpage, with customized interface, not an <a> element that redirects.
 
@@ -139,8 +145,6 @@ https://stackoverflow.com/questions/48092880/ng-serve-not-detecting-file-changes
 
 #2021027 Date formats are wrong in Spanish. (ex. 5th of Enero 2021)
 
-#2021028 Implement profile comments.
-
 #2021029 Allow user to choose the usage of virtual hosts or not, and remove absolute paths where possible.
 
 #2021030 (Idk if this one is only possible for a live server) -> Allow user to register using Google API.
@@ -148,6 +152,12 @@ https://stackoverflow.com/questions/48092880/ng-serve-not-detecting-file-changes
 #2021031 Add guide in a PDF explaining what can be done in MoonArt.
 
 #2021034 Implement websocket for chatting and to see who is online from your friends.
+
+#2021041 Add posibility of private profile -> This means that we have to add to the loading images queries (home/feed/profile) the condition of only showing if you are
+the user that uploaded it, or if the user allowed your friend request. Also accessing to a pic info (GET method for check, and others, will also need a token)
+
+#2021042 Add scroll loading when visualizing followed and following (the checking part should still be done with the full array, so the arrays should load completely from the beginning, 
+but only show x number of users, and that amount as you scroll down... also consider looking for a more efficient way to check if user follows the user in the modal)
 
 #20210xx Possible future version for phones with Cordova.
 

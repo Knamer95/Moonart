@@ -142,7 +142,7 @@ get_is_following:
 
 get_number_follows:
     path: /user/get-user-follows
-    controller: App\Controller\FollowController::getFollowNumber
+    controller: App\Controller\FollowController::getFollowInfo
     methods: [GET]
 
 

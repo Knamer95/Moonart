@@ -238,6 +238,7 @@ export class UserEditComponent implements OnInit {
                 lang: "english",
                 attributes: {
                     title: "Edit profile",
+                    shortDescription: "Tell the world who you are!",
                     profileUpdateSuccess: "You have updated your profile successfully.",
                     profileUpdateError: "There was an error while updating the profile.",
                     passwordsDontMatch: "The passwords don't match.",
@@ -264,6 +265,7 @@ export class UserEditComponent implements OnInit {
                 lang: "spanish",
                 attributes: {
                     title: "Editar perfil",
+                    shortDescription: "¡Dile al mundo quién eres!",
                     profileUpdateSuccess: "Has actualizado tu perfil correctamente.",
                     profileUpdateError: "Error al actualizar la información.",
                     passwordsDontMatch: "Las contraseñas no coinciden.",

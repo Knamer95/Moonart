@@ -1,0 +1,4 @@
+1) If you try to add to a component style the selector [data-mode="day-bg"] (+ selector), it won't work. The reason is that it's in the child component, while data-mode is from app.component (the main parent)
+   So, you cannot reference to selectors outside of the child scope.
+
+   Solution for modals -> Add the rules to [data-mode="{x}-bg"] instead, since modals have to be out of the child container, due to how they are made.

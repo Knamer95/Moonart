@@ -160,7 +160,7 @@ class FollowController extends AbstractController
         return $this->ajson($data);
     }
 
-    public function getFollowNumber(Request $request, JwtAuth $jwt_auth){
+    public function getFollowInfo(Request $request, JwtAuth $jwt_auth){
 
         $data = [
             'status'    => 'error',
@@ -187,8 +187,10 @@ class FollowController extends AbstractController
             $data = [
                 'status'        => 'success',
                 'message'       => 'User found.',
-                'followers'     => sizeof($followers),
-                'following'     => sizeof($following),
+                'followers'     => $followers,
+                'following'     => $following,
+                'nFollowers'     => sizeof($followers),
+                'nFollowing'     => sizeof($following),
             ];
     
         }

@@ -81,8 +81,9 @@
                                     aria-expanded="false">{{identity.nick}}</button>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                                    <!-- Changed from href to routerLink, due to error of profile not updating fixed (apparently) now. Check constructor on profile for more info -->
                                     <a class="dropdown-item" id="view-profile"
-                                        [href]="['/profile/' + identity.nick]">{{this.currentLang.attributes.profile}}</a>
+                                        [routerLink]="['/profile/' + identity.nick]">{{this.currentLang.attributes.profile}}</a>
                                     <a class="dropdown-item" id="edit-profile"
                                         [routerLink]="['/edit']">{{this.currentLang.attributes.editProfile}}</a>
                                     <a class="dropdown-item" id="edit-profile"
@@ -114,7 +115,7 @@
                     </li>
                     <li class="separator"></li>
                     <li class="nav-item small" *ngIf="identity && identity.nick != 'guest'">
-                        <a class="nav-link" id="view-profile-2" [href]="['/profile/' + identity.nick]"
+                        <a class="nav-link" id="view-profile-2" [routerLink]="['/profile/' + identity.nick]"
                             (click)="this.toggle()">{{this.currentLang.attributes.profile}}</a>
                     </li>
                     <li class="nav-item small" *ngIf="identity && identity.nick != 'guest'">

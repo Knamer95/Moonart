@@ -122,6 +122,12 @@
     color: rgb(193, 121, 0);
     text-decoration: underline;
     cursor: pointer;
+    transition: all 0.3s;
+}
+
+.author span:hover,
+.more-by-user-link:hover {
+    color: rgb(255 160 0)
 }
 
 .actions-container{
@@ -355,12 +361,18 @@
     cursor: pointer;
     top: -7px;
     font-size: 18px;
-    font-weight: bold;
+    /* font-weight: bold; */
+    transition: all 0.3s;
+}
+
+.comment-name:hover, .subcomment-name:hover {
+    color: #0989e3;
 }
 
 .comment-date,
 .subcomment-date{
     position: relative;
+    color: grey;
     top: -7px;
     right: 0px;
 }

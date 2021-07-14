@@ -100,7 +100,7 @@ export class ImagesComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.username);
+    // console.log(this.username);
     this.loadUser();
     this.pageImages();
   }

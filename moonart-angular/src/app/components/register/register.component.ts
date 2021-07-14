@@ -1,4 +1,5 @@
 import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
 import { CommonService } from '../../services/common.service';
@@ -29,7 +30,8 @@ export class RegisterComponent implements OnInit {
 
     constructor(
         private _userService: UserService,
-        private _commonService: CommonService
+        private _commonService: CommonService,
+        private _router: Router,
     ) {
         this.user = new User(1, '', '', '', '', '', 'ROLE_USER', '', '');
     }
@@ -69,6 +71,10 @@ export class RegisterComponent implements OnInit {
                         :
                         this.currentLang.attributes.messageError;
 
+                    if (response.status === "success")
+                        setTimeout(() => { this._router.navigate(['login']); }, 1500);
+
+
                     this.emitter.emit({
                         type: emitterTypes.alert,
                         status: response.status,
@@ -94,7 +100,7 @@ export class RegisterComponent implements OnInit {
             );
         }
         else {
-            
+
             this.emitter.emit({
                 type: emitterTypes.alert,
                 status: "error",
@@ -115,7 +121,7 @@ export class RegisterComponent implements OnInit {
                 attributes: {
                     title: "Register",
                     messageSuccess1: "You were registered successfully",
-                    messageSuccess2: "log in here",
+                    messageSuccess2: "you'll be redirected soon.",
                     messageError: "You were not registered. Check the console to see the error (F12).",
                     passwordsDontMatch: "The passwords don't match.",
                     invalidName: "Invalid name. It must contain at least one character",
@@ -136,7 +142,7 @@ export class RegisterComponent implements OnInit {
                 attributes: {
                     title: "Registro",
                     messageSuccess1: "Te has registrado correctamente",
-                    messageSuccess2: "identifícate aquí",
+                    messageSuccess2: "se te redirigirá pronto.",
                     messageError: "No te has registrado. Consulta la consola para ver el error (F12).",
                     passwordsDontMatch: "Las contraseñas no coinciden.",
                     invalidName: "Nombre no válido. Debe contener al menos un caracter.",

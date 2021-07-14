@@ -75,6 +75,10 @@ a:hover{text-decoration: none;}
     cursor: pointer !important;
 }
 
+[data-mode="day-bg"] .btn-success, [data-mode="night-bg"] .btn-success {
+    background: #037ca0 !important;
+}
+
 /* ---------------------------------------------------
     SPACINGS
 ----------------------------------------------------- */
@@ -101,6 +105,65 @@ Also whenever you select text, and drag mouse to the top while selecting (so it'
 
 /* Título */
 .index-title{ color: rgb(63, 63, 63); font-size: 44px;}
+
+
+/* ---------------------------------------------------
+    MODAL STYLES
+----------------------------------------------------- */
+
+[data-mode="night-bg"] .modal .modal-content {
+    color: lightgrey;
+    background-color: #222222;
+    border: 1px solid rgb(0 0 0 / 25%);
+    border-radius: 2px;
+}
+
+[data-mode="night-bg"] .modal .modal-header {
+    padding: 2rem 2rem 1rem;
+    border-bottom: none;
+}
+
+[data-mode="night-bg"] .modal .modal-body {
+    color: white;
+    padding: 1rem 2rem 1rem;
+}
+
+[data-mode="night-bg"] .modal .modal-footer {
+    padding: 1rem 2rem 2rem;
+    border-top: none;
+}
+
+[data-mode="night-bg"] .modal .close {
+    color: white;
+}
+
+[data-mode="day-bg"] .followers-list .follower-item, [data-mode="day-bg"] .following-list .followed-item {
+    border-bottom: 1px solid #dfdfdf;
+}
+
+[data-mode="day-bg"] #followersModal .modal-header, [data-mode="day-bg"] #followingModal .modal-header {
+    border-bottom: 1px solid #dfdfdf;
+}
+
+[data-mode="night-bg"] .followers-list .follower-item, [data-mode="night-bg"] .following-list .followed-item {
+    border-bottom: 1px solid grey;
+}
+
+[data-mode="night-bg"] #followersModal .modal-header, [data-mode="night-bg"] #followingModal .modal-header {
+    border-bottom: 1px solid grey;
+}
+
+[data-mode="night-bg"] .followers:hover, [data-mode="night-bg"] .followers:hover *, [data-mode="night-bg"] .following:hover, [data-mode="night-bg"] .following:hover * {
+    color: white;
+}
+
+[data-mode="day-bg"] .followers:hover, [data-mode="day-bg"] .followers:hover *, [data-mode="day-bg"] .following:hover, [data-mode="day-bg"] .following:hover * {
+    color: black;
+}
+
+[data-mode="night-bg"] .followers-list button, [data-mode="night-bg"] .following-list button {
+    color: white !important;
+}
 
 /* ---------------------------------------------------
     NAV STYLES
@@ -649,7 +712,7 @@ ul{ margin-left:2em; }
 }
 
 .button-follow.no-follow:hover{
-    background: rgba(29, 160, 242, 0.279);
+    background: rgba(29, 160, 242);
     color: white;
 }
 

@@ -5,7 +5,7 @@
         <img [src]="_imageURL" class="profile-picture">
       </div>
       <div class="user-container">
-        <span class="user" >{{userCustom}}</span>
+        <span class="user">{{userCustom}}</span>
       </div>
       <div class="follow-container">
         <button type="button" class="button button-follow no-follow" *ngIf="this.username != this.identity.nick"
@@ -13,8 +13,13 @@
         <button type="button" [routerLink]="['/edit']" class="button button-edit edit"
           *ngIf="this.username == this.identity.nick">{{this.currentLang.attributes.edit}}</button>
       </div>
-      <div class="followers">{{followers}}<span>{{this.currentLang.attributes.followers}}</span></div>
-      <div class="following">{{following}}<span>{{this.currentLang.attributes.following}}</span></div>
+      <div class="followers-following-container">
+        <div class="followers" (click)="prop('#followersModal')">{{nFollowers}}<span
+            class="lightgrey">&nbsp;{{this.currentLang.attributes.followers}}</span></div>
+        <div class="following" (click)="prop('#followingModal')">{{nFollowing}}<span
+            class="lightgrey">&nbsp;{{this.currentLang.attributes.following}}</span></div>
+      </div>
+      <div class="description-title">About me</div>
       <div class="description-container">
         <div class="description">
           <span *ngIf="this.description != null else nodesc" [innerHTML]="this.description"></span>
@@ -24,7 +29,7 @@
         </div>
       </div>
     </div>
-    <hr class="index-title mt-5">
+    <hr class="index-title mt-4">
     <div class="row profile-navbar no-select mt-4">
       <div class="mr-5">
         <span class="chosen" (click)="pickElement($event,1)">{{this.currentLang.attributes.gallery}}</span>
@@ -49,9 +54,65 @@
     </div>
   </div>
   <div class="container-fluid error" *ngIf="found==false">
-    <img src="assets/img/404.png">
-    <h2>{{this.currentLang.attributes.wrongUserTitle}}</h2>
-    <p>{{this.currentLang.attributes.wrongUserBody}}</p>
-    <a [routerLink]="['/home']">&nbsp;{{this.currentLang.attributes.goBack}}&nbsp;</a>
+    <div class="user-does-not-exist">
+      <img src="assets/img/404.png">
+      <h2>{{this.currentLang.attributes.wrongUserTitle}}</h2>
+      <p>{{this.currentLang.attributes.wrongUserBody}}</p>
+      <a [routerLink]="['/home']">&nbsp;{{this.currentLang.attributes.goBack}}&nbsp;</a>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="followersModal" tabindex="-1" role="dialog" aria-labelledby="followersModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="followersModalLabel">{{this.currentLang.attributes.followers}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul class="followers-list">
+          <li class="follower-item" *ngFor="let follower of followers; let i = index">
+            <img class="profile-picture" src="assets/profile-picture/{{follower.follower.image}}">
+            <span class="nick" [routerLink]="['/profile', follower.follower.nick]">{{follower.follower.nick}}</span>
+            <button type="button" class="button button-follow" [ngClass]="follower.isFollowedByUser ? 'follow' : 'no-follow'" (click)="follow(token, follower.follower.nick)" *ngIf="follower.follower.nick != this.identity.nick"></button>
+            <span class="user-full-name">@{{follower.follower.name}}</span>
+            <span class="user-description">{{follower.follower.description}}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="followingModal" tabindex="-1" role="dialog" aria-labelledby="followingModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="followingModalLabel">{{this.currentLang.attributes.following}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul class="following-list">
+          <li class="followed-item" *ngFor="let followed of following; let i = index">
+            <img class="profile-picture" src="assets/profile-picture/{{followed.followed.image}}">
+            <span class="nick" [routerLink]="['/profile', followed.followed.nick]">{{followed.followed.nick}}</span>
+            <button type="button" class="button button-follow no-follow" [ngClass]="followed.isFollowedByUser ? 'follow' : 'no-follow'" (click)="follow(token, followed.followed.nick)" *ngIf="followed.followed.nick != this.identity.nick"></button>
+            <span class="user-full-name">@{{followed.followed.name}}</span>
+            <span class="user-description">{{followed.followed.description}}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
   </div>
 </div>
