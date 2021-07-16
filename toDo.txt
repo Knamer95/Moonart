@@ -78,12 +78,11 @@ Implemented changes:
 
 #2021011 Visualize the followers and following in profile when clicking on them. Modal that shows users, with option to go to their profile, with the follow/unfollow button.
 
+#2021044 Check the issues with AJAX calls. They seem to be getting worse. Now when entering to an image/profile, sometimes pics won't load until refreshing (More by, and Gallery).
 
 ---------
 
 Pending (priority order):
-
-#2021044 The issues with AJAX calls seem to get worse. Now when entering to an image/profile, sometimes pics won't load until refreshing (More by, and Gallery). Could be related to uploading issue...
 
 #2021043 Remove the property "zoom: 0.8", and adjust the size of elements, text, etc, properly. Some browsers don't support it!
 

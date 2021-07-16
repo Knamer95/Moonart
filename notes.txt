@@ -2,3 +2,6 @@
    So, you cannot reference to selectors outside of the child scope.
 
    Solution for modals -> Add the rules to [data-mode="{x}-bg"] instead, since modals have to be out of the child container, due to how they are made.
+
+2) After investigating the issues with AJAX calls, I found this: https://stackoverflow.com/questions/12894822/access-denied-error-on-rename-call-when-uploading-files-in-symfony
+   After downloading MoonArt in a virtual machine, and running it, I concluded that there is a problem with Symfony/Doctrine and Windows.
