@@ -10,6 +10,10 @@
     /* background: fuchsia; */
 }
 
+.button {
+    padding: 3px 8px;
+}
+
 .tweet{
     font-family: 'M PLUS Rounded 1c', sans-serif;
     padding: 20px 40px 20px 40px;
@@ -26,8 +30,9 @@
 }
 
 .image{
-    max-width: 350px;
-    max-height: 300px;
+    max-width: 300px;
+    max-height: 280px;
+    padding-top: 5px;
     border-radius: 3px;
     transition: all 1s;
 }
@@ -38,7 +43,7 @@
 }
 
 .shared-by{
-    font-size: 18px;
+    font-size: 12px;
     padding-top: 10px;
     padding-bottom: 10px;
     color: rgb(30, 172, 42);
@@ -57,12 +62,13 @@
 }
 
 .name{
-    font-size: 32px;
-    color: rgb(48, 196, 196);
+    font-size: 22px;
+    /* color: rgb(48, 196, 196); */
+    color: white;
 }
 
 .by, .by-user{
-    font-size: 20px;
+    font-size: 14px;
 }
 
 .by-user{
@@ -71,11 +77,11 @@
 }
 
 .description{
-    font-size: 20px;
+    font-size: 14px;
     max-height: 115px;
     margin-bottom: 40px;
     /* Does the magic */
-    overflow :hidden;
+    overflow: auto;    
     white-space: normal;    
     text-overflow: ellipsis; /* Adds the ... */
 }
@@ -86,7 +92,7 @@
 }
 
 .date{
-    font-size: 16px;
+    font-size: 12px;
     /* position: absolute;
     bottom: -5px; */
     color: rgb(0 0 0 / 69%);
@@ -101,7 +107,7 @@
 }
 
 .counter{
-    font-size: 20px;
+    font-size: 14px;
     margin-left: 15px;
 }
 

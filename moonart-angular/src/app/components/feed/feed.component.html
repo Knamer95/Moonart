@@ -24,8 +24,8 @@
           </div>
           <div class="col-md-8">
             <div class="row pb-4">
-              <div class="col-md-12">
-                <a [routerLink]="['/images', element.image.id]" class="name">[{{element.image.name}}]</a>
+              <div class="col-md-12 mb-2">
+                <a [routerLink]="['/images', element.image.id]" class="name">{{element.image.name}}</a>
               </div>
               <div class="col-md-12">
                 <span class="by">{{this.currentLang.attributes.by}}&nbsp;</span> <a

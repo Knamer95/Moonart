@@ -85,7 +85,6 @@ export class LoginComponent implements OnInit {
                     // Token
                     this._userService.signup(this.user, true).subscribe(
                         response => {
-                            // console.log(response);
                             if (!response.status || response.status != 'error') {
                                 this.status = 'success';
 
@@ -118,12 +117,13 @@ export class LoginComponent implements OnInit {
                     // form.reset(); // Uncomment to reset when password is incorrect
                 }
 
-                let message = response.status === "success" ? this.currentLang.attributes.messageSuccess : this.currentLang.attributes.messageError;
+                // If the status is error (meaning wrong credentials), response.status is 'error', but otherwise the response is just the token
+                let message = response.status === "error" ? this.currentLang.attributes.messageError : this.currentLang.attributes.messageSuccess;
 
                 this.emitter.emit({
                     type: emitterTypes.alert,
-                    status: response.status,
-                    notificationType: response.status,
+                    status:  response.status === "error" ? "error" : "success",
+                    notificationType: response.status === "error" ? "error" : "success",
                     message: message,
                     timer: 3000
                 });

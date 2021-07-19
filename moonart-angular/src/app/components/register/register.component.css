@@ -51,3 +51,42 @@ input[type=submit]{
     -webkit-border-radius: 50%;
     border-radius: 50%;
 }
+
+input {
+    border: none;
+    border-bottom: 1px solid black;
+    border-radius: 0px;
+    outline: none;
+    background: none;
+
+    font-size: 14px !important;
+    padding: 0px !important;
+}
+
+input:focus {
+    /* border-bottom: 1px solid #8ebbff; */
+    box-shadow: none;    
+    outline: none;
+    background: none;
+    border-color: black;
+}
+
+span.line-hover {
+    display: block;
+    width: 100%;
+    margin-bottom: 30px;
+    height: 2px;
+    /* position: absolute; */
+}
+
+input:focus + span.line-hover{
+    background: #0099fe33;
+    animation: underline .3s linear;
+    /* height: 47px; */
+    /* top: 0px; */
+}
+
+@keyframes underline {  
+    from { width: 0px; }
+    to   { width: 100%; }
+}

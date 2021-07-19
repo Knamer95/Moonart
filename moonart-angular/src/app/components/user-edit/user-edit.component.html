@@ -24,7 +24,7 @@
       <div *ngIf="element==1">
         <div class="form-group mb-5">
           <div class="row-grid relative">
-            <input type="file" name="file" id="path" #file (change)="fileHandler(file.files)" accept="image/*" style="display:none">
+            <input type="file" name="file" id="path" #file (change)="fileHandler(file.files)" accept="image/*" style="display: none">
             <img [src]="_imageURL" id="upload-image" class="user-image" (click)="file.click()">
             <textarea name="description" #description="ngModel" [(ngModel)]="user.description" class="form-control"
               [placeholder]="this.currentLang.attributes.shortDescription" maxlength="300" #counterRef>{{this.identity.description}}</textarea>
@@ -84,7 +84,7 @@
       <div class="row">
         <div class="col pt-5">
           <button type="submit" class="btn btn-success">{{this.currentLang.attributes.saveChanges}}</button>
-          <button type="button" class="btn btn-danger btn-red-ma" [routerLink]="['/home']">{{this.currentLang.attributes.cancel}}</button>
+          <button type="button" class="btn btn-secondary" [routerLink]="['/home']">{{this.currentLang.attributes.cancel}}</button>
         </div>
       </div>
     </form>

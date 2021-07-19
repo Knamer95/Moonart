@@ -17,7 +17,7 @@
 }
 
 .user{
-    font-size: 40px;
+    font-size: 30px;
     font-weight: bold;
     line-height: 1;
 
@@ -30,7 +30,7 @@
 }
 
 .followers, .following{
-    font-size: 20px;
+    font-size: 14px;
     font-weight: bold;
     max-width: fit-content;
 }
@@ -53,7 +53,7 @@
     /* border: 1px solid lightgray; */
     /* background: #ffffff14; */
     padding: 10px 0px;
-    font-size: 16px;
+    font-size: 12px;
     word-break: break-all;
 	overflow-y: auto;
     text-overflow: ellipsis;
@@ -99,7 +99,7 @@
     grid-row: 1;
     grid-column: 4;
     align-self: end;
-    font-size: 24px;
+    font-size: 20px;
 }
 
 .description-container{
@@ -109,7 +109,7 @@
 }
 
 .profile-navbar{
-    font-size: 35px;
+    font-size: 24px;
     padding-left: 95px;
 }
 

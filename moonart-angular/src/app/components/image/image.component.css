@@ -31,7 +31,7 @@
 .interactions-container{
     padding: 30px 0;
     font-family: monospace;
-    font-size: 18px;
+    font-size: 14px;
     font-weight: bold;
 }
 
@@ -93,7 +93,7 @@
 }
 
 .author-img img{
-    width: 85px;
+    width: 60px;
 }
 
 .grid-user-description{
@@ -106,15 +106,14 @@
 .title{
     grid-row: 1;
     /* align-self:  */
-    font-size: 25px;
+    font-size: 18px;
     font-weight: bold;
     font-family: sans-serif;
 }
 
 .author{
-    font-size: 25px;
     align-self: end;
-    font-size: 18px;
+    font-size: 14px;
 }
 
 .author span,
@@ -203,7 +202,7 @@
 .image-arrows, .image-star, .image-heart{ z-index: 200; transform: scale(1.5); position: static; display: inline-block; width: 24px; margin-right: 20px; }
 
 .rights{
-    font-size: 18px;
+    /* font-size: 14px; */
 }
 
 .rights .highlighed{
@@ -225,12 +224,12 @@
 .rights-container > span,
 .created-at-container > span,
 .comments-container{
-    font-size: 20px;
+    font-size: 16px;
 }
 
 .tags{
-    font-size: 15px;
-    padding: 10px 24px;
+    font-size: 12px;
+    padding: 10px 20px;
     margin-right: 10px; 
     background: rgb(133, 133, 133);
     color: white;
@@ -266,8 +265,8 @@
     grid-row: 1;
     grid-column: 1;
     align-self: center;
-    width: 115px;
-    height: 115px;
+    width: 95px;
+    height: 95px;
 }
 
 .add-comment-container textarea {
@@ -290,7 +289,7 @@
     background: none;
     font-weight: bold;
     font-family: monospace;
-    font-size: 18px;
+    font-size: 14px;
     border: none;
     letter-spacing: 2px;
     border: none;
@@ -360,7 +359,7 @@
     position: relative;
     cursor: pointer;
     top: -7px;
-    font-size: 18px;
+    font-size: 14px;
     /* font-weight: bold; */
     transition: all 0.3s;
 }
@@ -395,6 +394,7 @@
 .subcomment-actions{
     grid-row: 2;
     grid-column: 2;
+    padding-top: 5px;
 }
 
 .reply-comment{
@@ -409,13 +409,13 @@
 }
 
 .reply-comment, .delete-comment{
-    font-size: 14px;
+    font-size: 12px;
 }
 
 textarea{
     padding: 10px;
     width: 100%;
-    height: 115px;
+    height: 100px;
     resize: none;
     border: none;
     background: #fcfcfc;
@@ -446,13 +446,13 @@ textarea{
 
 .nsfw-epilepsy-alert{
     color: darkred;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .more-by-user{
     display: inline-block;
     padding: 20px 0;
-    font-size: 20px;
+    font-size: 16px;
 }
 
 .more-by-container{

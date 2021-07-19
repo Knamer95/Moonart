@@ -56,6 +56,8 @@ export class RegisterComponent implements OnInit {
 
             this._userService.register(this.user).subscribe(
                 response => {
+                    console.log(response);
+
                     if (response.status == 'success') {
                         this.status = 'success';
                         // form.reset();
@@ -66,10 +68,20 @@ export class RegisterComponent implements OnInit {
 
                     }
 
-                    let message = response.status === "success" ?
-                        `${this.currentLang.attributes.messageSuccess1}, <a>${this.currentLang.attributes.messageSuccess2}</a>`
-                        :
-                        this.currentLang.attributes.messageError;
+                    let message = this.currentLang.attributes.messageError;
+
+                    if (response.status === "success") {
+                        message = `${this.currentLang.attributes.messageSuccess1}, ${this.currentLang.attributes.messageSuccess2}`;
+                    }
+                    else if (response.messageError === 1) {
+                        message = this.currentLang.attributes.messageError1;
+                    }
+                    else if (response.messageError === 2) {
+                        message = this.currentLang.attributes.messageError2;
+                    }
+                    else if (response.messageError === 3) {
+                        message = this.currentLang.attributes.messageError3;
+                    }
 
                     if (response.status === "success")
                         setTimeout(() => { this._router.navigate(['login']); }, 1500);
@@ -122,7 +134,10 @@ export class RegisterComponent implements OnInit {
                     title: "Register",
                     messageSuccess1: "You were registered successfully",
                     messageSuccess2: "you'll be redirected soon.",
-                    messageError: "You were not registered. Check the console to see the error (F12).",
+                    messageError: "There was an error while trying to register the user. If this error persists, please contact an administrator.",
+                    messageError1: "The email is already in use, please choose another one.",
+                    messageError2: "The nick is already in use, please choose another one.",
+                    messageError3: "The nick and email are already in use, please choose different ones.",
                     passwordsDontMatch: "The passwords don't match.",
                     invalidName: "Invalid name. It must contain at least one character",
                     invalidUser: "Invalid nick. Must be between 4 and 10 characters. It admits alphanumerics, hyphen, and underscore",
@@ -143,7 +158,10 @@ export class RegisterComponent implements OnInit {
                     title: "Registro",
                     messageSuccess1: "Te has registrado correctamente",
                     messageSuccess2: "se te redirigirá pronto.",
-                    messageError: "No te has registrado. Consulta la consola para ver el error (F12).",
+                    messageError: "Ocurrió un error al intentar registrar el usuario. Si el error persiste, por favor contacta a un administrador.",
+                    messageError1: "El email ya está en uso. Por favor, escoge otro.",
+                    messageError2: "El nick ya está en uso. Por favor, escoge otro.",
+                    messageError3: "El nick y email ya están en uso. Por favor, escoge otros.",
                     passwordsDontMatch: "Las contraseñas no coinciden.",
                     invalidName: "Nombre no válido. Debe contener al menos un caracter.",
                     invalidUser: "Nick no válido. Debe tener entre 4 y 10 caracteres. Admite alfanuméricos, guión, y guión bajo.",

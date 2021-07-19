@@ -140,22 +140,25 @@ class UserController extends AbstractController
                 else{
                     if (count($isset_email) != 0){
                         $data = [
-                            'status'    => 'error',
-                            'messsage'  => 'That email is already taken.',
+                            'status'        => 'error',
+                            'messsage'      => 'The email is already in use.',
+                            'messageError'  => 1
                         ];
                     }
 
                     if (count($isset_nick) != 0){
                         $data = [
-                            'status'    => 'error',
-                            'messsage'  => 'That nickname is already taken.',
+                            'status'        => 'error',
+                            'messsage'      => 'The nickname is already in use.',
+                            'messageError'  => 2
                         ];
                     }
 
                     if (count($isset_email) != 0 && count($isset_nick) != 0){
                         $data = [
-                            'status'    => 'error',
-                            'messsage'  => 'That nick and email are already taken.',
+                            'status'        => 'error',
+                            'messsage'      => 'The nick and email are already in use.',
+                            'messageError'  => 3
                         ];
                     }
                 }
