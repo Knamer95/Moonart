@@ -15,7 +15,7 @@ use App\Entity\User;
 use App\Entity\Image;
 use App\Entity\UserInteractsWithImage;
 use App\Services\JwtAuth;
-use App\Services\ImageUploader;
+// use App\Services\ImageUploader;
 
 class InteractionsController extends AbstractController
 {

@@ -15,7 +15,7 @@ use App\Entity\User;
 use App\Entity\Image;
 use App\Entity\UserFollowsUser;
 use App\Services\JwtAuth;
-use App\Services\ImageUploader;
+// use App\Services\ImageUploader;
 
 class FollowController extends AbstractController
 {

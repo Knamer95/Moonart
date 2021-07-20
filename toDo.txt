@@ -84,9 +84,13 @@ Implemented changes:
 
 ---------
 
-Pending (priority order):
+Pending (priority order... more or less):
 
 #2021028 Implement profile comments.
+
+#2021045 Store who deleted the comment/image (deleted_by).
+
+#2021017 Add notifications when user follows, comments, uploads a pic, etc. (Can be disabled)
 
 #2021039 Uploading a new pic doesn't seem to work. Webm may fail too. Look at it and how to support it. ng serve --poll=2000
 https://stackoverflow.com/questions/48092880/ng-serve-not-detecting-file-changes-automatically
@@ -124,8 +128,6 @@ https://stackoverflow.com/questions/48092880/ng-serve-not-detecting-file-changes
 
 #2021016 Look for ways to load a thumbnail first, then actual image once it has loaded (or maybe leave a thumbnail, since it's smaller than the image, or has to be)
 
-#2021017 Add notifications when user follows, comments, etc. (Can be disabled)
-
 #2021018 Add DMs.
 
 #2021019 Public - Private - Hidden -> Something like YT, being able to make your picture public, private or hidden. If private, anyone can access with the image link. If 
@@ -159,6 +161,8 @@ the user that uploaded it, or if the user allowed your friend request. Also acce
 
 #2021042 Add scroll loading when visualizing followed and following (the checking part should still be done with the full array, so the arrays should load completely from the beginning, 
 but only show x number of users, and that amount as you scroll down... also consider looking for a more efficient way to check if user follows the user in the modal)
+
+#2021046 Add salt to passwords maybe? It should be based on something static, nick/name may be changed. If i used created_at, what if that data got changed by an attacker?
 
 #20210xx Possible future version for phones with Cordova.
 

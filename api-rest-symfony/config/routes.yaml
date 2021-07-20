@@ -2,7 +2,7 @@
 #    path: /
 #    controller: App\Controller\DefaultController::index
 
-# RUTAS PARA CONTROLADOR: USER #
+# ROUTES FOR THE CONTROLLER: USER #
 user:
     path: /user
     controller: App\Controller\UserController::index
@@ -43,7 +43,7 @@ check_password:
     controller: App\Controller\UserController::comparePwd
     methods: [POST]
 
-# RUTAS PARA CONTROLADOR: IMAGES #
+# ROUTES FOR THE CONTROLLER: IMAGES #
 
 image:
     path: /image
@@ -105,7 +105,7 @@ shared_images:
     methods: [GET]
 
 
-# RUTAS PARA EL CONTROLADOR INTERACTIONS #
+# ROUTES FOR THE CONTROLLER: INTERACTIONS #
 
 create_interaction:
     path: /create_interaction
@@ -128,7 +128,7 @@ get_image_interactions:
     methods: [GET]
 
     
-# RUTAS PARA EL CONTROLADOR FOLLOW #
+# ROUTES FOR THE CONTROLLER: FOLLOW #
 
 follow_unfollow:
     path: /user/follow-unfollow
@@ -146,7 +146,7 @@ get_number_follows:
     methods: [GET]
 
 
-# RUTAS PARA EL CONTROLADOR ImageComment #
+# ROUTES FOR THE CONTROLLER: IMAGECOMMENT #
 
 add_comment:
     path: /image/add-comment
@@ -161,5 +161,23 @@ get_comments:
 remove_comment:
     path: /image/comment/remove/{id}
     controller: App\Controller\ImageCommentController::removeComment
+    methods: [DELETE]
+    
+
+# ROUTES FOR THE CONTROLLER: USERCOMMENT #
+
+add_profile_comment:
+    path: /user/add-profile-comment
+    controller: App\Controller\UserCommentController::addProfileComment
+    methods: [POST]
+
+get_profile_comments:
+    path: /user/get-profile-comments
+    controller: App\Controller\UserCommentController::getProfileComments
+    methods: [GET]
+
+remove_profile_comment:
+    path: /user/profile-comment/remove/{id}
+    controller: App\Controller\UserCommentController::removeProfileComment
     methods: [DELETE]
     

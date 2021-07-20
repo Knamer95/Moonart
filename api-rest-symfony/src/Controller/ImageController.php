@@ -18,8 +18,6 @@ use App\Entity\UserFollowsUser;
 use App\Services\JwtAuth;
 use App\Services\ImageUploader;
 
-// include(__DIR__."/../Services/ImageUploader.php");
-
 class ImageController extends AbstractController
 {
     private function ajson($data){

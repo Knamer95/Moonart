@@ -5,12 +5,12 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UserComments
+ * UserComment
  *
  * @ORM\Table(name="user_comments", indexes={@ORM\Index(name="fk_user_comments_image", columns={"comment_user_id"}), @ORM\Index(name="fk_user_comments_user", columns={"user_id"})})
  * @ORM\Entity
  */
-class UserComments
+class UserComment
 {
     /**
      * @var int
@@ -29,6 +29,20 @@ class UserComments
     private $comment;
 
     /**
+     * @var int
+     *
+     * @ORM\Column(name="parent_id", type="integer", nullable=true)
+     */    
+    private $parent;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="status", type="string", length=12, nullable=true, options={"default"="published"})
+     */
+    private $status = 'published';
+
+    /**
      * @var \DateTime|null
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
@@ -40,10 +54,10 @@ class UserComments
      *
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="comment_user_id", referencedColumnName="id")
+     *   @ORM\JoinColumn(name="profile_user_id", referencedColumnName="id")
      * })
      */
-    private $commentUser;
+    private $profileUser;
 
     /**
      * @var \User
@@ -72,6 +86,31 @@ class UserComments
         return $this;
     }
 
+    public function getParent(): ?int
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?int $parent): self
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
@@ -84,14 +123,14 @@ class UserComments
         return $this;
     }
 
-    public function getCommentUser(): ?User
+    public function getProfileUser(): ?User
     {
-        return $this->commentUser;
+        return $this->profileUser;
     }
 
-    public function setCommentUser(?User $commentUser): self
+    public function setProfileUser(?User $profileUser): self
     {
-        $this->commentUser = $commentUser;
+        $this->profileUser = $profileUser;
 
         return $this;
     }

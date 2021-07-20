@@ -129,14 +129,16 @@ DROP TABLE IF EXISTS `user_comments`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `user_comments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `profile_user_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `comment_user_id` int(11) NOT NULL,
   `comment` varchar(300) NOT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `status` enum('deleted','hidden','published') DEFAULT 'published',
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `fk_user_comments_user` (`user_id`),
-  KEY `fk_user_comments_image` (`comment_user_id`),
-  CONSTRAINT `fk_user_comments_image` FOREIGN KEY (`comment_user_id`) REFERENCES `users` (`id`),
+  KEY `fk_user_comments_image` (`profile_user_id`),
+  CONSTRAINT `fk_user_comments_image` FOREIGN KEY (`profile_user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `fk_user_comments_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
