@@ -188,67 +188,78 @@
           </div>
 
           <!-- <ng-template> Changed, messages are shown even if hidden now, but actions are removed -->
-            <div class="comment" *ngFor="let comment of this.comments; let i = index"
-              (click)="this._commonService.redirectToProfile($event)">
-              <div class="row no-padding mb-5">
-                <div class="comment-container pb-5">
-                  <div class="comment-image-container">
-                    <img [src]="['assets/profile-picture/' + comment.user.image]"
-                      [routerLink]="['/profile', comment.user.nick]" class="comment-image">
+          <div class="comment" *ngFor="let comment of this.comments; let i = index"
+            (click)="this._commonService.redirectToProfile($event)">
+            <div class="row no-padding mb-5">
+              <div class="comment-container pb-5">
+                <div class="comment-image-container">
+                  <img [src]="['assets/profile-picture/' + comment.user.image]"
+                    [routerLink]="['/profile', comment.user.nick]" class="comment-image">
+                </div>
+                <div class="comment-id" [id]="'comment-' + comment.id">
+                  <div class="mb-1">
+                    <span class="comment-name" [routerLink]="['/profile', comment.user.nick]">{{comment.user.name}}
+                      (@{{comment.user.nick}})</span><span class="comment-date"> -
+                      {{this.currentLang.attributes.the}}{{comment.createdAt}}{{this.currentLang.attributes.ago}}</span>
                   </div>
-                  <div class="comment-id" [id]="'comment-' + comment.id">
-                    <div class="mb-1">
-                      <span class="comment-name" [routerLink]="['/profile', comment.user.nick]">{{comment.user.name}}
-                        (@{{comment.user.nick}})</span><span class="comment-date"> -
-                        {{this.currentLang.attributes.the}}{{comment.createdAt}}{{this.currentLang.attributes.ago}}</span>
-                    </div>
-                    <div class="comment-text mt-2" [ngClass]="{'removed': comment.status == 'deleted'}"
-                      [innerHTML]="comment.comment | safe: 'html'"></div>
-                    <div *ngIf="comment.status == 'published'" class="ml-1">
-                    </div>
-                  </div>
-                  <div class="comment-actions" *ngIf="this.image.status != 'hidden'">
-                    <span class="reply-comment"
-                      (click)="this.tarea.focus(); addName($event, comment.user.nick, tarea.value)">{{this.currentLang.attributes.reply}}</span>
-                    <span class="delete-comment" (click)="assignDelete(comment.id)" data-toggle="modal"
-                      data-target="#deleteCommentModal"
-                      *ngIf="(comment.user.nick == identity.nick || identity.role == 'role_admin') && comment.status != 'deleted'">{{this.currentLang.attributes.delete}}</span>
+                  <div class="comment-text mt-2" [ngClass]="{'removed': comment.status == 'deleted'}"
+                    [innerHTML]="comment.comment | safe: 'html'"></div>
+                  <div *ngIf="comment.status == 'published'" class="ml-1">
                   </div>
                 </div>
-                <div class="subcomment subcomment-alignment" *ngFor="let subcomment of comment.children; let i = index">
-                  <div class="row no-padding mb-5 w-95">
-                    <div class="subcomment-container pb-3">
-                      <div class="subcomment-image-container ml-3">
-                        <img [src]="['assets/profile-picture/' + subcomment.user.image]"
-                          [routerLink]="['/profile', subcomment.user.nick]" class="subcomment-image">
-                      </div>
+                <div class="comment-actions" *ngIf="this.image.status != 'hidden'">
+                  <span class="reply-comment" *ngIf="identity.nick == 'guest' else isAuthenticated"
+                    (click)="isGuest();">{{this.currentLang.attributes.reply}}</span>
 
-                      <div class="subcomment-id" [id]="'subcomment-' + subcomment.id">
-                        <div class="mb-1">
-                          <span class="subcomment-name"
-                            [routerLink]="['/profile', subcomment.user.nick]">{{subcomment.user.nick}}</span><span
-                            class="subcomment-date"> -
-                            {{this.currentLang.attributes.the}}{{subcomment.createdAt}}{{this.currentLang.attributes.ago}}</span>
-                        </div>
-                        <div class="subcomment-text mt-2" [ngClass]="{'removed': subcomment.status == 'deleted'}"
-                          [innerHTML]="subcomment.comment | safe: 'html'"></div>
-                        <div *ngIf="subcomment.status == 'published'" class="ml-1">
-                        </div>
+                  <ng-template #isAuthenticated>
+                    <span class="reply-comment"
+                      (click)="this.tarea.focus(); addName($event, comment.user.nick, tarea.value)">{{this.currentLang.attributes.reply}}</span>
+                  </ng-template>
+
+                  <span class="delete-comment" (click)="assignDelete(comment.id)" data-toggle="modal"
+                    data-target="#deleteCommentModal"
+                    *ngIf="(comment.user.nick == identity.nick || identity.role == 'role_admin') && comment.status != 'deleted'">{{this.currentLang.attributes.delete}}</span>
+                </div>
+              </div>
+              <div class="subcomment subcomment-alignment" *ngFor="let subcomment of comment.children; let i = index">
+                <div class="row no-padding mb-5 w-95">
+                  <div class="subcomment-container pb-3">
+                    <div class="subcomment-image-container ml-3">
+                      <img [src]="['assets/profile-picture/' + subcomment.user.image]"
+                        [routerLink]="['/profile', subcomment.user.nick]" class="subcomment-image">
+                    </div>
+
+                    <div class="subcomment-id" [id]="'subcomment-' + subcomment.id">
+                      <div class="mb-1">
+                        <span class="subcomment-name"
+                          [routerLink]="['/profile', subcomment.user.nick]">{{subcomment.user.nick}}</span><span
+                          class="subcomment-date"> -
+                          {{this.currentLang.attributes.the}}{{subcomment.createdAt}}{{this.currentLang.attributes.ago}}</span>
                       </div>
-                      <div class="subcomment-actions" *ngIf="this.image.status != 'hidden'">
+                      <div class="subcomment-text mt-2" [ngClass]="{'removed': subcomment.status == 'deleted'}"
+                        [innerHTML]="subcomment.comment | safe: 'html'"></div>
+                      <div *ngIf="subcomment.status == 'published'" class="ml-1">
+                      </div>
+                    </div>
+                    <div class="subcomment-actions" *ngIf="this.image.status != 'hidden'">
+                      <span class="reply-comment" *ngIf="identity.nick == 'guest' else isAuthenticated2"
+                        (click)="isGuest();">{{this.currentLang.attributes.reply}}</span>
+
+                      <ng-template #isAuthenticated2>
                         <span class="reply-comment"
                           (click)="this.tarea.focus(); addName($event, comment.user.nick, tarea.value)">{{this.currentLang.attributes.reply}}</span>
-                        <span class="delete-comment" (click)="assignDelete(comment.id)" data-toggle="modal"
-                          data-target="#deleteCommentModal"
-                          *ngIf="subcomment.user.nick == identity.nick || identity.role == 'role_admin'">{{this.currentLang.attributes.delete}}</span>
-                      </div>
+                      </ng-template>
+                      <span class="delete-comment" (click)="assignDelete(comment.id)" data-toggle="modal"
+                        data-target="#deleteCommentModal"
+                        *ngIf="subcomment.user.nick == identity.nick || identity.role == 'role_admin'">{{this.currentLang.attributes.delete}}</span>
                     </div>
                   </div>
                 </div>
               </div>
-
-              <!-- [innerHTML]="permissionArray" -->
             </div>
+
+            <!-- [innerHTML]="permissionArray" -->
+          </div>
           <!-- </ng-template> -->
         </div>
       </div>

@@ -3,15 +3,16 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { User } from '../../models/user';
 import { UserService } from '../../services/user.service';
 import { CommonService } from '../../services/common.service';
-import { AppComponent } from '../../app.component';
 import { emitterTypes } from '../../models/struct';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-    selector: 'app-login',
+    selector: 'login-component',
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.css'],
-    providers: [UserService, CommonService, AppComponent]
+    providers: [UserService, CommonService]
 })
+
 export class LoginComponent implements OnInit {
 
     public pageTitle: string = "Login";
@@ -24,17 +25,18 @@ export class LoginComponent implements OnInit {
     public config: any;
     public configJSON: string;
     public isFirst: boolean;
+    public showPassword: boolean = false;
     public language: Object;
     public currentLang: any;
     public lang: number;
     public emitType: number;
 
-    @Output() emitter = new EventEmitter();
+    @Output() emitter: EventEmitter<any> = new  EventEmitter();
 
     constructor(
+        public activeModal: NgbActiveModal,
         private _userService: UserService,
         private _commonService: CommonService,
-        private _appComponent: AppComponent,
         private _router: Router,
         private _route: ActivatedRoute
     ) {
@@ -42,8 +44,7 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {
-        document.title = this.pageTitle;
-        this.logout();
+        // document.title = this.pageTitle;
 
         if (localStorage.getItem("config") == "undefined" || localStorage.getItem("config") == null) {
 
@@ -68,6 +69,11 @@ export class LoginComponent implements OnInit {
         this.lang = JSON.parse(localStorage.getItem("config")).lang;;
         this.currentLang = this.getLang(this.lang);
         this._commonService.changeLangAttr(this.lang);
+    }
+
+    toggle(el) {
+        if (el === 1)
+            this.showPassword = this.showPassword ? false : true;
     }
 
     onSubmit(form) {
@@ -96,7 +102,8 @@ export class LoginComponent implements OnInit {
                                 localStorage.setItem('identity', JSON.stringify(this.identity));
                                 localStorage.removeItem("config");
                                 this.updateDB(this.token);
-                                setTimeout(() => { this._router.navigate(['home']); }, 1500);
+                                
+                                // setTimeout(() => { this._router.navigate(['home']); }, 1500);
 
                             }
                             else {
@@ -125,6 +132,7 @@ export class LoginComponent implements OnInit {
                     status:  response.status === "error" ? "error" : "success",
                     notificationType: response.status === "error" ? "error" : "success",
                     message: message,
+                    modal: 'login-modal',
                     timer: 3000
                 });
             },
@@ -132,23 +140,6 @@ export class LoginComponent implements OnInit {
                 this.status = 'error';
             }
         );
-    }
-
-    logout() {
-        this._route.params.subscribe(params => {
-            let sure = +params['sure'];
-
-            if (sure == 1) {
-                localStorage.removeItem('identity');
-                localStorage.removeItem('token');
-                localStorage.removeItem('config');
-
-                this.identity = null;
-                this.token = null;
-
-                this._router.navigate(['home']);
-            }
-        });
     }
 
 
@@ -173,6 +164,19 @@ export class LoginComponent implements OnInit {
 
                     this._commonService.setUserConfig(this, this.token, this.configJSON);
                 }
+
+                this.nightMode = JSON.parse(localStorage.getItem("config")).nightMode;
+                this._commonService.changeNightModeAttr(this.nightMode);
+                console.log(`Changed to ${this.nightMode ? 'night' : 'day'} mode.`);
+
+                this.emitter.emit({
+                    type: emitterTypes.reload,
+                    status: 'logged',
+                    notificationType: null,
+                    message: null,
+                    timer: 0
+                });
+
             },
             error => { }
         );
@@ -184,7 +188,7 @@ export class LoginComponent implements OnInit {
                 lang: "english",
                 attributes: {
                     title: "Login",
-                    messageSuccess: "Logged in succesfully. You will be redirected soon.",
+                    messageSuccess: "Logged in succesfully.",
                     messageError: "Error while trying to log in. Please try again.",
                     invalidUser: "Invalid user. Please, introduce your nick or email here.",
                     invalidPassword: "Invalid password. Minimum 8 characters. It must contain a capital letter and a number at least.",
@@ -200,8 +204,8 @@ export class LoginComponent implements OnInit {
                 lang: "spanish",
                 attributes: {
                     title: "Acceso",
-                    messageSuccess: "Te has identificado correctamente. Se te redirigirá en seguida.",
-                    messageError: "Error al identificarse. Inténtalo de nuevo",
+                    messageSuccess: "Te has identificado correctamente.",
+                    messageError: "Error al identificarse. Inténtalo de nuevo.",
                     invalidUser: "Usuario no válido. Por favor, introduce tu nick o tu email aquí.",
                     invalidPassword: "Contraseña no válida. Mínimo 8 caracteres. Debe contener al menos una letra mayúscula y un número.",
                     rememberMe: "Recordarme",

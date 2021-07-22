@@ -32,13 +32,16 @@
     <hr class="index-title mt-4">
     <div class="row profile-navbar no-select mt-4">
       <div class="mr-5">
-        <span class="chosen" (click)="pickElement($event,1)">{{this.currentLang.attributes.gallery}}</span>
+        <span class="chosen" (click)="pickElement($event, 1)">{{this.currentLang.attributes.comments}}</span>
       </div>
       <div class="mr-5">
-        <span (click)="pickElement($event,2)">{{this.currentLang.attributes.likes}}</span>
+        <span (click)="pickElement($event, 2)">{{this.currentLang.attributes.gallery}}</span>
+      </div>
+      <div class="mr-5">
+        <span (click)="pickElement($event, 3)">{{this.currentLang.attributes.likes}}</span>
       </div>
       <div class="" *ngIf="this.username == this.identity.nick">
-        <span (click)="pickElement($event,3)">{{this.currentLang.attributes.favs}}</span>
+        <span (click)="pickElement($event, 4)">{{this.currentLang.attributes.favs}}</span>
       </div>
     </div>
     <div class="container-fluid col-md-12 profile-navbar-content mt-5">
@@ -46,9 +49,10 @@
         <div class="col-md-12 images-container">
           <!-- https://zeroesandones.medium.com/how-to-pass-data-from-parent-to-child-component-in-angular-9-dc7a0a64256c -->
           <!-- username is the variable in child (needs to have Input() when declared), urlname is the parent passed variable-->
-          <images-component *ngIf="this.element == 1" [username]="urlname"></images-component>
-          <likes-component *ngIf="this.element == 2" [username]="urlname"></likes-component>
-          <favs-component *ngIf="this.element == 3" [username]="urlname"></favs-component>
+          <comments-component *ngIf="this.element == 1" [username]="urlname"></comments-component>
+          <images-component *ngIf="this.element == 2" [username]="urlname"></images-component>
+          <likes-component *ngIf="this.element == 3" [username]="urlname"></likes-component>
+          <favs-component *ngIf="this.element == 4" [username]="urlname"></favs-component>
         </div> <!-- Here we load the components of the images, Likes and Favs depending on which is selected -->
       </div>
     </div>

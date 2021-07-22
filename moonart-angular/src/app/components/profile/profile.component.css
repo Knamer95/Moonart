@@ -142,16 +142,20 @@
 }
 
 #followersModal .modal-header, #followingModal .modal-header {
-    padding: 2rem;
+    padding: 1rem;
 }
 
 #followersModal .modal-body, #followingModal .modal-body {
     padding: 0rem;
 }
 
+#followersModal .modal-footer, #followingModal .modal-footer {
+    padding: 0rem 1rem 1rem;
+}
+
 @media (min-width: 576px) {
     #followersModal .modal-dialog, #followingModal .modal-dialog {
-        max-width: 700px;
+        max-width: 610px;
     }
 }
 
@@ -216,11 +220,11 @@
 ----------------------------------------------------- */
 
 [data-container="day-container"] .profile-navbar-content{
-    background: rgb(255, 255, 255);
+    /* background: rgb(255, 255, 255); */
 }
 
 [data-container="night-container"] .profile-navbar-content{
-    background: rgba(255, 255, 255, 0.05)
+    /* background: rgba(255, 255, 255, 0.05) */
 }
 
 [data-container="day-container"] .profile-navbar{

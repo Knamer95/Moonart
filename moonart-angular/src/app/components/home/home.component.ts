@@ -131,6 +131,10 @@ export class HomeComponent implements OnInit {
         // console.log(this.token);
     }
 
+    onEmited(emit) {
+        console.log(emit);
+    }
+
     getLang(lang) {
         this.language = [
             {

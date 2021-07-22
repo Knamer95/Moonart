@@ -8,7 +8,8 @@ import { UploadImageComponent } from './components/upload-image/upload-image.com
 import { SearchComponent } from './components/search/search.component';
 
 import { ImageComponent } from './components/image/image.component';
-import { LoginComponent } from './components/login/login.component';
+// import { LoginComponent } from './components/login/login.component';
+import { LogoutComponent } from './components/login/logout.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { UserEditComponent } from './components/user-edit/user-edit.component';
@@ -28,9 +29,9 @@ const appRoutes: Routes = [
     {path: 'search/:page', component: SearchComponent},
     {path: 'upload-image', component: UploadImageComponent, canActivate: [IdentityGuard]},
     {path: 'images/:image', component: ImageComponent},
-    {path: 'login', component: LoginComponent, canActivate: [Identity2Guard]},
-    {path: 'logout/:sure', component: LoginComponent, canActivate: [IdentityGuard]},
-    {path: 'register', component: RegisterComponent, canActivate: [Identity2Guard]},
+    // {path: 'login', component: LoginComponent, canActivate: [Identity2Guard]},
+    {path: 'logout/:sure', component: LogoutComponent, canActivate: [IdentityGuard]},
+    // {path: 'register', component: RegisterComponent, canActivate: [Identity2Guard]},
 
     {path: 'profile/:username/:page', component: ProfileComponent},
     {path: 'profile/:username', component: ProfileComponent},

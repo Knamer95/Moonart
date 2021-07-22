@@ -1,11 +1,14 @@
-import { Component, OnInit, DoCheck } from '@angular/core';
+import { Component, OnInit, DoCheck, ViewChild, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { UserService } from './services/user.service';
 import { Renderer2 } from '@angular/core';
 import { CommonService } from './services/common.service';
-import * as $ from 'jquery';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { ImageComponent } from './components/image/image.component';
 
-// import { SettingsComponent } from '../app/components/settings/settings.component';
+import * as $ from 'jquery';
 
 @Component({
     selector: 'app-root',
@@ -16,6 +19,7 @@ import * as $ from 'jquery';
     // (emitter)="onEmited($event)">
     //   </app-settings>`
 })
+
 export class AppComponent implements OnInit, DoCheck {
     title = 'moonart-angular';
     public identity: any;
@@ -25,6 +29,7 @@ export class AppComponent implements OnInit, DoCheck {
     public navHeight: number;
     public i: number;
     public searchQuery;
+    public nightMode: boolean;
     public navStatus: number;
     public language: Object;
     public currentLang: any;
@@ -35,12 +40,16 @@ export class AppComponent implements OnInit, DoCheck {
     public alertCounter: number = 0;
     public position: number = 0;
 
+    @ViewChild('loginElement') loginElement: ElementRef<HTMLElement>;
+    @ViewChild(ImageComponent, {}) _imageComponent: ImageComponent;
 
     constructor(
+        private modalService: NgbModal,
         private _userService: UserService,
         private _commonService: CommonService,
         private _router: Router,
-        private render: Renderer2
+        private render: Renderer2,
+        private _route: ActivatedRoute
     ) {
         this.i = 0;
         this.searchQuery = '';
@@ -124,46 +133,41 @@ export class AppComponent implements OnInit, DoCheck {
         }
     }
 
-    getLang(lang) {
-        this.language = [
-            {
-                lang: "english",
-                attributes: {
-                    title: null,
-                    gallery: "Gallery",
-                    feed: "Feed",
-                    uploadImage: "Upload image",
-                    searchImage: "Search images",
-                    login: "Login",
-                    register: "Register",
-                    welcomeMsg: "Hi",
-                    profile: "Profile",
-                    editProfile: "Edit profile",
-                    config: "Configuration",
-                    exit: "Log out"
-                }
-            },
+    // Function to redirect if user isn't logged in
+    isGuest(url) {
+        if (this.identity.nick === "guest" || !this.identity.nick || url === null) {
+            let el: HTMLElement = this.loginElement.nativeElement;
+            el.click();
+        }
+        else {
+            this._router.navigate([url]);
+        }
+    }
 
-            {
-                lang: "spanish",
-                attributes: {
-                    title: null,
-                    gallery: "Galería",
-                    feed: "Feed",
-                    uploadImage: "Subir imagen",
-                    searchImage: "Buscar imágenes",
-                    login: "Entrar",
-                    register: "Registrarse",
-                    welcomeMsg: "Hola",
-                    profile: "Perfil",
-                    editProfile: "Editar perfil",
-                    config: "Configuración",
-                    exit: "Salir"
+    open(type) {
+        let modalRef: any = [];
+        
+        if (type === 1) {
+            modalRef = this.modalService.open(LoginComponent);
+        }
+        else if (type === 2) {
+            modalRef = this.modalService.open(RegisterComponent);
+        }
+
+        this.render.selectRootElement('#autofocus').focus()
+        modalRef.componentInstance.emitter.subscribe((result) => {
+            this.onEmited(result);
+
+            if (result.modal) {
+                if (result.status === "success") {
+                    modalRef.componentInstance.activeModal.dismiss('Cross click')
+                }
+
+                if (result.status === "success" && type === 1) {
+
                 }
             }
-        ];
-
-        return this.language[(lang - 1)];
+        })
     }
 
     /*
@@ -211,10 +215,19 @@ export class AppComponent implements OnInit, DoCheck {
                     };
 
                     this.alertsArray = arr;
+
+                    // Close modal (if there is any) 
                 });
 
                 break;
+            case 3:
+                this.isGuest(null);
+                break;
 
+            case 4:
+                console.log(this._imageComponent);
+                // this._imageComponent.update();
+                break;
             default:
                 break;
         }
@@ -228,6 +241,49 @@ export class AppComponent implements OnInit, DoCheck {
                 this.onEmited(event)
             });
         }
+    }
+
+
+    getLang(lang) {
+        this.language = [
+            {
+                lang: "english",
+                attributes: {
+                    title: null,
+                    gallery: "Gallery",
+                    feed: "Feed",
+                    uploadImage: "Upload image",
+                    searchImage: "Search images",
+                    login: "Login",
+                    register: "Register",
+                    welcomeMsg: "Hi",
+                    profile: "Profile",
+                    editProfile: "Edit profile",
+                    config: "Configuration",
+                    exit: "Log out"
+                }
+            },
+
+            {
+                lang: "spanish",
+                attributes: {
+                    title: null,
+                    gallery: "Galería",
+                    feed: "Feed",
+                    uploadImage: "Subir imagen",
+                    searchImage: "Buscar imágenes",
+                    login: "Entrar",
+                    register: "Registrarse",
+                    welcomeMsg: "Hola",
+                    profile: "Perfil",
+                    editProfile: "Editar perfil",
+                    config: "Configuración",
+                    exit: "Salir"
+                }
+            }
+        ];
+
+        return this.language[(lang - 1)];
     }
 }
 

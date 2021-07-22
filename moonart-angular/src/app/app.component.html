@@ -5,6 +5,7 @@
 <div *ngFor="let alert of alertsArray; let i = index" class="alert notification" [ngClass]="alert.type"
     data-type="alert" [attr.data-ref]="alert.ref" [ngStyle]="{'bottom': alert.position+'px'}">{{alert.message}}</div>
 
+
 <div class="nav-wrapper nav-small">
     <!-- data-navbar="not-fixed" -->
     <!-- <div class="clip"> -->
@@ -36,7 +37,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" [routerLink]="['/feed']"
-                                (click)="this.toggle()">{{this.currentLang.attributes.feed}}<span
+                                (click)="this.toggle(); isGuest('/feed')">{{this.currentLang.attributes.feed}}<span
                                     class="sr-only"></span></a>
                         </li>
                         <!--
@@ -45,8 +46,8 @@
                 </li>
             -->
                         <li class="nav-item mr-auto">
-                            <a class="nav-link themed" data-theme="zoe" [routerLink]="['/upload-image']"
-                                (click)="this.toggle()">{{this.currentLang.attributes.uploadImage}}&nbsp;<i
+                            <a class="nav-link themed" data-theme="zoe"
+                                (click)="this.toggle(); isGuest('/upload-image')">{{this.currentLang.attributes.uploadImage}}&nbsp;<i
                                     class="fas fa-upload"></i></a>
                         </li>
                     </ul>
@@ -65,11 +66,10 @@
                     <!-- <a class="navbar-brand ml-auto admin" href="#">Administrate</a> -->
                     <ul class="navbar-nav right-position log-reg">
                         <li class="nav-item" *ngIf="!identity || identity.nick == 'guest'">
-                            <a class="nav-link" [routerLink]="['/login']">{{this.currentLang.attributes.login}}</a>
+                            <a #loginElement class="nav-link" (click)="open(1)">{{this.currentLang.attributes.login}}</a>
                         </li>
                         <li class="nav-item" *ngIf="!identity || identity.nick == 'guest'">
-                            <a class="nav-link"
-                                [routerLink]="['/register']">{{this.currentLang.attributes.register}}</a>
+                            <a class="nav-link" (click)="open(2)">{{this.currentLang.attributes.register}}</a>
                         </li>
 
                         <!-- <button class="btn btn-outline-info btn-toggle" onclick="this.blur(); swap();"><i class="fas fa-lightbulb"></i></button> -->
@@ -104,13 +104,13 @@
                                 class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" [routerLink]="['/feed']"
-                            (click)="this.toggle()">{{this.currentLang.attributes.feed}}<span
+                        <a class="nav-link"
+                            (click)="this.toggle(); isGuest('/feed')">{{this.currentLang.attributes.feed}}<span
                                 class="sr-only"></span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link themed" data-theme="zoe" [routerLink]="['/upload-image']"
-                            (click)="this.toggle()">{{this.currentLang.attributes.uploadImage}}&nbsp;<i
+                        <a class="nav-link themed" data-theme="zoe"
+                            (click)="this.toggle(); isGuest('/upload-image')">{{this.currentLang.attributes.uploadImage}}&nbsp;<i
                                 class="fas fa-upload"></i></a>
                     </li>
                     <li class="separator"></li>
@@ -132,12 +132,12 @@
                     </li>
 
                     <li class="nav-item small" *ngIf="!identity || identity.nick == 'guest'">
-                        <a class="nav-link" [routerLink]="['/login']"
-                            (click)="this.toggle()">{{this.currentLang.attributes.login}}</a>
+                        <a class="nav-link"
+                            (click)="this.toggle(); open(1)">{{this.currentLang.attributes.login}}</a>
                     </li>
                     <li class="nav-item small" *ngIf="!identity || identity.nick == 'guest'">
-                        <a class="nav-link" [routerLink]="['/register']"
-                            (click)="this.toggle()">{{this.currentLang.attributes.register}}</a>
+                        <a class="nav-link"
+                            (click)="this.toggle(); open(2)">{{this.currentLang.attributes.register}}</a>
                     </li>
                 </ul>
             </div>
@@ -149,6 +149,8 @@
 
 <!-- Content -->
 <router-outlet (activate)="onActivate($event)"></router-outlet>
+
+
 <!--   
     We add onActivate, and in the ts we specify that the event 
     is (emitter)="onEmited($event)" on that fn.

@@ -4,7 +4,7 @@ ng serve --host 192.168.1.143 --live-reload false
 
 Known bugs:
 
-- Position of SHOW (in sensitive/nsfw) is wrong. Make parent position relative, and show span translate(-50%, -50%);
+- Since we use 'guest' to check if the user is logged in or not, there should not be possible to create an account named 'guest'.
 
 - Translation to Spanish is wrong in Feed. It also lacks an space (weekago)
 
@@ -31,7 +31,6 @@ Known bugs:
 
 
 
-
 ---
 
 Fixed bugs: 
@@ -51,6 +50,8 @@ Fixed bugs:
 - Search with scroll activated would not clear the previous results, and this caused images to stay on the search (adding elements to array, without resetting it on each search)
 
 - The message of a hidden/deleted image should not disappear after the timeout.
+
+- Position of SHOW (in sensitive/nsfw) is wrong. Make parent position relative, and show span translate(-50%, -50%);
 
 ---
 

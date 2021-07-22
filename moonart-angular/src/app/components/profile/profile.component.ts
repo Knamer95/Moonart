@@ -93,14 +93,18 @@ export class ProfileComponent implements OnInit {
         this.loadUser();
         this.tab = window.location.href.split("/");
         this.tab = this.tab[this.tab.length - 2];
-
+        // console.log(this.tab);
+        
         this.element = 1;
 
-        if (this.tab == "likes") {
+        if (this.tab == "gallery") {
             this.element = 2;
         }
-        else if (this.tab == "favs") {
+        if (this.tab == "likes") {
             this.element = 3;
+        }
+        else if (this.tab == "favs") {
+            this.element = 4;
         }
         else {
             this.element = 1;
@@ -183,14 +187,19 @@ export class ProfileComponent implements OnInit {
         // this.followers = arr1;
         // this.following = arr2;
 
+        console.log(followersP);
+        console.log(followingP);
+        console.log(followingU);
+
+
         if (followingU === null) { // Different to empty array!
             // If this param is null, it means that logged user != profile user, and so every following is true
 
             if (followersP.length > 0) {
-                for (let i = 0; i < followingP.length; i++) {
+                for (let i = 0; i < followersP.length; i++) {
                     let found = false;
-                    for (let j = 0; j < followersP.length; j++) {
-                        if (followingP[i].follower.nick === followersP[j].followed.nick) {
+                    for (let j = 0; j < followingP.length; j++) {
+                        if (followersP[i].follower.nick === followingP[j].followed.nick) {
                             found = true;
                             break;
                         }
@@ -201,7 +210,7 @@ export class ProfileComponent implements OnInit {
 
             if (followingP.length > 0) {
                 for (let i = 0; i < followingP.length; i++) {
-                    followingP.isFollowedByUser = true;
+                    followingP[i].isFollowedByUser = true;
                 }
             }
         }
@@ -347,6 +356,7 @@ export class ProfileComponent implements OnInit {
                     followers: "Followers",
                     following: "Following",
                     noDescription: "User didn't add a description.",
+                    comments: "Comments",
                     gallery: "Gallery",
                     likes: "Likes",
                     favs: "Favs",
@@ -364,6 +374,7 @@ export class ProfileComponent implements OnInit {
                     followers: "Seguidores",
                     following: "Siguiendo",
                     noDescription: "El usuario no ha agregado ninguna descripción.",
+                    comments: "Comentarios",
                     gallery: "Galería",
                     likes: "Likes",
                     favs: "Favs",

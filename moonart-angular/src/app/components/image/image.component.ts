@@ -130,6 +130,15 @@ export class ImageComponent implements OnInit {
         this._commonService.changeLangAttr(this.lang);
     }
 
+    ngOnChanges() {
+        // create header using child_id
+        console.log("A");
+    }
+
+    update(): void {
+        this.ngOnInit();
+    }
+
     /* 
      *
      * Function to load a new image by updating all the data, but without actually reloading the whole script
@@ -600,6 +609,21 @@ export class ImageComponent implements OnInit {
     prop(el) {
         jQuery(el).modal("show");
     }
+
+    // Function to redirect if user isn't logged in
+    isGuest() {
+        if (this.identity.nick === "guest" || !this.identity.nick) {
+            this.emitter.emit({
+                type: emitterTypes.login,
+                status: 'not-logged',
+                notificationType: null,
+                message: null,
+                timer: 0
+            });
+        }
+        else { }
+    }
+
 
     getLang(lang) {
         this.language = [

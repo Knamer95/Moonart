@@ -4,73 +4,124 @@
 </div>
 -->
 
-<div class="container-fluid col-9 col-md-5 col-xl-3 col-sm-7 container-ma">
-  <div class="row form-ma">
-    <!-- <div class="d-flex justify-content-center"> -->
-    <div class="col-md-12 text-center">
-      <img id="profile-img" class="profile-img-card" src="assets/img/register.png">
-      <div class="title mb-3">
-        <span class="no-select">{{this.currentLang.attributes.title}}</span>
-      </div>
-    </div>
-    <!-- </div> -->
+<div class="register-modal">
+  <div class="modal-header">
+    <h4 class="modal-title">{{this.currentLang.attributes.register}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
+  <div class="modal-body">
 
-  <div class="row form-ma">
-    <form class="col-md-12" #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
-      <div class="form-group">
-        <input type="text" name="name" #name="ngModel" [(ngModel)]="user.name" class="form-control" required pattern="[A-zÁÉÍÓÚÀÈÌÒÙáéíóúàèìòùñ \s]+"
-          placeholder="{{this.currentLang.attributes.placeholderName}}" maxlength="25">
-
-        <small *ngIf="!name.valid && name.touched" class="invalid-feedback d-block">
-          {{this.currentLang.attributes.invalidName}}
-        </small>
+    <div class="row form-ma">
+      <!-- <div class="d-flex justify-content-center"> -->
+      <div class="col-md-12 text-center">
+        <img id="profile-img" class="profile-img-card" src="assets/img/register.png">
       </div>
+      <!-- </div> -->
+    </div>
 
-      <div class="form-group">
-        <input type="text" name="nick" #nick="ngModel" [(ngModel)]="user.nick" class="form-control" required pattern="[A-z0-9_-]{4,10}"
-          placeholder="{{this.currentLang.attributes.placeholderUser}}" minlength="4" maxlength="10">
+    <div class="row form-ma">
+      <form class="col-md-12" #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
+        <div class="form-group">
+          <div class="input-grid">
+            <input type="text" name="name" #name="ngModel" [(ngModel)]="user.name" class="form-control" required
+              pattern="[A-zÁÉÍÓÚÀÈÌÒÙáéíóúàèìòùñ \s]+" placeholder="{{this.currentLang.attributes.placeholderName}}"
+              maxlength="25" id="autofocus">
+            <div class="input-actions-container">
+              <span class="input-status input-status-error"></span>
+              <span class="input-status input-status-success"></span>
+            </div>
+          </div>
+          <span class="line-hover"></span>
 
-        <small *ngIf="!nick.valid && nick.touched" class="invalid-feedback d-block">
-          {{this.currentLang.attributes.invalidUser}}
-        </small>
-      </div>
-
-      <div class="form-group">
-        <input type="email" name="email" #email="ngModel" [(ngModel)]="user.email" class="form-control" required
-          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="{{this.currentLang.attributes.placeholderEmail}}" maxlength="50">
-
-        <small *ngIf="!email.valid && email.touched" class="invalid-feedback d-block">
-          {{this.currentLang.attributes.invalidEmail}}
-        </small>
-      </div>
-
-      <div class="form-group">
-        <input type="password" name="password" #password="ngModel" [(ngModel)]="user.password" class="form-control"
-          required pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" placeholder="{{this.currentLang.attributes.placeholderPassword}}"
-          minlength="8" maxlength="64">
-
-        <small *ngIf="!password.valid && password.touched" class="invalid-feedback d-block">
-          {{this.currentLang.attributes.invalidPassword}}
-        </small>
-      </div>
-
-      <div class="form-group" id="password_match_check">
-        <input type="password" name="password_2" #password_2="ngModel" [(ngModel)]="user.password_confirm" class="form-control"
-          required pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$" placeholder="{{this.currentLang.attributes.placeholderConfirmPassword}}"
-          minlength="8" maxlength="64">
-      </div>
-
-      <div class="row">
-        <div class="col-md-12 mb-2">
-          <button type="submit" class="btn btn-success" [disabled]="registerForm.invalid || checkData">{{this.currentLang.attributes.register}}</button>
+          <small *ngIf="!name.valid && name.dirty" class="invalid-feedback d-block">
+            {{this.currentLang.attributes.invalidName}}
+          </small>
         </div>
-      </div>
-      <!-- <div class="row">
+
+        <div class="form-group">
+          <div class="input-grid">
+            <input type="text" name="nick" #nick="ngModel" [(ngModel)]="user.nick" class="form-control" required
+              pattern="[A-z0-9_-]{4,10}" placeholder="{{this.currentLang.attributes.placeholderUser}}" minlength="4"
+              maxlength="10">
+            <div class="input-actions-container">
+              <span class="input-status input-status-error"></span>
+              <span class="input-status input-status-success"></span>
+            </div>
+          </div>
+          <span class="line-hover"></span>
+
+          <small *ngIf="!nick.valid && nick.dirty" class="invalid-feedback d-block">
+            {{this.currentLang.attributes.invalidUser}}
+          </small>
+        </div>
+
+        <div class="form-group">
+          <div class="input-grid">
+            <input type="email" name="email" #email="ngModel" [(ngModel)]="user.email" class="form-control" required
+              pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+              placeholder="{{this.currentLang.attributes.placeholderEmail}}" maxlength="50">
+            <div class="input-actions-container">
+              <span class="input-status input-status-error"></span>
+              <span class="input-status input-status-success"></span>
+            </div>
+          </div>
+          <span class="line-hover"></span>
+
+          <small *ngIf="!email.valid && email.dirty" class="invalid-feedback d-block">
+            {{this.currentLang.attributes.invalidEmail}}
+          </small>
+        </div>
+
+        <div class="form-group">
+          <div class="input-grid">
+            <input [type]="this.showPassword ? 'text' : 'password'" name="password" #password="ngModel"
+              [(ngModel)]="user.password" class="form-control" required
+              pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
+              placeholder="{{this.currentLang.attributes.placeholderPassword}}" minlength="8" maxlength="64">
+            <div class="input-actions-container">
+              <span class="show-hide" [ngClass]="this.showPassword ? 'hide' : 'show'" (click)="this.toggle(1)"></span>
+              <span class="input-status input-status-error"></span>
+              <span class="input-status input-status-success"></span>
+            </div>
+          </div>
+          <span class="line-hover"></span>
+
+          <small *ngIf="!password.valid && password.dirty" class="invalid-feedback d-block">
+            {{this.currentLang.attributes.invalidPassword}}
+          </small>
+        </div>
+
+        <div class="form-group" id="password_match_check">
+          <div class="input-grid">
+            <input [type]="this.showPassword2 ? 'text' : 'password'" name="password_2" #password_2="ngModel"
+              [(ngModel)]="user.password_confirm" class="form-control" required
+              pattern="(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
+              placeholder="{{this.currentLang.attributes.placeholderConfirmPassword}}" minlength="8" maxlength="64">
+            <div class="input-actions-container">
+              <span class="show-hide" [ngClass]="this.showPassword2 ? 'hide' : 'show'" (click)="this.toggle(2)"></span>
+              <span class="input-status input-status-error"></span>
+              <span class="input-status input-status-success"></span>
+            </div>
+          </div>
+          <span class="line-hover"></span>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 pt-2 pb-2">
+            <button type="submit" class="btn btn-success"
+              [disabled]="registerForm.invalid || checkData">{{this.currentLang.attributes.register}}</button>
+          </div>
+        </div>
+        <!-- <div class="row">
         <div class="col-md-12">
           <button type="submit" class="btn btn-danger btn-red-ma">Google</button>
         </div>
       </div> -->
-    </form>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer">
   </div>
 </div>
