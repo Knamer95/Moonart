@@ -8,7 +8,7 @@
         <span class="user">{{userCustom}}</span>
       </div>
       <div class="follow-container">
-        <button type="button" class="button button-follow no-follow" *ngIf="this.username != this.identity.nick"
+        <button type="button" class="button button-follow no-follow" *ngIf="this.username != this.identity.nick && this.identity.nick != 'guest'"
           (click)="follow(token, username)"></button><!-- {{followStatus}} -->
         <button type="button" [routerLink]="['/edit']" class="button button-edit edit"
           *ngIf="this.username == this.identity.nick">{{this.currentLang.attributes.edit}}</button>
@@ -82,7 +82,7 @@
           <li class="follower-item" *ngFor="let follower of followers; let i = index">
             <img class="profile-picture" src="assets/profile-picture/{{follower.follower.image}}">
             <span class="nick" [routerLink]="['/profile', follower.follower.nick]">{{follower.follower.nick}}</span>
-            <button type="button" class="button button-follow" [ngClass]="follower.isFollowedByUser ? 'follow' : 'no-follow'" (click)="follow(token, follower.follower.nick)" *ngIf="follower.follower.nick != this.identity.nick"></button>
+            <button type="button" class="button button-follow" [ngClass]="follower.isFollowedByUser ? 'follow' : 'no-follow'" (click)="follow(token, follower.follower.nick)" *ngIf="follower.follower.nick != this.identity.nick && this.identity.nick != 'guest'"></button>
             <span class="user-full-name">@{{follower.follower.name}}</span>
             <span class="user-description">{{follower.follower.description}}</span>
           </li>
@@ -109,7 +109,7 @@
           <li class="followed-item" *ngFor="let followed of following; let i = index">
             <img class="profile-picture" src="assets/profile-picture/{{followed.followed.image}}">
             <span class="nick" [routerLink]="['/profile', followed.followed.nick]">{{followed.followed.nick}}</span>
-            <button type="button" class="button button-follow no-follow" [ngClass]="followed.isFollowedByUser ? 'follow' : 'no-follow'" (click)="follow(token, followed.followed.nick)" *ngIf="followed.followed.nick != this.identity.nick"></button>
+            <button type="button" class="button button-follow no-follow" [ngClass]="followed.isFollowedByUser ? 'follow' : 'no-follow'" (click)="follow(token, followed.followed.nick)" *ngIf="followed.followed.nick != this.identity.nick && this.identity.nick != 'guest'"></button>
             <span class="user-full-name">@{{followed.followed.name}}</span>
             <span class="user-description">{{followed.followed.description}}</span>
           </li>

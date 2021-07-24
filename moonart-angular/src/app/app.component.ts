@@ -7,6 +7,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ImageComponent } from './components/image/image.component';
+import { SharedService } from './components/shared-service/shared-service.component';
 
 import * as $ from 'jquery';
 
@@ -45,6 +46,7 @@ export class AppComponent implements OnInit, DoCheck {
 
     constructor(
         private modalService: NgbModal,
+        private _sharedService: SharedService,
         private _userService: UserService,
         private _commonService: CommonService,
         private _router: Router,
@@ -226,6 +228,7 @@ export class AppComponent implements OnInit, DoCheck {
 
             case 4:
                 console.log(this._imageComponent);
+                this._sharedService.needsReload(true);
                 // this._imageComponent.update();
                 break;
             default:

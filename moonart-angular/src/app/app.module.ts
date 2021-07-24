@@ -32,6 +32,7 @@ import { UserService } from './services/user.service';
 import { ImageService } from './services/image.service';
 import { SearchComponent } from './components/search/search.component';
 import { SafePipe } from './safe.pipe';
+import { SharedService } from './components/shared-service/shared-service.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, outlet: 'home' },
@@ -82,6 +83,7 @@ const routes: Routes = [
     ErrorComponent,
     SearchComponent,
     SafePipe,
+    SharedService,
   ],
   entryComponents: [
     LoginComponent,
@@ -93,6 +95,7 @@ const routes: Routes = [
     Identity2Guard,
     UserService,
     ImageService,
+    SharedService
     // forwardRef(() => LoginComponent)
   ],
   bootstrap: [AppComponent]

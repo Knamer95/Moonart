@@ -7,6 +7,7 @@ import { Renderer2 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { callbackify } from 'util';
 import { emitterTypes } from '../../models/struct';
+import { SharedService } from '../../components/shared-service/shared-service.component';
 
 declare var jQuery: any;
 
@@ -55,7 +56,6 @@ export class ImageComponent implements OnInit {
     public customAlert: string;
 
 
-
     formVar: FormGroup;
     public commError: number = 0;
     public isFwError: number = 0;
@@ -73,6 +73,7 @@ export class ImageComponent implements OnInit {
     @Output() emitter = new EventEmitter();
 
     constructor(
+        private _sharedService: SharedService,
         private _userService: UserService,
         private _imageService: ImageService,
         private _commonService: CommonService,
@@ -94,6 +95,13 @@ export class ImageComponent implements OnInit {
     }
 
     ngOnInit() {
+        this._sharedService.changeVar.subscribe(value => {
+            if (value === true) {
+                console.log("owo");
+                this._sharedService.needsReload(false);
+                this.ngOnInit();
+            }
+        });
 
         this.loadUser();
 

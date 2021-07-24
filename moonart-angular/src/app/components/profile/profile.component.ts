@@ -4,6 +4,7 @@ import { ImageService } from '../../services/image.service';
 import { CommonService } from '../../services/common.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Renderer2 } from '@angular/core';
+import { SharedService } from '../../components/shared-service/shared-service.component';
 
 declare var jQuery: any;
 
@@ -32,7 +33,7 @@ export class ProfileComponent implements OnInit {
 
     @Input() public urlname: any;
     public followStatus: string;
-    public element: number;
+    public element: number = 1;
     public found: boolean;
     public description: string;
     public isOwner: boolean;
@@ -49,6 +50,7 @@ export class ProfileComponent implements OnInit {
     public lang: number;
     public currentLang: any;
     constructor(
+        private _sharedService: SharedService,
         private _userService: UserService,
         private _imageService: ImageService,
         private _commonService: CommonService,
@@ -69,7 +71,7 @@ export class ProfileComponent implements OnInit {
         this.urlname = i ? url[i] : "guest";
 
         this.followStatus = "Follow";
-        this.tab = "images";
+        this.tab = "comments";
         this.nFollowers = 0;
         this.nFollowing = 0;
         this.followers = [];
@@ -79,6 +81,14 @@ export class ProfileComponent implements OnInit {
     }
 
     ngOnInit() {
+        console.log(this.element);
+        this._sharedService.changeVar.subscribe(value => {
+            if (value === true) {
+                this._sharedService.needsReload(false);
+                this.ngOnInit();
+            }
+        });
+
         const modalBackdrop = document.getElementsByClassName("modal-backdrop")[0];
 
         if (modalBackdrop)
@@ -95,8 +105,9 @@ export class ProfileComponent implements OnInit {
         this.tab = this.tab[this.tab.length - 2];
         // console.log(this.tab);
         
-        this.element = 1;
-
+        if (this.tab == "comments") {
+            this.element = 1;
+        }
         if (this.tab == "gallery") {
             this.element = 2;
         }

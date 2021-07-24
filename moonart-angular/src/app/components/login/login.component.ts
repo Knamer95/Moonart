@@ -176,7 +176,6 @@ export class LoginComponent implements OnInit {
                     message: null,
                     timer: 0
                 });
-
             },
             error => { }
         );

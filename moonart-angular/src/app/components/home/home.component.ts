@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Input, Output, HostListener } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input, Output, HostListener, HostBinding } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ImageService } from '../../services/image.service';
 import { CommonService } from '../../services/common.service';
@@ -6,6 +6,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Renderer2 } from '@angular/core';
 import * as $ from 'jquery';
 import { emitterTypes } from '../../models/struct';
+import { SharedService } from '../../components/shared-service/shared-service.component';
 
 @Component({
     selector: 'app-home',
@@ -13,7 +14,10 @@ import { emitterTypes } from '../../models/struct';
     styleUrls: ['./home.component.css'],
     providers: [UserService, ImageService, CommonService]
 })
+
 export class HomeComponent implements OnInit {
+
+    @HostBinding('attr.listener') listener = 'idle';
 
     public pageTitle: string = "Latest";
     public identity: any;
@@ -34,13 +38,14 @@ export class HomeComponent implements OnInit {
     public loaded: boolean = false;
     public imagError: number = 0;
     public language: Object;
-    public currentLang: any;
+    public currentLang: any; localhost: 4200
     public lang: number = 1;
     public emitType: number;
-    
+
     @Output() emitter = new EventEmitter();
 
     constructor(
+        private _sharedService: SharedService,
         private _userService: UserService,
         private _imageService: ImageService,
         private _commonService: CommonService,
@@ -51,6 +56,13 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
+        this._sharedService.changeVar.subscribe(value => {
+            if (value === true) {
+                this._sharedService.needsReload(false);
+                this.ngOnInit();
+            }
+        });
+
         document.title = this.pageTitle;
 
         this.loadUser();
@@ -64,9 +76,9 @@ export class HomeComponent implements OnInit {
                 notificationType: "success",
                 lang: this.lang
             });
-            
+
             this.nightMode = JSON.parse(localStorage.getItem("config")).nightMode;
-            this.scroll = JSON.parse(localStorage.getItem("config")).scroll; 
+            this.scroll = JSON.parse(localStorage.getItem("config")).scroll;
 
             this._commonService.changeNightModeAttr(this.nightMode);
         }
@@ -128,7 +140,6 @@ export class HomeComponent implements OnInit {
     loadUser() {
         this.identity = this._userService.getIdentity();
         this.token = this._userService.getToken();
-        // console.log(this.token);
     }
 
     onEmited(emit) {
