@@ -4,6 +4,7 @@ import { ImageService } from '../../services/image.service';
 import { CommonService } from '../../services/common.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Renderer2 } from '@angular/core';
+import { SharedService } from '../../components/shared-service/shared-service.component';
 
 @Component({
     selector: 'app-search',
@@ -39,6 +40,7 @@ export class SearchComponent implements OnInit {
     public lang: number;
 
     constructor(
+        private _sharedService: SharedService,
         private _userService: UserService,
         private _imageService: ImageService,
         private _commonService: CommonService,
@@ -57,6 +59,13 @@ export class SearchComponent implements OnInit {
     }
 
     ngOnInit() {
+        this._sharedService.changeVar.subscribe(value => {
+            if (value === true) {
+                this._sharedService.needsReload(false);
+                // this.ngOnInit();
+            }
+        });
+
         document.title = this.pageTitle;
         this.images = [];
         this.isLast == false;
@@ -65,7 +74,6 @@ export class SearchComponent implements OnInit {
         this.loadUser();
 
         if (localStorage.getItem("config") != null && localStorage.getItem("config") != "undefined") {
-
             this.nightMode = JSON.parse(localStorage.getItem("config")).nightMode;
             this._commonService.changeNightModeAttr(this.nightMode);
             this.scroll = JSON.parse(localStorage.getItem("config")).scroll;

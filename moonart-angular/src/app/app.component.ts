@@ -55,7 +55,7 @@ export class AppComponent implements OnInit, DoCheck {
     ) {
         this.i = 0;
         this.searchQuery = '';
-        this.alertStatus = 'iddle';
+        this.alertStatus = 'idle';
     }
 
     ngOnInit() {
@@ -142,13 +142,13 @@ export class AppComponent implements OnInit, DoCheck {
             el.click();
         }
         else {
-            this._router.navigate([url]);
+            // this._router.navigate([url]);
         }
     }
 
     open(type) {
         let modalRef: any = [];
-        
+
         if (type === 1) {
             modalRef = this.modalService.open(LoginComponent);
         }
@@ -156,7 +156,10 @@ export class AppComponent implements OnInit, DoCheck {
             modalRef = this.modalService.open(RegisterComponent);
         }
 
-        this.render.selectRootElement('#autofocus').focus()
+        // https://github.com/ng-bootstrap/ng-bootstrap/issues/1776#issuecomment-394249029
+        setTimeout(() =>
+            this.render.selectRootElement('#autofocus').focus(), 0);
+            
         modalRef.componentInstance.emitter.subscribe((result) => {
             this.onEmited(result);
 
@@ -227,8 +230,9 @@ export class AppComponent implements OnInit, DoCheck {
                 break;
 
             case 4:
-                console.log(this._imageComponent);
                 this._sharedService.needsReload(true);
+                window.location.reload();
+
                 // this._imageComponent.update();
                 break;
             default:
@@ -240,7 +244,6 @@ export class AppComponent implements OnInit, DoCheck {
     onActivate(elementRef) {
         if (elementRef.emitter) { // Adds emitter only if there is an EventEmitter defined on the module (Settings)
             elementRef.emitter.subscribe(event => {
-                console.log(elementRef);
                 this.onEmited(event)
             });
         }

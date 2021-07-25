@@ -42,7 +42,7 @@ export class LogoutComponent implements OnInit {
 
     ngOnInit(): void {
         this.logout();
-        
+
         if (localStorage.getItem("config") == "undefined" || localStorage.getItem("config") == null) {
 
             let config = {
@@ -79,7 +79,8 @@ export class LogoutComponent implements OnInit {
                 this.identity = null;
                 this.token = null;
 
-                this._router.navigate(['home']);
+                console.log(this._commonService.getLastUrl());
+                this._router.navigateByUrl(this._commonService.getLastUrl());
             }
         });
     }

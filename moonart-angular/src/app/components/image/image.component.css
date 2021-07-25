@@ -11,7 +11,7 @@
 */
 
 .info-block{
-    padding: 30px 0 !important;
+    /* padding: 30px 0 !important; */
     background: #ffffff;
 }
 
@@ -41,15 +41,15 @@
 }
 
 .like-container[data-status='1'], .like-container:hover{
-    color: #c70000;
+    /* color: #c70000; */
 }
 
 .fav-container[data-status='1'], .fav-container:hover{
-    color: #cbcb00;
+    /* color: #cbcb00; */
 }
 
 .share-container[data-status='1'], .share-container:hover{
-    color: #12baaa;
+    /* color: #12baaa; */
 }
 
 .edit-button, .fa-ellipsis-h{
@@ -173,14 +173,34 @@
     /* max-width: 640px; */
     cursor: zoom-in;
     max-width: 89%;
+    height: 70vh;
     max-height: 1000px;
+}
+
+.image[data-state="loading"],
+.maximized-main-image[data-state="loading"] {
+    filter: blur(3px) brightness(1.2) opacity(0);
+}
+
+.loading-frame {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    /* top: 35vh; */
+    z-index: 999;
+}
+
+[data-container="night-container"] .loading-frame,
+.maximized-view-container .loading-frame {
+    filter: invert(1);
 }
 
 .image-container{
     position: relative;
     background: linear-gradient(45deg, #ffffff, #f0f0f0);
     align-self: center;
-    padding: 60px 45px 45px 45px;
+    padding: 0px 45px 0px 45px;
     /* width: calc(100% - 90px); */ /* Only necessary if it's margin*/
 }
 
@@ -500,6 +520,94 @@ textarea{
     max-width: 100%;
 }
 
+.image-control {
+    display: inline-block;
+    /* transform: scaleY(2); */
+    /* font-size: 54px; */
+    /* transform: translate(-50%, -50%); */
+    position: absolute;
+    top: 50%;
+    cursor: pointer;
+}
+
+/* https://codepen.io/sosuke/pen/Pjoqqp -> Given a color, it returns filters to match the mask */
+.selected-image {
+    filter: invert(13%) sepia(88%) saturate(4647%) hue-rotate(205deg) brightness(92%) contrast(103%);
+}
+
+.maximized-view {
+    display: grid;
+    grid-template-rows: 1fr 100px;
+    align-items: center;
+    justify-items: center;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    padding-bottom: 10px;
+
+    position: absolute;
+    z-index: 1000;
+    top: 0px;
+}
+
+.maximized-main-image {
+    max-width: 90vw;
+    max-height: 66vh;
+}
+
+.mask {
+    position: fixed;
+    top: -20px;
+    width: 100%;
+    height: calc(100vh + 20px);
+    z-index: 999;
+    background: black;
+    opacity: 0.85;
+}
+
+.maximized-more-by-images-container {
+    display: flex;
+    /* width: 100%; */
+    height: 100%;
+}
+
+.maximized-more-by-image-element{
+    /* max-width: 100%; */
+    /* position: absolute; */
+    cursor: pointer;
+}
+
+.maximized-more-by-images-container .more-by-image {
+    border: 3px solid transparent;
+}
+
+.maximized-view-container .loading-frame {
+    top: calc(50% - 100px);
+}
+
+.maximized-view-container .image-control {
+    z-index: 1001;
+    top: calc(50% - 90px);
+}
+
+[data-container="night-container"] .image-control:hover,
+.maximized-view-container .image-control:hover {
+    fill: white;
+}
+
+.image-control:not(:hover) {
+    fill: grey;
+}
+
+.go-prev {
+    left: 20px;
+}
+
+.go-next {
+    right: 20px;
+}
+
 [data-container="night-container"] .lower-textarea{
     background: #222124 !important;
 }
@@ -578,7 +686,7 @@ textarea{
 
 @media screen and (max-width: 1150px){
     .info-block{
-        padding: 30px 30px !important;
+        /* padding: 30px 30px !important; */
     }
 
     .interactions-container > div:not(.grid-actions-right) i + span{

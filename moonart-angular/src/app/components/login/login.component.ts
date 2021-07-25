@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
     public lang: number;
     public emitType: number;
 
-    @Output() emitter: EventEmitter<any> = new  EventEmitter();
+    @Output() emitter: EventEmitter<any> = new EventEmitter();
 
     constructor(
         public activeModal: NgbActiveModal,
@@ -102,7 +102,7 @@ export class LoginComponent implements OnInit {
                                 localStorage.setItem('identity', JSON.stringify(this.identity));
                                 localStorage.removeItem("config");
                                 this.updateDB(this.token);
-                                
+
                                 // setTimeout(() => { this._router.navigate(['home']); }, 1500);
 
                             }
@@ -129,7 +129,7 @@ export class LoginComponent implements OnInit {
 
                 this.emitter.emit({
                     type: emitterTypes.alert,
-                    status:  response.status === "error" ? "error" : "success",
+                    status: response.status === "error" ? "error" : "success",
                     notificationType: response.status === "error" ? "error" : "success",
                     message: message,
                     modal: 'login-modal',
@@ -165,8 +165,11 @@ export class LoginComponent implements OnInit {
                     this._commonService.setUserConfig(this, this.token, this.configJSON);
                 }
 
+                /*
+                // Due to reloading page instead (to avoid issues with pagination/scroll), it doesn't make sense that the user sees the config updating
                 this.nightMode = JSON.parse(localStorage.getItem("config")).nightMode;
                 this._commonService.changeNightModeAttr(this.nightMode);
+                */
                 console.log(`Changed to ${this.nightMode ? 'night' : 'day'} mode.`);
 
                 this.emitter.emit({

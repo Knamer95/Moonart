@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 import { User } from '../models/user';
 import { global } from './global';
 import { UserService } from '../services/user.service';
-import { Router } from '@angular/router';
+import { Router, RoutesRecognized } from '@angular/router';
+import { filter, pairwise } from 'rxjs/operators';
 
 @Injectable()
 export class CommonService {
@@ -14,6 +15,8 @@ export class CommonService {
     public token: string;
     public confError: number;
     public setCError: number;
+    public lastURL: string = 'not defined';
+    public events: Array<any> = [];
 
     constructor(
         public _http: HttpClient,
@@ -24,6 +27,20 @@ export class CommonService {
         this.url = global.url;
         this.confError = 0;
         this.setCError = 0;
+
+        // https://stackoverflow.com/questions/41038970/how-to-determine-previous-page-url-in-angular
+        this._router.events
+            .pipe(filter((evt: any) => evt instanceof RoutesRecognized), pairwise())
+            .subscribe((events: RoutesRecognized[]) => {
+                // console.log('previous url', events[0].urlAfterRedirects);
+                // console.log('current url', events[1].urlAfterRedirects);
+                this.lastURL = events[0].urlAfterRedirects || 'not defined';
+                localStorage.setItem("lastURL", this.lastURL);
+            });
+    }
+
+    getLastUrl() {
+        return localStorage.getItem("lastURL");
     }
 
     getUserConfig(that, token) { // Gets the getConfig returned object (AJAX request from user.service), and stores it

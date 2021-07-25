@@ -17,7 +17,7 @@ import { SharedService } from '../../components/shared-service/shared-service.co
 
 export class HomeComponent implements OnInit {
 
-    @HostBinding('attr.listener') listener = 'idle';
+    @HostBinding('attr.listener') listener = 'idle'; // To add attribute listener to the main element (<app-home />)
 
     public pageTitle: string = "Latest";
     public identity: any;
@@ -59,7 +59,7 @@ export class HomeComponent implements OnInit {
         this._sharedService.changeVar.subscribe(value => {
             if (value === true) {
                 this._sharedService.needsReload(false);
-                this.ngOnInit();
+                // this.ngOnInit();
             }
         });
 
@@ -133,7 +133,7 @@ export class HomeComponent implements OnInit {
                 this.nsfw = JSON.parse(localStorage.getItem("config")).nsfw;
                 this.epilepsy = JSON.parse(localStorage.getItem("config")).epilepsy;
             }
-            this._imageService.showAllImages(this, this.page, this.scroll);
+            this._imageService.showAllImages(this, this.page, this.scroll, true, null);
         });
     }
 

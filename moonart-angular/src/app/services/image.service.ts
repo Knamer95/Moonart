@@ -170,7 +170,7 @@ export class ImageService {
      * Depending on if it's scroll or not, it will add it to an existing array or a new one
      *
      */
-    showAllImages(that, page, isScroll) {
+    showAllImages(that, page, isScroll, check, resolve) {
         let isProfileUser = typeof that.isProfileUser !== 'undefined' ? that.isProfileUser : null;
         let user = typeof that.username !== 'undefined' ? that.username : null;
         this.getAllImages(page, that.nsfw, that.epilepsy, user, isProfileUser).subscribe(
@@ -213,15 +213,21 @@ export class ImageService {
                     that.isLast = that.images.length == response.total_items ? true : false;
                 }
 
-                this.getInteractions(that);
+                if (check) {
+                    this.getInteractions(that);
+                }
 
                 that.imagError = 0;
+
+                if (resolve) {
+                    resolve();
+                }
             },
             error => {
                 console.log("getAllImages()");
                 console.log("Ero..." + " attempt: " + that.imagError);
                 if (that.imagError < 5) {
-                    this.showAllImages(that, page, isScroll);
+                    this.showAllImages(that, page, isScroll, check, resolve);
                     that.imagError++;
                 }
             }
@@ -340,7 +346,7 @@ export class ImageService {
                 intImages.length = 1;
                 // console.log(that.image);
             }
-            else{
+            else {
                 intImages = that.images;
             }
 

@@ -4,6 +4,7 @@ import { ImageService } from '../../services/image.service';
 import { CommonService } from '../../services/common.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Renderer2 } from '@angular/core';
+import { SharedService } from '../../components/shared-service/shared-service.component';
 
 @Component({
   selector: 'favs-component',
@@ -89,6 +90,7 @@ export class FavsComponent implements OnInit {
   public interaction: string = "faved";
 
   constructor(
+    private _sharedService: SharedService,
     private _userService: UserService,
     private _imageService: ImageService,
     private _commonService: CommonService,
@@ -99,6 +101,13 @@ export class FavsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this._sharedService.changeVar.subscribe(value => {
+      if (value === true) {
+        this._sharedService.needsReload(false);
+        // this.ngOnInit();
+      }
+    });
+
     this.loadUser();
 
     this._userService.userInfo(this, this.username);

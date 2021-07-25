@@ -11,6 +11,10 @@ import { SharedService } from '../../components/shared-service/shared-service.co
 
 declare var jQuery: any;
 
+interface ImageObject {
+    [key: string]: any
+}
+
 @Component({
     selector: 'app-image',
     templateUrl: './image.component.html',
@@ -33,8 +37,19 @@ export class ImageComponent implements OnInit {
     public isOwner: boolean;
     public isFollowing: boolean;
     public _imageURL: string; // The image of the logged in user
-    public image: Object;
-    public images: Array<Object> = [];
+    public image: ImageObject;
+    
+    public loading: boolean = false; // Tells Angular if the image is loading, to show a loading gif otherwise
+    public loadingDelay: boolean = false; // We add a delay of 300 ms, so there's no gif if the image loading is fast
+
+    public images: Array<ImageObject> = [];
+    public hasLeft: boolean = false;
+    public hasRight: boolean = false;
+    public prevImage: ImageObject = null;
+    public nextImage: ImageObject = null;
+
+    public maximized: boolean = false; // Set as false when initialized
+
     // public images2: Array<Object>;
     public moreImagesLoaded: boolean = false; // Flag to avoid loading them every time
     public tags: Array<string>;
@@ -95,11 +110,13 @@ export class ImageComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.loading = true;
+        setTimeout(() => this.loadingDelay = true, 300);
+
         this._sharedService.changeVar.subscribe(value => {
             if (value === true) {
-                console.log("owo");
                 this._sharedService.needsReload(false);
-                this.ngOnInit();
+                // this.ngOnInit();
             }
         });
 
@@ -110,11 +127,15 @@ export class ImageComponent implements OnInit {
 
             for (let i = 0; i < this.imageId.length; i++) {
                 if (this.imageId[i] == "images" && (i + 1) < this.imageId.length) {
-                    this.imageId = this.imageId[i + 1];
+                    this.imageId = parseInt(this.imageId[i + 1]);
                 }
             }
         }
 
+        if (this.images.length) {
+            this.getNextPrevImages(this.imageId);
+        }
+        
         if (/^[0-9]*$/.test(this.imageId) == false) {
             this.error();
         }
@@ -140,7 +161,15 @@ export class ImageComponent implements OnInit {
 
     ngOnChanges() {
         // create header using child_id
-        console.log("A");
+        // console.log("A");
+    }
+
+
+    ngAfterViewInit() {
+        this.tarea = document.getElementById("tarea");
+        jQuery(this.elementRef.nativeElement).find('[data-toggle="tooltip"]').tooltip();
+
+        // console.log(this.tarea);
     }
 
     update(): void {
@@ -153,26 +182,23 @@ export class ImageComponent implements OnInit {
      * 
      */
     reload(newImg) {
-        this.imageId = newImg[0].id;
 
-        if (window.history.replaceState) {
-            //prevents browser from storing history with each change:
-            window.history.replaceState('page', 'Title', '/images/' + this.imageId);
-        }
-        else {
-            window.history.pushState('page', 'Title', '/images/' + this.imageId);
-        }
+        if (newImg) {
+            this.imageId = newImg[0].id;
 
-        this.ngOnInit();
-        window.scrollTo(0, 0);
+            if (window.history.replaceState) {
+                //prevents browser from storing history with each change:
+                window.history.replaceState('page', 'Title', '/images/' + this.imageId);
+            }
+            else {
+                window.history.pushState('page', 'Title', '/images/' + this.imageId);
+            }
+
+            this.ngOnInit();
+            window.scrollTo(0, 0);
+        }
     }
 
-    ngAfterViewInit() {
-        this.tarea = document.getElementById("tarea");
-        jQuery(this.elementRef.nativeElement).find('[data-toggle="tooltip"]').tooltip();
-
-        // console.log(this.tarea);
-    }
 
     /**
      * 
@@ -186,6 +212,9 @@ export class ImageComponent implements OnInit {
         that._imageService.getImage(that.imageId).subscribe(
             response => {
                 if (response.status == "success") {
+                    setTimeout(() => this.loading = false, 300);
+
+                    this.loadingDelay = false;
                     console.log(response);
 
                     // Idk what the purpose of this was, it didn't seem to do anything
@@ -196,6 +225,7 @@ export class ImageComponent implements OnInit {
                     this._userService.checkFollowing(that);
                     that.image = response.image;
                     document.title = that.image.name;
+                    this.getMoreImages();
 
                     // that.images = that.image;
                     // console.log(that.images);
@@ -206,7 +236,7 @@ export class ImageComponent implements OnInit {
                         this._commonService.displayNotification(this.currentLang.attributes.hiddenImage, true, null);
                     }
                     else {
-                        this.alertStatus = "iddle";
+                        this.alertStatus = "idle";
                     }
 
                     this._imageService.getInteractions(this, true, "imageComponent");
@@ -597,9 +627,45 @@ export class ImageComponent implements OnInit {
     }
 
     getMoreImages() {
-        this._route.params.subscribe(params => {
-            this._imageService.showAllImages(this, 1, false);
+        const promise = new Promise((resolve, reject) => {
+            this._imageService.showAllImages(this, 1, false, false, resolve);
         });
+
+        // If resolve is called in showAllImages, it will go here
+        promise.then((success) => {
+            this.getNextPrevImages(null);
+        });
+
+        /*
+        this._route.params.subscribe(params => {
+            this._imageService.showAllImages(this, 1, false, false);
+        });
+        */
+    }
+
+    getNextPrevImages(current) {
+        const iid = current !== null ? current : this.image.id;
+        this.hasLeft = iid === this.images[0][0].id ? false : true;
+        this.hasRight = iid === this.images[this.images.length - 1][0].id ? false : true;
+
+        var imageIndex: number = null;
+
+        for (let i = 0; i < this.images.length; i++) {
+            if (this.images[i][0].id === iid && i < this.images.length) {
+                imageIndex = i;
+                break;
+            }
+        }
+
+        if (imageIndex !== null) {
+            if (imageIndex > 0) {
+                this.prevImage = this.images[imageIndex - 1];
+            }
+            if (imageIndex < this.images.length - 1) {
+                this.nextImage = this.images[imageIndex + 1];
+            }
+        }
+        // console.log(obj);
     }
 
     getRatio(img) {
@@ -632,6 +698,11 @@ export class ImageComponent implements OnInit {
         else { }
     }
 
+
+    maximize() {
+        this.maximized = true;
+    }
+    
 
     getLang(lang) {
         this.language = [

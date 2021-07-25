@@ -4,6 +4,7 @@ import { ImageService } from '../../services/image.service';
 import { CommonService } from '../../services/common.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Renderer2 } from '@angular/core';
+import { SharedService } from '../../components/shared-service/shared-service.component';
 
 @Component({
   selector: 'images-component',
@@ -90,6 +91,7 @@ export class ImagesComponent implements OnInit {
   public interaction: string = "user-by";
 
   constructor(
+    private _sharedService: SharedService,
     private _userService: UserService,
     private _imageService: ImageService,
     private _commonService: CommonService,
@@ -100,6 +102,13 @@ export class ImagesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this._sharedService.changeVar.subscribe(value => {
+      if (value === true) {
+        this._sharedService.needsReload(false);
+        // this.ngOnInit();
+      }
+    });
+
     // console.log(this.username);
     this.loadUser();
     this.pageImages();
@@ -140,7 +149,7 @@ export class ImagesComponent implements OnInit {
         this.scroll = JSON.parse(localStorage.getItem("config")).scroll;
       }
 
-      this._imageService.showAllImages(this, this.page, this.scroll);
+      this._imageService.showAllImages(this, this.page, this.scroll, true, null);
     });
   }
 

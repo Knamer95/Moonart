@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, Input } from '@angular/core';
+import { Component, OnInit, HostListener, Input, ViewChild, ElementRef } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ImageService } from '../../services/image.service';
 import { CommonService } from '../../services/common.service';
@@ -15,6 +15,7 @@ declare var jQuery: any;
     providers: [UserService, ImageService, CommonService]
 })
 export class ProfileComponent implements OnInit {
+    @ViewChild('profileNavbar', { read: ElementRef }) profileNavbar: ElementRef<HTMLElement>;
 
     public pageTitle: string = "Profile";
     public identity: any;
@@ -49,6 +50,7 @@ export class ProfileComponent implements OnInit {
     public language: Object;
     public lang: number;
     public currentLang: any;
+
     constructor(
         private _sharedService: SharedService,
         private _userService: UserService,
@@ -81,11 +83,10 @@ export class ProfileComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.element);
         this._sharedService.changeVar.subscribe(value => {
             if (value === true) {
                 this._sharedService.needsReload(false);
-                this.ngOnInit();
+                // this.ngOnInit();
             }
         });
 
@@ -104,7 +105,9 @@ export class ProfileComponent implements OnInit {
         this.tab = window.location.href.split("/");
         this.tab = this.tab[this.tab.length - 2];
         // console.log(this.tab);
-        
+
+        /*
+        // Not used
         if (this.tab == "comments") {
             this.element = 1;
         }
@@ -120,6 +123,7 @@ export class ProfileComponent implements OnInit {
         else {
             this.element = 1;
         }
+        */
 
         this.getUserData(this.urlname, true);
 
@@ -195,13 +199,11 @@ export class ProfileComponent implements OnInit {
      *   followingU -> Following from user (null if user viewing profile is the profile user)
      */
     compareFollowers(followersP, followingP, followingU) {
-        // this.followers = arr1;
-        // this.following = arr2;
-
+        /*
         console.log(followersP);
         console.log(followingP);
         console.log(followingU);
-
+        */
 
         if (followingU === null) { // Different to empty array!
             // If this param is null, it means that logged user != profile user, and so every following is true
@@ -332,6 +334,21 @@ export class ProfileComponent implements OnInit {
                             }
                         }
                     );
+
+                    /*
+                    // Not in use anymore, not needed with how it works now, but it has some useful info so I leave it there, in case it ever happens again :-)
+
+                    // We use a timeout because since it's wrapped on an ngIf (if user exists, shows profile, otherwise shows user not found),
+                    // it needs a timeout or else returns a "Cannot read property nativeElement of undefined" (doesn't work with ngAfterViewInit)
+                    // Using Angular 7 there doesn't seem another alternative, except changing ngIf to classes to show/hide the div instead, with CSS...
+                    // https://stackoverflow.com/questions/39158922/viewchild-not-working-cannot-read-property-nativeelement-of-undefined
+                    setTimeout(() => {
+                        // Click trigger on the menu (mainly for "reloading" purposes, like logging in while in someone's profile)
+                        let el: HTMLElement = this.profileNavbar.nativeElement.querySelector(`[data-target="${this.element || 1}"]`);
+                        console.log(el);
+                        el.click();
+                    }, 10);
+                    */
                 }
                 else {
                     this.found = false;

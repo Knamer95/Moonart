@@ -144,7 +144,7 @@ export class UserService {
     }
 
     getUserFollows(id): Observable<any> {
-        console.log(id);
+        // console.log(id);
 
         return this._http.get(this.url + 'user/get-user-follows?id=' + id);
     }
@@ -154,7 +154,7 @@ export class UserService {
         let unique = true;
         let selector;
 
-        console.log(that.username);
+        // console.log(that.username);
 
         if (name != false) {
             that.username = name;
