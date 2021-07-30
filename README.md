@@ -23,11 +23,15 @@ In order to make the project work, you'll need to follow the next steps:
 
 
 3) Download the project code, and place it inside the web-server. (In `WAMP`'s case, it should look like `/wamp64/www/moonart/*folders*`).
+
 _It's important that the folder is located at the root of the web-server, and the folder containing the folders `api-rest-symfony` and `moonart-angular` has to be named `moonart` (root folder)._
+
 _In case you want to have it on a different subfolder, or name it differently, all you have to do is go to `/moonart/moonart-angular/src/app/services/global.ts`, and change it like this:_
 
 ```
-// If we added it to the subfolder 'projects' in 'www', and renamed it to 'moonart-master', you'd need to change the reference path to the current one here
+// If we added it to the subfolder 'projects' in 'www', and renamed it to 'moonart-master', 
+// you'd need to change the reference path to the current one here
+
 export var global = {
     url: 'http://localhost/projects/moonart-master/api-rest-symfony'
 }
