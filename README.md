@@ -2,12 +2,12 @@
 
 MoonArt is a place to upload your art, and share it with the world. Find new artists, make friends, and enjoy liking/sharing your favourite drawings.
 
-The main purpose of this project is learning `Angular`, `REST API`, and how to use an `ORM`. Feel free to use it for learning purposes. :)
+The main purpose of this project is learning `Angular`, `REST API`, and how to use an `ORM` to handle the database queries. Feel free to use it for learning purposes. :)
 
 
 ## Getting started 🚀
 
-This instructions will allow you to get a functioning copy of MoonArt on your machine, for developing and learning purposes. 
+This instructions will allow you to get a functioning copy of MoonArt on your machine. 
 
 
 ## Installation 🔧
@@ -23,7 +23,15 @@ In order to make the project work, you'll need to follow the next steps:
 
 
 3) Download the project code, and place it inside the web-server. (In `WAMP`'s case, it should look like `/wamp64/www/moonart/*folders*`).
-_It's important that the folder is located at the root of the web-server, since I used absolute paths in the vhost config and in some parts of the code (I will change those to relative), and the folder containing the folders `api-rest-symfony` and `moonart-angular` has to be named `moonart` (root folder)_
+_It's important that the folder is located at the root of the web-server, and the folder containing the folders `api-rest-symfony` and `moonart-angular` has to be named `moonart` (root folder)._
+_In case you want to have it on a different subfolder, or name it differently, all you have to do is go to `/moonart/moonart-angular/src/app/services/global.ts`, and change it like this:_
+
+```
+// If we added it to the subfolder 'projects' in 'www', and renamed it to 'moonart-master', you'd need to change the reference path to the current one here
+export var global = {
+    url: 'http://localhost/projects/moonart-master/api-rest-symfony'
+}
+```
 
 
 4) Navigate through the terminal until you reach the `Angular` project folder.
@@ -42,19 +50,7 @@ D:\Programs\wamp64\www\moonart\moonart-angular> npm install
 _If some dependency fails, you can run `-g @angular/cli@7.3.8` in the console instead. It's important to specify the version (after the @), or else it will install the latest Angular version... If you have any error, and are unable to fix it, please contact me. (My email can be found below, in `#Contribute`)._
 
 
-6) Create two virtual hosts. In Windows, it should be located in somewhere like `C:\Windows\System32\drivers\etc`. Add the lines:
-
-```
-127.0.0.1 moonart.io
-127.0.0.1 moonart-api.io
-```
-
-_You will need administrator permissions to edit this file._
-
-7) Change (or create a `httpd-vhosts.conf`) file. This was needed for `WAMP`, it may be different on other platforms. There's an example of how your file should look like in the `misc` folder. The CORS line must be commented in current `WAMP` versions.
-
-
-8) Add these lines in `httpd.conf`, after `IfModule dir_module` (to avoid CORS issue)
+6) Add these lines in `httpd.conf`, after `IfModule dir_module` (to avoid CORS issue). Make sure that you have the mod_headers module active.
 
 ```
 <IfModule mod_headers.c>
@@ -62,15 +58,17 @@ _You will need administrator permissions to edit this file._
 </IfModule>
 ```
 
-_It should look something like this_
+_It should look something like this:_
 
-> \<IfModule dir_module>
->    DirectoryIndex index.php index.php3 index.html index.htm
->\</IfModule\>
+```
+<IfModule dir_module>
+    DirectoryIndex index.php index.php3 index.html index.htm
+</IfModule\>
 
->\<IfModule mod_headers.c\>
->    Header set Access-Control-Allow-Origin: *
->\</IfModule\>
+<IfModule mod_headers.c\>
+    Header set Access-Control-Allow-Origin: *
+</IfModule\>
+```
 
 _**Note: I changed it so now the httpd.conf part is not needed anymore. The way it works now is by allowing apache on your firewall (Control Panel => Windows Defender Firewall => Allow an app to go through Windows Defender => Allow another app => Search for apache (in my case, C://wamp64/bin/apache/apache2.4.37/bin/httpd.exe)._
 
@@ -82,11 +80,11 @@ _Then if you want to have access to the server from every device in your network
 
 _Once all this is done, you can run the Angular server with 'ng serve --host 192.168.1.x --live-reload false', being that your private IP, and you will be able to access to MoonArt from every device in your network!_
 
-_Since your virtual host may only be on one of your devices, you can access to MoonArt from 192.168.1.x:4200 from everywhere. Note that you can't access with moonart.io if you run the project in a host, and vice-versa_
+_Since your virtual host may only be on one of your devices, you can access to MoonArt from 192.168.1.x:4200 from everywhere. Note that you can't access with localhost, or your mapped domain if you run the project in a host, and vice-versa_
 
 \-\-\-
 
-9) Import the database queries from moonDB.sql (located at the root of the project). I used MySQL Workbench. The credentials are:
+7) Import the database queries from moonDB.sql (located at the root of the project). I used MySQL Workbench. The credentials are:
 
 ```
 User: root
@@ -94,7 +92,7 @@ Pass: (empty)
 ```
 
 
-10) Extract the files from `moonart/api-rest-symfony/api-rest-symfony.rar` on the `Symfony` root path (`moonart/api-rest-symfony/*here*`). This way, you won't need to install `Symfony`. If you wanted to, I installed the skeleton, and some libraries that you can find there.
+10) Extract the files from `moonart/api-rest-symfony/api-rest-symfony.rar` on the `Symfony` root path (`moonart/api-rest-symfony/*here*`). This way, you won't need to install `Symfony`. In case you want to, I installed the skeleton, and some libraries that you can find there.
 
 And you should be ready to go!
 
@@ -102,12 +100,13 @@ And you should be ready to go!
 
 Notes:
 
-If you were running your web-server, you may need to reload it. 
+\- If you were running your web-server, you may need to reload it. 
 
-You may encounter a problem the first time you log in into an account. Reloading the page fixes it, and it doesn't seem to happen ever again, even if you log in other accounts. If the images aren't loading, please check the console. It may be due to `Cross-Origin` requests being blocked. (In `WAMP`, adding the lines from point 8 solved it for me)
+\- You may encounter a problem the first time you log in into an account. Reloading the page fixes it, and it doesn't seem to happen ever again, even if you log in other accounts. If the images aren't loading, please check the console. It may be due to `Cross-Origin` requests being blocked. (In `WAMP`, adding the lines from point 8 solved it for me)
 
-I will give the choice to the user to set the paths of the webpage in a future version (using set vhosts or not), instead of forcing my two virtual hosts and making things overcomplicated...
+\- I will give the choice to the user to set the paths of the webpage in a future version (using set vhosts or not), instead of forcing my two virtual hosts and making things overcomplicated...
 
+\- If you want to add your own virtual hosts, you'll need to add it in hosts (C:/Windows/System32/drivers/etc/hosts), and change the Angular host to the new virtualhost, in /moonart/moonart-angular/angular.json, at projects.moonart-angular.architect.serve.host. Ex: `"host": "moonart.io"` 
 
 ## Running the project ⚙️
 

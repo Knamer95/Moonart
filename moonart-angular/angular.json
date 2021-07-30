@@ -77,7 +77,7 @@
           "options": {
             "browserTarget": "moonart-angular:build",
             "proxyConfig": "src/proxy.conf.json",
-            "host": "moonart.io",
+            "host": "localhost",
             "port": 4200
           },
           "configurations": {
