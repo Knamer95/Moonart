@@ -26,7 +26,7 @@ In order to make the project work, you'll need to follow the next steps:
 
 _It's important that the folder is located at the root of the web-server, and the folder containing the folders `api-rest-symfony` and `moonart-angular` has to be named `moonart` (root folder)._
 
-_In case you want to have it on a different subfolder, or name it differently, all you have to do is go to `/moonart/moonart-angular/src/app/services/global.ts`, and change it like this:_
+_In case you want to have it on a different subfolder, or name it differently, all you have to do is go to `moonart/moonart-angular/src/app/services/global.ts`, and change it like this:_
 
 ```
 // If we added it to the subfolder 'projects' in 'www', and renamed it to 'moonart-master', 
@@ -110,7 +110,7 @@ Notes:
 
 \- I will give the choice to the user to set the paths of the webpage in a future version (using set vhosts or not), instead of forcing my two virtual hosts and making things overcomplicated...
 
-\- If you want to add your own virtual hosts, you'll need to add it in hosts (C:/Windows/System32/drivers/etc/hosts), and change the Angular host to the new virtualhost, in /moonart/moonart-angular/angular.json, at projects.moonart-angular.architect.serve.host. Ex: `"host": "moonart.io"` 
+\- If you want to add your own virtual hosts, you'll need to add it in hosts (`C:/Windows/System32/drivers/etc/hosts`), and change the Angular host to the new virtualhost, in `moonart/moonart-angular/angular.json`, at projects.moonart-angular.architect.serve.host. Ex: `"host": "moonart.io"` 
 
 ## Running the project ⚙️
 
