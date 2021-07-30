@@ -16,7 +16,7 @@
       </div>
       <div class="col-md-7">
         <div class="mb-5 relative image-title-container">
-          <label for="name" class="pr-3">{{this.currentLang.attributes.imageTitle}}</label>
+          <label for="name" class="pr-3 label-title">{{this.currentLang.attributes.imageTitle}}</label>
           <input type="text" name="name" #name="ngModel" [(ngModel)]="image.name" placeholder="{{this.currentLang.attributes.max30CharsPlaceholder}}"
             maxlength="30" class="form-control title" autofocus required>
           <small *ngIf="!name.valid && name.touched" class="invalid-feedback d-block">
@@ -24,7 +24,7 @@
           </small>
         </div>
         <div class="mb-3">
-          <label for="description">{{this.currentLang.attributes.description}}</label>
+          <label for="description" class="label-title">{{this.currentLang.attributes.description}}</label>
           <div>
             <textarea name="description" #description="ngModel" [(ngModel)]="image.description" placeholder="{{this.currentLang.attributes.max300CharsPlaceholder}}"
               maxlength="300" class="form-control descr-image" id="upload-desc"></textarea>
@@ -39,7 +39,7 @@
           <label for="epilepsy">{{this.currentLang.attributes.epilepsyContent}}</label>
         </div>
         <div class="mb-5">
-          <label for="rights" class="mr-3">{{this.currentLang.attributes.rights}}</label>
+          <label for="rights" class="mr-3 label-title">{{this.currentLang.attributes.rights}}</label>
           <select name="rights" #rights="ngModel" [(ngModel)]="_rights">
             <option value="totales" ng-selected="selected">{{this.currentLang.attributes.total}}</option>
             <option value="parciales">{{this.currentLang.attributes.partial}}</option>
@@ -47,7 +47,7 @@
           </select>
         </div>
         <div>
-          <label for="tags" class="pr-3">{{this.currentLang.attributes.tags}}</label>
+          <label for="tags" class="pr-3 label-title">{{this.currentLang.attributes.tags}}</label>
           <input type="text" name="tags" #tags="ngModel" [(ngModel)]="image.tags" placeholder="{{this.currentLang.attributes.tagsPlaceholder}}"
             maxlength="100" class="form-control tags">
         </div>

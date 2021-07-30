@@ -4,23 +4,26 @@
 
 <div class="mask" *ngIf="this.maximized === true"></div>
     
-<div class="maximized-view-container" *ngIf="this.maximized === true">
+<div class="maximized-view-container" *ngIf="this.maximized === true" (click)="this.setMaximized($event, false)">
 
-  <div class="image-control go-prev" *ngIf="this.hasLeft" (click)="reload(this.prevImage)">
+  <div class="image-control go-prev" *ngIf="this.hasLeft" (click)="reload($event, this.prevImage)">
     <svg width="27" height="48" viewBox="0 0 27 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M3 21L24 0l3 3L6 24l21 21-3 3L0 24l3-3z" fill-rule="evenodd"></path></svg>
   </div>
-  <div class="image-control go-next" *ngIf="this.hasRight" (click)="reload(this.nextImage)">
+  <div class="image-control go-next" *ngIf="this.hasRight" (click)="reload($event, this.nextImage)">
     <svg width="27" height="48" viewBox="0 0 27 48" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M24 27L3 48l-3-3 21-21L0 3l3-3 24 24-3 3z" fill-rule="evenodd"></path></svg>
   </div>
 
+  <div class="exit-maximized">
+    <svg xmlns="http://www.w3.org/2000/svg" class="maximized-close" width="24" height="24" viewBox="0 0 24 24"><path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z"/></svg>
+  </div>
   <img src="assets/img/loading_alt.gif" class="loading-frame" *ngIf="this.loading === true" alt="Loading image..."> <!--  && this.loadingDelay === true -->
   <div class="maximized-view">
     <img [src]="['assets/public/' + this.image.url]" class="maximized-main-image" [attr.data-state]="this.loading === true ? 'loading' : 'loaded'">
 
     <div class="maximized-more-by-images-container">
       <div class="more-by-image" *ngFor="let image of images; let i = index" style="--aspect-ratio: 1/1;">
-        <a class="more-by-image-link" *ngIf="i < 12" (click)="reload(image)">
-          <img src="assets/public/{{image[0].url}}" [id]="'img' + (i + 1)" class="maximized-more-by-image-element" [ngClass]="{'selected-image' : image[0].id === this.imageId}"
+        <a class="more-by-image-link" *ngIf="i < 12" (click)="reload($event, image)">
+          <img src="assets/public/{{image[0].url}}" [id]="'maximized-view-img' + (i + 1)" class="maximized-more-by-image-element" [ngClass]="{'selected-image' : image[0].id === this.imageId}"
             [class.hidden]="image[0].status == 'hidden'" (load)="getRatio('img' + (i + 1))">
         </a>
       </div>
@@ -32,10 +35,10 @@
   <div class="row no-padding">
     <div class="col-md-9 no-padding">
       <div class="image-container text-center">
-        <div class="image-control go-prev" *ngIf="this.hasLeft" (click)="reload(this.prevImage)">
+        <div class="image-control go-prev" *ngIf="this.hasLeft" (click)="reload($event, this.prevImage)">
           <svg width="27" height="48" viewBox="0 0 27 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M3 21L24 0l3 3L6 24l21 21-3 3L0 24l3-3z" fill-rule="evenodd"></path></svg>
         </div>
-        <div class="image-control go-next" *ngIf="this.hasRight" (click)="reload(this.nextImage)">
+        <div class="image-control go-next" *ngIf="this.hasRight" (click)="reload($event, this.nextImage)">
           <svg width="27" height="48" viewBox="0 0 27 48" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M24 27L3 48l-3-3 21-21L0 3l3-3 24 24-3 3z" fill-rule="evenodd"></path></svg>
         </div>
 
@@ -50,7 +53,7 @@
 
           <div class="main-view">
             <img src="assets/img/loading_alt.gif" class="loading-frame" *ngIf="this.loading === true && !this.maximized" alt="Loading image..."> <!--  && this.loadingDelay === true -->
-            <img [src]="['assets/public/' + this.image.url]" class="image" id="" [attr.data-state]="this.loading === true || this.maximized ? 'loading' : 'loaded'" (click)="this.maximized = true">
+            <img [src]="['assets/public/' + this.image.url]" class="image" id="" [attr.data-state]="this.loading === true || this.maximized ? 'loading' : 'loaded'" (click)="this.setMaximized($event, true)">
           </div>
           
           <!--
@@ -306,7 +309,7 @@
         </span>
         <div class="more-by-images-container">
           <div class="more-by-image" *ngFor="let image of images; let i = index" style="--aspect-ratio: 1/1;">
-            <a class="more-by-image-link" *ngIf="i < 12" (click)="reload(image)">
+            <a class="more-by-image-link" *ngIf="i < 12" (click)="reload($event, image)">
               <img src="assets/public/{{image[0].url}}" [id]="'img' + (i + 1)" class="more-by-image-element" [ngClass]="{'selected-image' : image[0].id === this.imageId}"
                 [class.hidden]="image[0].status == 'hidden'" (load)="getRatio('img' + (i + 1))">
             </a>

@@ -34,8 +34,11 @@ export class CommonService {
             .subscribe((events: RoutesRecognized[]) => {
                 // console.log('previous url', events[0].urlAfterRedirects);
                 // console.log('current url', events[1].urlAfterRedirects);
-                this.lastURL = events[0].urlAfterRedirects || 'not defined';
-                localStorage.setItem("lastURL", this.lastURL);
+
+                if (events[0].urlAfterRedirects !== events[1].urlAfterRedirects) { // We make sure to not add to the history the same webpage if it's reloaded
+                    this.lastURL = events[0].urlAfterRedirects || 'not defined';
+                    localStorage.setItem("lastURL", this.lastURL);
+                }
             });
     }
 

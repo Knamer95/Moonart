@@ -64,6 +64,14 @@ label{
     letter-spacing: 2px;
 }
 
+.container-ma .label-title {
+    font-size: 15px;
+}
+
+.container-ma .form-control {
+    font-size: 12px;
+}
+
 .invalid-feedback{
     position: absolute;
     bottom: -26px;

@@ -142,7 +142,7 @@ export class FavsComponent implements OnInit {
   doSomethingOnWindowsScroll($event: Event) { // Copied from home.component.ts -> If possible, make this a common function of image.service.ts
 
     var d = document.documentElement;
-    var zoom = 0.8; // Establecido en CSS
+    var zoom = 1; // Establecido en CSS
     var offset = d.scrollTop + window.innerHeight;
     var height = d.offsetHeight * zoom;
 

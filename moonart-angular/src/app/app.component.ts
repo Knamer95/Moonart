@@ -146,14 +146,15 @@ export class AppComponent implements OnInit, DoCheck {
         }
     }
 
+    // To add custom styles to modal-dialog > https://stackoverflow.com/questions/53178873/ngbmodal-custom-class-styling (custom .modal-centered > .modal-dialog)
     open(type) {
         let modalRef: any = [];
 
         if (type === 1) {
-            modalRef = this.modalService.open(LoginComponent);
+            modalRef = this.modalService.open(LoginComponent, {windowClass: 'modal-centered'});
         }
         else if (type === 2) {
-            modalRef = this.modalService.open(RegisterComponent);
+            modalRef = this.modalService.open(RegisterComponent, {windowClass: 'modal-centered'});
         }
 
         // https://github.com/ng-bootstrap/ng-bootstrap/issues/1776#issuecomment-394249029

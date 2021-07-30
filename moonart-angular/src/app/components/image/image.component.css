@@ -169,6 +169,10 @@
 }
 */
 
+.main-view {
+    padding: 10px 0;
+}
+
 .image{
     /* max-width: 640px; */
     cursor: zoom-in;
@@ -370,7 +374,8 @@
 
 .comment-id,
 .subcomment-id{
-    background: #eceaea;
+    /* background: #eceaea; */
+    background: #f5f5f5;
     padding: 20px;
 }
 
@@ -570,11 +575,13 @@ textarea{
     display: flex;
     /* width: 100%; */
     height: 100%;
+    align-items: center;
 }
 
 .maximized-more-by-image-element{
     /* max-width: 100%; */
     /* position: absolute; */
+    width: 100px;
     cursor: pointer;
 }
 
@@ -589,6 +596,26 @@ textarea{
 .maximized-view-container .image-control {
     z-index: 1001;
     top: calc(50% - 90px);
+}
+
+.maximized-view-container .exit-maximized {
+    position: relative;
+    z-index: 1001;
+}
+
+.maximized-view-container .exit-maximized svg {
+    fill: #686868;
+    cursor: pointer;
+    /* font-size: 60px; */
+    transform: scale(1.5);
+    position: absolute;
+    right: 30px;
+    top: -30px;
+    transition: all 0.3s;
+}
+
+.maximized-view-container .exit-maximized svg:hover {
+    fill: white;
 }
 
 [data-container="night-container"] .image-control:hover,

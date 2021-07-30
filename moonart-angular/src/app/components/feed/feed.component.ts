@@ -85,7 +85,7 @@ export class FeedComponent implements OnInit {
     doSomethingOnWindowsScroll($event: Event) { // Event to fire new items on scroll down
 
         var d = document.documentElement;
-        var zoom = 0.8; // Establecido en CSS
+        var zoom = 1; // Establecido en CSS
         var offset = d.scrollTop + window.innerHeight;
         var height = d.offsetHeight * zoom;
 

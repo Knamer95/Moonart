@@ -11,8 +11,16 @@ import { SharedService } from '../../components/shared-service/shared-service.co
 
 declare var jQuery: any;
 
+// Change to a proper one... right now there's not much difference between 'var image: ImageObject' and 'var image: any'
 interface ImageObject {
     [key: string]: any
+}
+
+interface LanguageObject {
+    lang: string,
+    attributes: {
+        [key: string]: string
+    }
 }
 
 @Component({
@@ -38,7 +46,7 @@ export class ImageComponent implements OnInit {
     public isFollowing: boolean;
     public _imageURL: string; // The image of the logged in user
     public image: ImageObject;
-    
+
     public loading: boolean = false; // Tells Angular if the image is loading, to show a loading gif otherwise
     public loadingDelay: boolean = false; // We add a delay of 300 ms, so there's no gif if the image loading is fast
 
@@ -135,7 +143,7 @@ export class ImageComponent implements OnInit {
         if (this.images.length) {
             this.getNextPrevImages(this.imageId);
         }
-        
+
         if (/^[0-9]*$/.test(this.imageId) == false) {
             this.error();
         }
@@ -181,9 +189,12 @@ export class ImageComponent implements OnInit {
      * Function to load a new image by updating all the data, but without actually reloading the whole script
      * 
      */
-    reload(newImg) {
+    reload(event: MouseEvent, newImg: ImageObject) {
 
-        if (newImg) {
+        const self: string = "selected-image"; // Clicked elements that should prop the view
+        const classes: Array<string> = (<HTMLInputElement>event.target).classList.value.split(" ");
+
+        if (newImg && !classes.includes(self)) {
             this.imageId = newImg[0].id;
 
             if (window.history.replaceState) {
@@ -672,6 +683,8 @@ export class ImageComponent implements OnInit {
         img = document.getElementById(img);
         // console.log(img.clientWidth, img.clientHeight);
 
+        console.log(img.clientWidth);
+
         if (img.clientWidth > img.clientHeight) {
             img.classList.add("aspect-width");
         }
@@ -699,10 +712,25 @@ export class ImageComponent implements OnInit {
     }
 
 
-    maximize() {
-        this.maximized = true;
+    setMaximized(event: MouseEvent, status: boolean) {
+        const closeTargets: Array<string> = ["maximized-view", "maximized-close", "image"]; // Clicked elements that should prop the view
+        const classes: Array<string> = (<HTMLInputElement>event.target).classList.value.split(" ");
+        let prevent: boolean = true;
+
+        for (let i = 0; i < classes.length; i++) {
+            if (closeTargets.includes(classes[i])) {
+                prevent = false;
+                break;
+            }
+        }
+
+        if (!prevent)
+            this.maximized = status;
+
+        console.log(this.maximized);
+        console.log(classes);
     }
-    
+
 
     getLang(lang) {
         this.language = [

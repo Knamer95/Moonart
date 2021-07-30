@@ -97,7 +97,7 @@ export class HomeComponent implements OnInit {
     doSomethingOnWindowsScroll($event: Event) { // Event to fire new items on scroll down
 
         var d = document.documentElement;
-        var zoom = 0.8; // Establecido en CSS
+        var zoom = 1; // Establecido en CSS
         var offset = d.scrollTop + window.innerHeight;
         var height = d.offsetHeight * zoom;
 
@@ -105,7 +105,7 @@ export class HomeComponent implements OnInit {
         // console.log('height = ' + height);
 
         if (offset >= (height - 5) && this.isLast == false && this.loaded == true) { // 5 is the margin of error
-            this.loaded = false; // Checker so it doesn't  para que no pase más de una página seguida
+            this.loaded = false; // Checker so it doesn't skip more than one page in a row
             this.page = this.page ? this.page : 1;
 
             this.page++;
