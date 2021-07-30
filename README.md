@@ -96,7 +96,7 @@ Pass: (empty)
 ```
 
 
-10) Extract the files from `moonart/api-rest-symfony/api-rest-symfony.rar` on the `Symfony` root path (`moonart/api-rest-symfony/*here*`). This way, you won't need to install `Symfony`. In case you want to, I installed the skeleton, and some libraries that you can find there.
+8) Extract the files from `moonart/api-rest-symfony/api-rest-symfony.rar` on the `Symfony` root path (`moonart/api-rest-symfony/*here*`). This way, you won't need to install `Symfony`. In case you want to, I installed the skeleton, and some libraries that you can find there.
 
 And you should be ready to go!
 
