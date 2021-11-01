@@ -1,7 +1,3 @@
-D:
-cd Programs/wamp64/www/moonart/moonart-angular
-ng serve --host 192.168.1.143 --live-reload false
-
 Known bugs:
 
 - Since we use 'guest' to check if the user is logged in or not, there should not be possible to create an account named 'guest'.

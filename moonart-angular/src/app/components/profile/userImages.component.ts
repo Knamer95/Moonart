@@ -89,6 +89,7 @@ export class ImagesComponent implements OnInit {
   public id: string;
   public url: string;
   public interaction: string = "user-by";
+  public imagError: number = 0;
 
   constructor(
     private _sharedService: SharedService,

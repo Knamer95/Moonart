@@ -140,8 +140,10 @@ Also whenever you select text, and drag mouse to the top while selecting (so it'
 }
 
 .modal .close {
-    color: #d7d7d7;
-    font-size: 56px;
+    /* color: #d7d7d7; */
+    /* font-size: 56px; */
+    font-size: 25px;
+    color: black;
     font-family: serif;
     font-weight: 100;
     outline: none;
