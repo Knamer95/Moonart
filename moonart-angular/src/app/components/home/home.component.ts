@@ -1,12 +1,13 @@
-import { Component, OnInit, EventEmitter, Input, Output, HostListener, HostBinding } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, HostListener, HostBinding, Renderer2 } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ImageService } from '../../services/image.service';
 import { CommonService } from '../../services/common.service';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { Renderer2 } from '@angular/core';
-import * as $ from 'jquery';
+import { ActivatedRoute } from '@angular/router';
 import { emitterTypes } from '../../models/struct';
 import { SharedService } from '../../components/shared-service/shared-service.component';
+import { Language } from 'src/app/types/config';
+import { Identity } from 'src/app/types/user';
+import { Image } from 'src/app/types/image';
 
 @Component({
     selector: 'app-home',
@@ -16,13 +17,12 @@ import { SharedService } from '../../components/shared-service/shared-service.co
 })
 
 export class HomeComponent implements OnInit {
-
     @HostBinding('attr.listener') listener = 'idle'; // To add attribute listener to the main element (<app-home />)
 
     public pageTitle: string = "Latest";
-    public identity: any;
+    public identity: Identity;
     public token: string;
-    public images: Array<Object> = [];
+    public images: Image[] = [];
     public status: boolean;
     public page: number = 1;
     public hasElements: boolean = true;
@@ -37,8 +37,8 @@ export class HomeComponent implements OnInit {
     public isLast: boolean = false;
     public loaded: boolean = false;
     public imagError: number = 0;
-    public language: Object;
-    public currentLang: any; localhost: 4200
+    public language: Language[];
+    public currentLang: Language;
     public lang: number = 1;
     public emitType: number;
 
@@ -50,8 +50,7 @@ export class HomeComponent implements OnInit {
         private _imageService: ImageService,
         private _commonService: CommonService,
         private _route: ActivatedRoute,
-        private _router: Router,
-        private render: Renderer2
+        private render: Renderer2,
     ) {
     }
 
@@ -67,25 +66,24 @@ export class HomeComponent implements OnInit {
 
         this.loadUser();
 
-        if (localStorage.getItem("config") != null && localStorage.getItem("config") != "undefined") {
-            this.lang = JSON.parse(localStorage.getItem("config")).lang;
+        const lsConfig = localStorage.getItem("config");
+        if (![null, 'undefined'].includes(lsConfig)) {
+            const lsParsedConfig = JSON.parse(lsConfig);
+            this.lang = lsParsedConfig.lang;
+            this.nightMode = lsParsedConfig.nightMode;
+            this.scroll = lsParsedConfig.scroll;
 
             this.emitter.emit({
-                type: emitterTypes.lang,
+                type: emitterTypes.LANG,
                 status: "success",
                 notificationType: "success",
                 lang: this.lang
             });
 
-            this.nightMode = JSON.parse(localStorage.getItem("config")).nightMode;
-            this.scroll = JSON.parse(localStorage.getItem("config")).scroll;
-
             this._commonService.changeNightModeAttr(this.nightMode);
         }
 
         this.hasElements = true; // If false or unset, it will show the message of no elements found until the AJAX call is done
-
-        this.lang = JSON.parse(localStorage.getItem("config")).lang;
 
         this.pageImages();
 
@@ -129,10 +127,13 @@ export class HomeComponent implements OnInit {
                 }
             }
 
-            if (localStorage.getItem("config") != null || localStorage.getItem("config") != undefined) {
-                this.nsfw = JSON.parse(localStorage.getItem("config")).nsfw;
-                this.epilepsy = JSON.parse(localStorage.getItem("config")).epilepsy;
+            const lsConfig = localStorage.getItem("config");
+            if ([null, undefined].includes(lsConfig)) {
+                const lsParsedConfig = JSON.parse(lsConfig);
+                this.nsfw = lsParsedConfig.nsfw;
+                this.epilepsy = lsParsedConfig.epilepsy;
             }
+
             this._imageService.showAllImages(this, this.page, this.scroll, true, null);
         });
     }
@@ -146,7 +147,7 @@ export class HomeComponent implements OnInit {
         console.log(emit);
     }
 
-    getLang(lang) {
+    getLang(lang: number) {
         this.language = [
             {
                 lang: "english",

@@ -1,27 +1,18 @@
-import { Component, OnInit, ViewChildren, QueryList, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { Component, OnInit, ElementRef, EventEmitter, Output } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ImageService } from '../../services/image.service';
 import { CommonService } from '../../services/common.service';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Renderer2 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { callbackify } from 'util';
 import { emitterTypes } from '../../models/struct';
 import { SharedService } from '../../components/shared-service/shared-service.component';
+import { Identity, Roles } from 'src/app/types/user';
+import { Image } from 'src/app/types/image';
+import { Language } from 'src/app/types/config';
 
+// TODO - Remove the scrollbar when viewing images in fullscreen (overflow: hidden)
 declare var jQuery: any;
-
-// Change to a proper one... right now there's not much difference between 'var image: ImageObject' and 'var image: any'
-interface ImageObject {
-    [key: string]: any
-}
-
-interface LanguageObject {
-    lang: string,
-    attributes: {
-        [key: string]: string
-    }
-}
 
 @Component({
     selector: 'app-image',
@@ -32,10 +23,10 @@ interface LanguageObject {
 export class ImageComponent implements OnInit {
 
     public pageTitle: string = "Image";
-    public identity: any;
+    public identity: Identity;
     public token: string;
-    public imageId: any;
-    public tarea: any; // Textarea
+    public imageId: number;
+    public tarea: HTMLElement; // Textarea
     public nightMode: boolean = false;
     public nsfw: boolean = true;
     public epilepsy: boolean = true;
@@ -45,29 +36,28 @@ export class ImageComponent implements OnInit {
     public isOwner: boolean;
     public isFollowing: boolean;
     public _imageURL: string; // The image of the logged in user
-    public image: ImageObject;
+    public image: Image;
 
     public loading: boolean = false; // Tells Angular if the image is loading, to show a loading gif otherwise
     public loadingDelay: boolean = false; // We add a delay of 300 ms, so there's no gif if the image loading is fast
 
-    public images: Array<ImageObject> = [];
+    public images: Image[] = [];
     public hasLeft: boolean = false;
     public hasRight: boolean = false;
-    public prevImage: ImageObject = null;
-    public nextImage: ImageObject = null;
+    public prevImage: Image = null;
+    public nextImage: Image = null;
 
     public maximized: boolean = false; // Set as false when initialized
 
     // public images2: Array<Object>;
     public moreImagesLoaded: boolean = false; // Flag to avoid loading them every time
-    public tags: Array<string>;
+    public tags: string[];
     public isTags: boolean = false;
-    public role: string = "role_user";
+    public role: Roles = "role_user";
     public addComment: string = "";
     public parent = null;
     public comments: any;
     public commentsLength: number;
-    public commentAdded;
     public deleted: boolean;
     public hidden: boolean;
     public visible: boolean;
@@ -89,7 +79,7 @@ export class ImageComponent implements OnInit {
     public imagError: number = 0;
     public language: Object;
     public lang: number;
-    public currentLang: any;
+    public currentLang: Language;
     public alertStatus: String;
     public emitType: number;
 
@@ -100,11 +90,11 @@ export class ImageComponent implements OnInit {
         private _userService: UserService,
         private _imageService: ImageService,
         private _commonService: CommonService,
-        private _route: ActivatedRoute,
         private _router: Router,
-        private render: Renderer2,
         private fb: FormBuilder,
-        private elementRef: ElementRef
+        private elementRef: ElementRef,
+        private _route: ActivatedRoute,
+        private render: Renderer2,
     ) {
         this.image = {
             url: '',
@@ -131,11 +121,11 @@ export class ImageComponent implements OnInit {
         this.loadUser();
 
         if (!this.imageId) {
-            this.imageId = window.location.href.split("/");
+            const location = window.location.href.split("/");
 
-            for (let i = 0; i < this.imageId.length; i++) {
-                if (this.imageId[i] == "images" && (i + 1) < this.imageId.length) {
-                    this.imageId = parseInt(this.imageId[i + 1]);
+            for (let i = 0; i < location.length; i++) {
+                if (location[i] === "images" && (i + 1) < location.length) {
+                    this.imageId = parseInt(location[i + 1]);
                 }
             }
         }
@@ -144,15 +134,19 @@ export class ImageComponent implements OnInit {
             this.getNextPrevImages(this.imageId);
         }
 
-        if (/^[0-9]*$/.test(this.imageId) == false) {
+        if (!/^[0-9]*$/.test(String(this.imageId))) {
             this.error();
         }
         this.loadImage(this);
 
-        if (localStorage.getItem("config") != null && localStorage.getItem("config") != "undefined") {
-            this.nsfw = JSON.parse(localStorage.getItem("config")).nsfw;
-            this.epilepsy = JSON.parse(localStorage.getItem("config")).epilepsy;
-            this.nightMode = JSON.parse(localStorage.getItem("config")).nightMode;
+        const lsConfig = localStorage.getItem("config");
+
+        if (![null, 'undefined'].includes(lsConfig)) {
+            const lsParsedConfig = JSON.parse(lsConfig);
+            this.nsfw = lsParsedConfig.nsfw;
+            this.epilepsy = lsParsedConfig.epilepsy;
+            this.nightMode = lsParsedConfig.nightMode;
+            this.lang = lsParsedConfig.lang;
             this._commonService.changeNightModeAttr(this.nightMode);
         }
 
@@ -162,7 +156,6 @@ export class ImageComponent implements OnInit {
 
         this.getAllComments(this.imageId);
 
-        this.lang = JSON.parse(localStorage.getItem("config")).lang;
         this.currentLang = this.getLang(this.lang);
         this._commonService.changeLangAttr(this.lang);
     }
@@ -189,7 +182,7 @@ export class ImageComponent implements OnInit {
      * Function to load a new image by updating all the data, but without actually reloading the whole script
      * 
      */
-    reload(event: MouseEvent, newImg: ImageObject) {
+    reload(event: MouseEvent, newImg: Image) {
 
         const self: string = "selected-image"; // Clicked elements that should prop the view
         const classes: Array<string> = (<HTMLInputElement>event.target).classList.value.split(" ");
@@ -222,7 +215,7 @@ export class ImageComponent implements OnInit {
     loadImage(that) {
         that._imageService.getImage(that.imageId).subscribe(
             response => {
-                if (response.status == "success") {
+                if (response.status === "success") {
                     setTimeout(() => this.loading = false, 300);
 
                     this.loadingDelay = false;
@@ -270,8 +263,8 @@ export class ImageComponent implements OnInit {
                     that.nsfw = JSON.parse(localStorage.getItem("config")).nsfw;
                     that.epilepsy = JSON.parse(localStorage.getItem("config")).epilepsy;
 
-                    if (that.identity.nick != that.image.user.nick && ((that.nsfw == false && that.image.nsfw == true)
-                        || (that.epilepsy == false && that.image.epilepsy == true))) {
+                    if (that.identity.nick != that.image.user.nick && ((that.nsfw === false && that.image.nsfw === true)
+                        || (that.epilepsy === false && that.image.epilepsy === true))) {
                         that.visible = false;
                     }
 
@@ -337,7 +330,7 @@ export class ImageComponent implements OnInit {
     follow(token, nick) {
         this._userService.follow(token, nick).subscribe(
             response => {
-                if (response.status == "success") {
+                if (response.status === "success") {
                     // No need to display since you can visually see it
                     // this._commonService.displayNotification(null, false, response.status);
                     this._userService.checkFollowing(this);
@@ -384,7 +377,7 @@ export class ImageComponent implements OnInit {
                     }
                     catch (err) { }
 
-                    if (this.comments[i].status == "deleted") {
+                    if (this.comments[i].status === "deleted") {
                         this.comments[i].comment = this.currentLang.attributes.deletedComment;
                     }
 
@@ -432,7 +425,7 @@ export class ImageComponent implements OnInit {
         // Cannot submit empty comment
         if (comment) {
             for (let i = 0; i < comment.length; i++) {
-                if (comment.charCodeAt(i) == 10) {
+                if (comment.charCodeAt(i) === 10) {
                     comment = comment.substr(0, i) + '\\n' + comment.substr(i + 1);
                 }
             }
@@ -449,9 +442,9 @@ export class ImageComponent implements OnInit {
             let json = JSON.stringify(data);
             this._imageService.addComment(this.token, json).subscribe(
                 response => {
-                    if (response.status == "success") {
+                    if (response.status === "success") {
                         this.emitter.emit({
-                            type: emitterTypes.alert,
+                            type: emitterTypes.ALERT,
                             status: response.status,
                             notificationType: response.status,
                             message: this.currentLang.attributes.commentAdded,
@@ -496,14 +489,14 @@ export class ImageComponent implements OnInit {
                 let message = response.status === "success" ? this.currentLang.attributes.deletedImage : this.currentLang.attributes.deletedImageError;
 
                 this.emitter.emit({
-                    type: emitterTypes.alert,
+                    type: emitterTypes.ALERT,
                     status: response.status,
                     notificationType: response.status,
                     message: message,
                     timer: 3000
                 });
 
-                if (response.status == "success") {
+                if (response.status === "success") {
                     this.deleted = true;
                     this._router.navigate(['home']);
                 }
@@ -523,11 +516,11 @@ export class ImageComponent implements OnInit {
         this._imageService.deleteComment(this.token, id).subscribe(
             response => {
                 console.log(response);
-                if (response.status == "success") {
+                if (response.status === "success") {
                     this.ngOnInit();
 
                     this.emitter.emit({
-                        type: emitterTypes.alert,
+                        type: emitterTypes.ALERT,
                         status: response.status,
                         notificationType: response.status,
                         message: this.currentLang.attributes.deletedComment2,
@@ -544,7 +537,7 @@ export class ImageComponent implements OnInit {
 
     /*
      *
-     * Function to hide an image if role user_role == role_admin || role_mod (Image status is set to hidden, so only the owner can see it at their profile)
+     * Function to hide an image if role user_role === role_admin || role_mod (Image status is set to hidden, so only the owner can see it at their profile)
      * Only if the user hiding it is not the owner, cause it wouldn't make sense otherwise to hide your own image 
      *
      */
@@ -552,7 +545,7 @@ export class ImageComponent implements OnInit {
         this._imageService.hide(this.token, id, action).subscribe(
             response => {
                 console.log(response);
-                if (response.status == "success") {
+                if (response.status === "success") {
 
                     this.alertStatus = "success";
 
@@ -561,7 +554,7 @@ export class ImageComponent implements OnInit {
                         this._commonService.displayNotification(this.currentLang.attributes.hiddenImage, true, null);
                     else
                         this.emitter.emit({
-                            type: emitterTypes.alert,
+                            type: emitterTypes.ALERT,
                             status: response.status,
                             notificationType: response.status,
                             message: this.currentLang.attributes.unbannedImage,
@@ -701,7 +694,7 @@ export class ImageComponent implements OnInit {
     isGuest() {
         if (this.identity.nick === "guest" || !this.identity.nick) {
             this.emitter.emit({
-                type: emitterTypes.login,
+                type: emitterTypes.LOGIN,
                 status: 'not-logged',
                 notificationType: null,
                 message: null,

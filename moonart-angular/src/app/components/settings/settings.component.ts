@@ -52,7 +52,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
         localStorage.setItem("config", JSON.stringify(updateConfig));
         
         this.emitter.emit({
-            type: emitterTypes.lang,
+            type: emitterTypes.LANG,
             status: "success",
             notificationType: "success",
             lang: this.lang

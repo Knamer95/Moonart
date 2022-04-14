@@ -3,12 +3,13 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { UserService } from './services/user.service';
 import { Renderer2 } from '@angular/core';
 import { CommonService } from './services/common.service';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { ImageComponent } from './components/image/image.component';
 import { SharedService } from './components/shared-service/shared-service.component';
-
+import { Alert, Config, Language, Themes } from './types/config';
+import { Identity } from './types/user';
 import * as $ from 'jquery';
 
 @Component({
@@ -23,21 +24,21 @@ import * as $ from 'jquery';
 
 export class AppComponent implements OnInit, DoCheck {
     title = 'moonart-angular';
-    public identity: any;
+    public identity: Identity;
     public token: string;
-    public config: any;
+    public config: Config;
     public configJSON: string;
     public navHeight: number;
     public i: number;
     public searchQuery;
     public nightMode: boolean;
     public navStatus: number;
-    public language: Object;
-    public currentLang: any;
-    public lang: number;
+    public language: Language[];
+    public currentLang: Language;
+    public lang: number = 1;
     public alertStatus: String;
     public alertMessage: String;
-    public alertsArray: any = []; // Array<Object> = []; <- Leave as any, or create a new interface
+    public alertsArray: Alert[]; // Array<Object> = []; <- Leave as any, or create a new interface
     public alertCounter: number = 0;
     public position: number = 0;
 
@@ -60,16 +61,18 @@ export class AppComponent implements OnInit, DoCheck {
 
     ngOnInit() {
         this.token = this._userService.getToken();
-
         this._commonService.getUserConfig(this, this.token);
 
-        this.lang = JSON.parse(localStorage.getItem("config")).lang ? JSON.parse(localStorage.getItem("config")).lang : 1;
+        const lsParsedConfig = JSON.parse(localStorage.getItem("config"));
+
+        if (lsParsedConfig) this.lang = lsParsedConfig.lang
+
         this.currentLang = this.getLang(this.lang);
 
         this.navHeight = $(".clip").height();
         this.navStatus = 1;
 
-        console.log(this.alertsArray);
+        // console.log(this.alertsArray);
     }
 
     ngDoCheck() {
@@ -84,7 +87,7 @@ export class AppComponent implements OnInit, DoCheck {
     }
 
     changeColor(color) {
-        let array = ["red", "green", "blue", "violet", "orange", "yellow", "light", "zoe"];
+        let array: Themes[] = ["red", "green", "blue", "violet", "orange", "yellow", "light", "zoe"];
         this.render.setAttribute(document.querySelector(".nav-background > div"), "data-theme", color);
 
         let elements = document.querySelectorAll(".themed");
@@ -151,16 +154,16 @@ export class AppComponent implements OnInit, DoCheck {
         let modalRef: any = [];
 
         if (type === 1) {
-            modalRef = this.modalService.open(LoginComponent, {windowClass: 'modal-centered'});
+            modalRef = this.modalService.open(LoginComponent, { windowClass: 'modal-centered' });
         }
         else if (type === 2) {
-            modalRef = this.modalService.open(RegisterComponent, {windowClass: 'modal-centered'});
+            modalRef = this.modalService.open(RegisterComponent, { windowClass: 'modal-centered' });
         }
 
         // https://github.com/ng-bootstrap/ng-bootstrap/issues/1776#issuecomment-394249029
         setTimeout(() =>
             this.render.selectRootElement('#autofocus').focus(), 0);
-            
+
         modalRef.componentInstance.emitter.subscribe((result) => {
             this.onEmited(result);
 
@@ -184,7 +187,7 @@ export class AppComponent implements OnInit, DoCheck {
      *
      */
     onEmited(emit) {
-        console.log(emit);
+        console.log({ emit });
 
         switch (emit.type) {
             case 1:
@@ -210,7 +213,7 @@ export class AppComponent implements OnInit, DoCheck {
                 });
 
                 response.then((val: any) => {
-                    let arr: any = this.alertsArray;
+                    let arr: Alert[] = this.alertsArray;
                     arr = arr.filter(function (item) {
                         return item.ref !== val.ref
                     });

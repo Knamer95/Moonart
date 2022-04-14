@@ -128,7 +128,7 @@ export class LoginComponent implements OnInit {
                 let message = response.status === "error" ? this.currentLang.attributes.messageError : this.currentLang.attributes.messageSuccess;
 
                 this.emitter.emit({
-                    type: emitterTypes.alert,
+                    type: emitterTypes.ALERT,
                     status: response.status === "error" ? "error" : "success",
                     notificationType: response.status === "error" ? "error" : "success",
                     message: message,
@@ -173,7 +173,7 @@ export class LoginComponent implements OnInit {
                 console.log(`Changed to ${this.nightMode ? 'night' : 'day'} mode.`);
 
                 this.emitter.emit({
-                    type: emitterTypes.reload,
+                    type: emitterTypes.RELOAD,
                     status: 'logged',
                     notificationType: null,
                     message: null,

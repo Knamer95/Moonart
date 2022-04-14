@@ -1,6 +1,6 @@
-export var emitterTypes = {
-    lang: 1,
-    alert: 2,
-    login: 3,
-    reload: 4
+export enum emitterTypes {
+    LANG = 1,
+    ALERT = 2,
+    LOGIN = 3,
+    RELOAD = 4
 }

@@ -4,6 +4,7 @@ import { UserService } from '../../services/user.service';
 import { CommonService } from '../../services/common.service';
 import { Renderer2 } from '@angular/core';
 import { emitterTypes } from '../../models/struct';
+import { Identity } from 'src/app/types/user';
 
 @Component({
     selector: 'app-user-edit',
@@ -16,16 +17,16 @@ export class UserEditComponent implements OnInit {
     public pageTitle: string = "Edit profile";
     public user: User;
     public status: string;
-    public identity: any;
+    public identity: Identity;
     public token: string;
     public nightMode: boolean;
     public element: number = 1;
-    public _imageURL: any;
+    public _imageURL: string;
     fileToUpload: File = null;
     public imagePath: string;
     public imageSize: boolean = true;
     public oldPassword: string;
-    public confirmPassword: any;
+    public confirmPassword: string;
     public pwdChange: boolean = false;
     public newPwd: boolean = false;
     public checker: boolean;
@@ -90,7 +91,7 @@ export class UserEditComponent implements OnInit {
         this.imagePath = files;
         reader.readAsDataURL(files[0]);
         reader.onload = (_event) => {
-            this._imageURL = reader.result;
+            this._imageURL = reader.result as string;
             this.user.imageToUpload = {
                 filename: this.nameGen(),
                 filetype: files[0].type.replace('image/', ''),
@@ -134,7 +135,7 @@ export class UserEditComponent implements OnInit {
 
                             let message = response.status === "success" ? this.currentLang.attributes.profileUpdateSuccess : this.currentLang.attributes.passwordsDontMatch;
                             this.emitter.emit({
-                                type: emitterTypes.alert,
+                                type: emitterTypes.ALERT,
                                 status: response.status,
                                 notificationType: response.status,
                                 message: message,
@@ -187,7 +188,7 @@ export class UserEditComponent implements OnInit {
 
                 let message = response.status === "success" ? this.currentLang.attributes.profileUpdateSuccess : this.currentLang.attributes.profileUpdateError;
                 this.emitter.emit({
-                    type: emitterTypes.alert,
+                    type: emitterTypes.ALERT,
                     status: response.status,
                     notificationType: response.status,
                     message: message,
@@ -199,7 +200,7 @@ export class UserEditComponent implements OnInit {
                 this.status = "error";
 
                 this.emitter.emit({
-                    type: emitterTypes.alert,
+                    type: emitterTypes.ALERT,
                     status: "error",
                     notificationType: "error",
                     message: this.currentLang.attributes.profileUpdateError,

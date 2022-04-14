@@ -92,7 +92,7 @@ export class RegisterComponent implements OnInit {
 
 
                     this.emitter.emit({
-                        type: emitterTypes.alert,
+                        type: emitterTypes.ALERT,
                         status: response.status,
                         notificationType: response.status,
                         message: message,
@@ -105,7 +105,7 @@ export class RegisterComponent implements OnInit {
                     this.checkData = false;
 
                     this.emitter.emit({
-                        type: emitterTypes.alert,
+                        type: emitterTypes.ALERT,
                         status: "error",
                         notificationType: "error",
                         message: this.currentLang.attributes.unbannedImage,
@@ -119,7 +119,7 @@ export class RegisterComponent implements OnInit {
         else {
 
             this.emitter.emit({
-                type: emitterTypes.alert,
+                type: emitterTypes.ALERT,
                 status: "error",
                 notificationType: "error",
                 message: this.currentLang.attributes.passwordsDontMatch,

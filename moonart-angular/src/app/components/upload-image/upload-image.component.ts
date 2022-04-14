@@ -175,7 +175,7 @@ export class UploadImageComponent implements OnInit {
                 let message = this.status = "success" ? this.currentLang.attributes.uploadSuccess : this.currentLang.attributes.uploadError;
 
                 this.emitter.emit({
-                    type: emitterTypes.alert,
+                    type: emitterTypes.ALERT,
                     status: response.status,
                     notificationType: response.status,
                     message: message,
@@ -186,7 +186,7 @@ export class UploadImageComponent implements OnInit {
                 this.status = "error";
 
                 this.emitter.emit({
-                    type: emitterTypes.alert,
+                    type: emitterTypes.ALERT,
                     status: "error",
                     notificationType: "error",
                     message: this.currentLang.attributes.uploadError,
