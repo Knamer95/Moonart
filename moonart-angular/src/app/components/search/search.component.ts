@@ -1,18 +1,17 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { UserService } from '../../services/user.service';
-import { ImageService } from '../../services/image.service';
-import { CommonService } from '../../services/common.service';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { Renderer2 } from '@angular/core';
-import { SharedService } from '../../components/shared-service/shared-service.component';
+import { Component, OnInit, HostListener } from "@angular/core";
+import { UserService } from "../../services/user.service";
+import { ImageService } from "../../services/image.service";
+import { CommonService } from "../../services/common.service";
+import { Router, ActivatedRoute, Params } from "@angular/router";
+import { Renderer2 } from "@angular/core";
+import { SharedService } from "../../components/shared-service/shared-service.component";
 
 @Component({
-    selector: 'app-search',
-    templateUrl: './search.component.html',
-    styleUrls: ['./search.component.css']
+    selector: "app-search",
+    templateUrl: "./search.component.html",
+    styleUrls: ["./search.component.css"],
 })
 export class SearchComponent implements OnInit {
-
     public pageTitle: string = "Search";
     public filter: string;
     public identity: any;
@@ -59,7 +58,7 @@ export class SearchComponent implements OnInit {
     }
 
     ngOnInit() {
-        this._sharedService.changeVar.subscribe(value => {
+        this._sharedService.statusNotifier$.subscribe((value) => {
             if (value === true) {
                 this._sharedService.needsReload(false);
                 // this.ngOnInit();
@@ -73,31 +72,42 @@ export class SearchComponent implements OnInit {
 
         this.loadUser();
 
-        if (localStorage.getItem("config") != null && localStorage.getItem("config") != "undefined") {
-            this.nightMode = JSON.parse(localStorage.getItem("config")).nightMode;
+        if (
+            localStorage.getItem("config") != null &&
+            localStorage.getItem("config") != "undefined"
+        ) {
+            this.nightMode = JSON.parse(
+                localStorage.getItem("config")
+            ).nightMode;
             this._commonService.changeNightModeAttr(this.nightMode);
             this.scroll = JSON.parse(localStorage.getItem("config")).scroll;
         }
 
-        this._route.queryParams.subscribe(params => {
-            this.query = params['q'];
+        this._route.queryParams.subscribe((params) => {
+            this.query = params["q"];
             this.changeURL();
         });
 
-        this.lang = JSON.parse(localStorage.getItem("config")).lang;;
-        this.currentLang = this.getLang(this.lang);
+        this.lang = JSON.parse(localStorage.getItem("config")).lang;
+        this.currentLang = {};
         this._commonService.changeLangAttr(this.lang);
     }
 
-    @HostListener("window:scroll", ['$event'])
-    doSomethingOnWindowsScroll($event: Event) { // Copied from home.component.ts -> If possible, make this a common function of image.service.ts
+    @HostListener("window:scroll", ["$event"])
+    doSomethingOnWindowsScroll($event: Event) {
+        // Copied from home.component.ts -> If possible, make this a common function of image.service.ts
 
         var d = document.documentElement;
         var zoom = 1; // Establecido en CSS
         var offset = d.scrollTop + window.innerHeight;
         var height = d.offsetHeight * zoom;
 
-        if (offset >= (height - 5) && this.isLast == false && this.loaded == true) { // 5 is the margin of error
+        if (
+            offset >= height - 5 &&
+            this.isLast == false &&
+            this.loaded == true
+        ) {
+            // 5 is the margin of error
             this.loaded = false; // Checker so it doesn't skip more than one page
             this.page = this.page ? this.page : 1;
 
@@ -113,11 +123,9 @@ export class SearchComponent implements OnInit {
 
         if (tagQuery == 0) {
             this.querySelector = "tag";
-        }
-        else if (nameQuery == 0) {
+        } else if (nameQuery == 0) {
             this.querySelector = "name";
-        }
-        else {
+        } else {
             this.querySelector = "all";
         }
 
@@ -134,10 +142,9 @@ export class SearchComponent implements OnInit {
 
     pageSearch() {
         this.images = [];
-        this._route.params.subscribe(params => {
+        this._route.params.subscribe((params) => {
             if (!this.scroll) {
-
-                this.page = +params['page'];
+                this.page = +params["page"];
 
                 if (!this.page) {
                     this.page = 1;
@@ -146,11 +153,23 @@ export class SearchComponent implements OnInit {
                 }
             }
 
-            if (localStorage.getItem("config") != null || localStorage.getItem("config") != undefined) {
+            if (
+                localStorage.getItem("config") != null ||
+                localStorage.getItem("config") != undefined
+            ) {
                 this.nsfw = JSON.parse(localStorage.getItem("config")).nsfw;
-                this.epilepsy = JSON.parse(localStorage.getItem("config")).epilepsy;
+                this.epilepsy = JSON.parse(
+                    localStorage.getItem("config")
+                ).epilepsy;
             }
-            this._imageService.showImageSearch(this, this.page, this.nsfw, this.epilepsy, this.querySelector, this.search);
+            this._imageService.showImageSearch(
+                this,
+                this.page,
+                this.nsfw,
+                this.epilepsy,
+                this.querySelector,
+                this.search
+            );
         });
     }
 
@@ -158,32 +177,5 @@ export class SearchComponent implements OnInit {
         this.identity = this._userService.getIdentity();
         this.token = this._userService.getToken();
         //   console.log(this.token);
-    }
-
-    getLang(lang) {
-        this.language = [
-            {
-                lang: "english",
-                attributes: {
-                    title: "Results:",
-                    by: "by",
-                    filter: "filter",
-                    previous: "Previous",
-                    next: "Next"
-                }
-            },
-
-            {
-                lang: "spanish",
-                attributes: {
-                    title: "Resultados de:",
-                    by: "por",
-                    filter: "filtro",
-                    previous: "Anterior",
-                    next: "Siguiente"
-                }
-            }
-        ];
-        return this.language[(lang - 1)];
     }
 }

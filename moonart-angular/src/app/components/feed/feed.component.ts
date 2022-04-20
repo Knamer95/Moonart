@@ -77,7 +77,7 @@ export class FeedComponent implements OnInit {
         // this._userService.checkFollowing(this);  // A new case has to be done appart
 
         this.lang = JSON.parse(localStorage.getItem("config")).lang;
-        this.currentLang = this.getLang(this.lang);
+        this.currentLang = {};
         this._commonService.changeLangAttr(this.lang);
     }
 
@@ -269,38 +269,5 @@ export class FeedComponent implements OnInit {
                 }
             }
         );
-    }
-
-    getLang(lang) {
-        this.language = [
-            {
-                lang: "english",
-                attributes: {
-                    title: "Feed",
-                    suchEmpty: "Such empty!",
-                    followTip: "You don't follow any user, or the users you follow haven't shared anything yet...",
-                    noDescription: "User didn't add a description.",
-                    sharedBy: "Shared by",
-                    by: "by",
-                    the: "",
-                    ago: " ago"
-                }
-            },
-
-            {
-                lang: "spanish",
-                attributes: {
-                    title: "Feed",
-                    suchEmpty: "¡Qué vacío!",
-                    followTip: "No sigues a ningún usuario, o éstos no han compartido nada todavía...",
-                    noDescription: "El usuario no ha agregado ninguna descripción.",
-                    sharedBy: "Compartido por",
-                    by: "por",
-                    the: "",    // Change to 'El'
-                    ago: "ago"  // Leave empty
-                }
-            }
-        ];
-        return this.language[(lang - 1)];
     }
 }

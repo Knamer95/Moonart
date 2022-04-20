@@ -58,7 +58,7 @@ export class UploadImageComponent implements OnInit {
         // }
 
         this.lang = JSON.parse(localStorage.getItem("config")).lang;
-        this.currentLang = this.getLang(this.lang);
+        this.currentLang = {};
         this._commonService.changeLangAttr(this.lang);
     }
 
@@ -214,62 +214,5 @@ export class UploadImageComponent implements OnInit {
         this.identity = this._userService.getIdentity();
         this.token = this._userService.getToken();
         // console.log(this.token);
-    }
-
-    getLang(lang) {
-        this.language = [
-            {
-                lang: "english",
-                attributes: {
-                    title: "Upload image",
-                    uploadSuccess: "Image uploaded successfully.",
-                    uploadError: "There was an error while uploading the image. Please try again later.",
-                    maxSize: "Max 2Mb.",
-                    minResolution: "The resolution must be higher than 400x400.",
-                    imageTitle: "Image title:",
-                    invalidTitle: "Please introduce a title for the image.",
-                    description: "Description",
-                    nsfwContent: "Explicit content (+18)",
-                    epilepsyContent: "May contain elements that cause epilepsy",
-                    rights: "Rights:",
-                    total: "All",
-                    partial: "Partial",
-                    none: "None",
-                    tags: "Tags:",
-                    tagsExample: "Example: Nebby, pokemon, moon",
-                    uploadImage: "Upload image",
-                    tagsPlaceholder: "Tags (separated by commas)",
-                    max30CharsPlaceholder: "Max 30 characters",
-                    max300CharsPlaceholder: "Max 300 characters"
-                }
-            },
-
-            {
-                lang: "spanish",
-                attributes: {
-                    title: "Subir imagen",
-                    uploadSuccess: "Imagen subida correctamente.",
-                    uploadError: "Error al subir la imagen. Inténtalo de nuevo más tarde.",
-                    maxSize: "Máximo 2Mb.",
-                    minResolution: "Debe ser una resolución superior a 400x400.",
-                    imageTitle: "Título de la imagen:",
-                    invalidTitle: "Por favor, introduce un título para la imagen.",
-                    description: "Descripción",
-                    nsfwContent: "Contenido explícito (+18)",
-                    epilepsyContent: "Puede contener elementos que causen epilepsia",
-                    rights: "Tipos de derechos:",
-                    total: "Totales",
-                    partial: "Parciales",
-                    none: "Ninguno",
-                    tags: "Tags:",
-                    tagsExample: "Ejemplo: Nebulilla, pokemon, moon",
-                    uploadImage: "Subir imagen",
-                    tagsPlaceholder: "Tags (separadas por comas)",
-                    max30CharsPlaceholder: "Máx 30 caracteres",
-                    max300CharsPlaceholder: "Máx 300 caracteres"
-                }
-            }
-        ];
-        return this.language[(lang - 1)];
     }
 }

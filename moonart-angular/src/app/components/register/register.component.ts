@@ -49,7 +49,7 @@ export class RegisterComponent implements OnInit {
         // }
 
         this.lang = JSON.parse(localStorage.getItem("config")).lang;;
-        this.currentLang = this.getLang(this.lang);
+        this.currentLang = {};
         this._commonService.changeLangAttr(this.lang);
     }
 
@@ -136,58 +136,5 @@ export class RegisterComponent implements OnInit {
             this.showPassword = this.showPassword ? false : true;
         else if (el === 2)
             this.showPassword2 = this.showPassword2 ? false : true;
-    }
-
-    getLang(lang) {
-        this.language = [
-            {
-                lang: "english",
-                attributes: {
-                    title: "Register",
-                    messageSuccess1: "You were registered successfully.",
-                    messageSuccess2: "",
-                    messageError: "There was an error while trying to register the user. If this error persists, please contact an administrator.",
-                    messageError1: "The email is already in use, please choose another one",
-                    messageError2: "The nick is already in use, please choose another one",
-                    messageError3: "The nick and email are already in use, please choose different ones",
-                    passwordsDontMatch: "The passwords don't match",
-                    invalidName: "Invalid name (admits letters, lowerdash)",
-                    invalidUser: "Nick must be between 4 and 10 characters (admits letters, numbers, dash, and lowerdash)",
-                    invalidEmail: "Invalid email structure",
-                    invalidPassword: "Password must be at least 8 characters, and contain a capital letter and a number at least",
-                    register: "Register",
-                    placeholderName: "Name",
-                    placeholderUser: "Nick",
-                    placeholderEmail: "Email",
-                    placeholderPassword: "Password",
-                    placeholderConfirmPassword: "Confirm password"
-                }
-            },
-
-            {
-                lang: "spanish",
-                attributes: {
-                    title: "Registro",
-                    messageSuccess1: "Te has registrado correctamente",
-                    messageSuccess2: "",
-                    messageError: "Ocurrió un error al intentar registrar el usuario. Si el error persiste, por favor contacta a un administrador.",
-                    messageError1: "El email ya está en uso, por favor, escoge otro",
-                    messageError2: "El nick ya está en uso, por favor, escoge otro",
-                    messageError3: "El nick y email ya están en uso, por favor, escoge otros",
-                    passwordsDontMatch: "Las contraseñas no coinciden",
-                    invalidName: "Nombre no válido (admite letras y guión bajo)",
-                    invalidUser: "El nick debe tener entre 4 y 10 caracteres (admite letras, números, guión, y guión bajo)",
-                    invalidEmail: "Estructura de email no válida",
-                    invalidPassword: "La contraseña debe tener mínimo 8 caracteres, y al menos una letra mayúscula y un número",
-                    register: "Registrarse",
-                    placeholderName: "Nombre",
-                    placeholderUser: "Nick",
-                    placeholderEmail: "Email",
-                    placeholderPassword: "Contraseña",
-                    placeholderConfirmPassword: "Confirmar contraseña"
-                }
-            }
-        ];
-        return this.language[(lang - 1)];
     }
 }

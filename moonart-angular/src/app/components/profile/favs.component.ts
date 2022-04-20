@@ -101,7 +101,7 @@ export class FavsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._sharedService.changeVar.subscribe(value => {
+    this._sharedService.statusNotifier$.subscribe(value => {
       if (value === true) {
         this._sharedService.needsReload(false);
         // this.ngOnInit();

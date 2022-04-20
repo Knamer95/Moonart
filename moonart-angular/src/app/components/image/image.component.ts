@@ -9,7 +9,6 @@ import { emitterTypes } from '../../models/struct';
 import { SharedService } from '../../components/shared-service/shared-service.component';
 import { Identity, Roles } from 'src/app/types/user';
 import { Image } from 'src/app/types/image';
-import { Language } from 'src/app/types/config';
 
 // TODO - Remove the scrollbar when viewing images in fullscreen (overflow: hidden)
 declare var jQuery: any;
@@ -79,7 +78,7 @@ export class ImageComponent implements OnInit {
     public imagError: number = 0;
     public language: Object;
     public lang: number;
-    public currentLang: Language;
+    public currentLang: any;
     public alertStatus: String;
     public emitType: number;
 
@@ -111,7 +110,7 @@ export class ImageComponent implements OnInit {
         this.loading = true;
         setTimeout(() => this.loadingDelay = true, 300);
 
-        this._sharedService.changeVar.subscribe(value => {
+        this._sharedService.statusNotifier$.subscribe(value => {
             if (value === true) {
                 this._sharedService.needsReload(false);
                 // this.ngOnInit();
@@ -156,7 +155,7 @@ export class ImageComponent implements OnInit {
 
         this.getAllComments(this.imageId);
 
-        this.currentLang = this.getLang(this.lang);
+        this.currentLang = {};
         this._commonService.changeLangAttr(this.lang);
     }
 
@@ -722,113 +721,5 @@ export class ImageComponent implements OnInit {
 
         console.log(this.maximized);
         console.log(classes);
-    }
-
-
-    getLang(lang) {
-        this.language = [
-            {
-                lang: "english",
-                attributes: {
-                    title: "Image",
-                    hiddenImage: "This image has been disabled due to infringement of rules. If you think this is a mistake, please contact with a moderator.",
-                    unbannedImage: "Image unbanned successfully.",
-                    deletedImage: "Image deleted successfully.",
-                    deletedImageError: "There was an error while trying to delete the image. Please try again later.",
-                    commentAdded: "Comment added successfully.",
-                    description: "Description",
-                    noDescription: "User didn't add a description.",
-                    rights: "Rights",
-                    total: "All",
-                    partial: "Partial",
-                    none: "None",
-                    tags: "Tags",
-                    by: "by",
-                    moreBy: "More by",
-                    uploaded: "Upload date",
-                    comments: "Comments",
-                    addComment: "COMMENT",
-                    show: "Show",
-                    reply: "Reply",
-                    delete: "Delete",
-                    remove: "Delete",
-                    hide: "Hide",
-                    unban: "Unban",
-                    report: "Report",
-                    edit: "Edit",
-                    cancel: "Cancel",
-                    the: "",
-                    ago: " ago",
-                    newComment: "Add a new comment...",
-                    deletedComment: "Comment deleted.",
-                    deletedComment2: "Comment deleted successfully.",
-                    deleteModalTitle: "Delete image?",
-                    deleteModalBody: "The image will be deleted permanently.",
-                    hideModalTitle: "Hide image?",
-                    hideModalBody: "The image won't show up again.",
-                    showModalTitle: "Unban image?",
-                    showModalBody: "The image will be shown again.",
-                    deleteCommentModalTitle: "Delete comment?",
-                    deleteCommentModalBody: "The comment will be deleted permanently.",
-                    imageAlert1: "This image may contain",
-                    imageAlert2: " sensitive elements",
-                    imageAlert3: " | ",
-                    imageAlert4: " elements that cause epilepsy",
-                    imageAlert5: "."
-                }
-            },
-
-            {
-                lang: "spanish",
-                attributes: {
-                    title: "Imagen",
-                    hiddenImage: "La imagen ha sido deshabilitada porque inflingía las normas. Si crees que esto es un error, por favor contacta con un moderador.",
-                    unbannedImage: "Imagen desocultada correctamente.",
-                    deletedImage: "La imagen se ha borrado correctamente.",
-                    deletedImageError: "Ocurrió un error al intentar borrar la imagen. Por favor, inténtelo más tarde.",
-                    commentAdded: "Comentario añadido correctamente.",
-                    description: "Descripción",
-                    noDescription: "El usuario no ha agregado ninguna descripción.",
-                    rights: "Derechos",
-                    total: "Totales",
-                    partial: "Parciales",
-                    none: "Ninguno",
-                    tags: "Tags",
-                    by: "por",
-                    moreBy: "Más de",
-                    uploaded: "Fecha de subida",
-                    comments: "Comentarios",
-                    addComment: "COMENTAR",
-                    show: "Mostrar",
-                    reply: "Responder",
-                    delete: "Eliminar",
-                    remove: "Borrar",
-                    hide: "Ocultar",
-                    unban: "Desbanear",
-                    report: "Reportar",
-                    edit: "Editar",
-                    cancel: "Cancelar",
-                    the: "",
-                    ago: " ago",
-                    newComment: "Añadir nuevo comentario...",
-                    deletedComment: "Comentario borrado.",
-                    deletedComment2: "Comentario borrado correctamente.",
-                    deleteModalTitle: "¿Borrar imagen?",
-                    deleteModalBody: "La imagen se borrará permanentemente.",
-                    hideModalTitle: "¿Ocultar imagen?",
-                    hideModalBody: "La imagen ya no se mostrará.",
-                    showModalTitle: "¿Desbanear imagen?",
-                    showModalBody: "La imagen se mostrará de nuevo.",
-                    deleteCommentModalTitle: "¿Borrar comentario?",
-                    deleteCommentModalBody: "El comentario se borrará permanentemente.",
-                    imageAlert1: "Esta imagen puede contener elementos",
-                    imageAlert2: " sensibles",
-                    imageAlert3: " | ",
-                    imageAlert4: " que causen epilepsia",
-                    imageAlert5: "."
-                }
-            }
-        ];
-        return this.language[(lang - 1)];
     }
 }

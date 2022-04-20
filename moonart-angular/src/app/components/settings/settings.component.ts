@@ -46,7 +46,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
         var updateConfigJSON = localStorage.getItem("config");
         var updateConfig = JSON.parse(updateConfigJSON);
         this.lang = parseInt($("select option:selected").attr("data-id"));
-        this.currentLang = this.getLang(this.lang);
+        this.currentLang = {};
         
         updateConfig.lang = parseInt($("select option:selected").attr("data-id"));
         localStorage.setItem("config", JSON.stringify(updateConfig));
@@ -96,7 +96,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
 
         this.scroll = JSON.parse(localStorage.getItem("config")).scroll;
         this.lang = JSON.parse(localStorage.getItem("config")).lang;
-        this.currentLang = this.getLang(this.lang);
+        this.currentLang = {};
         this._commonService.changeLangAttr(this.lang);
     }
 
@@ -186,7 +186,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
             this.lang = parseInt($("select option:selected").attr("data-id"));
             updateConfig.lang = parseInt($("select option:selected").attr("data-id"));
             this.updateDB(updateConfig);
-            this.currentLang = this.getLang(this.lang);
+            this.currentLang = {};
             this._commonService.changeLangAttr(this.lang);
             this.updateLang();
         }, 10);
@@ -227,40 +227,5 @@ export class SettingsComponent implements OnInit, AfterViewInit {
         // this.storageService.watchStorage().subscribe((data: string) => {
         //     this.color = config.color;
         // });
-    }
-
-    getLang(lang) {
-        this.language = [
-            {
-                lang: "english",
-                attributes: {
-                    title: "Settings",
-                    nightMode: "Mode [Day | Night]",
-                    showNsfw: "Show sensitive content",
-                    showEpilepsy: "Show flashy elements",
-                    shareImages: "Share images",
-                    feedElements: "Feed elements",
-                    paginationType: "Gallery display [By page | Scroll]",
-                    language: "Language",
-                    themes: "Themes"
-                }
-            },
-
-            {
-                lang: "spanish",
-                attributes: {
-                    title: "Ajustes",
-                    nightMode: "Modo [Día | Noche]",
-                    showNsfw: "Mostrar contenido sensible",
-                    showEpilepsy: "Mostrar elementos llamativos",
-                    shareImages: "Compartir imágenes",
-                    feedElements: "Elementos de feed",
-                    paginationType: "Desplegar galeria [Por página | Scroll]",
-                    language: "Idioma",
-                    themes: "Temas"
-                }
-            }
-        ];
-        return this.language[(lang - 1)];
     }
 }

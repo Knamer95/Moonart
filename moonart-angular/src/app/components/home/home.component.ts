@@ -5,7 +5,6 @@ import { CommonService } from '../../services/common.service';
 import { ActivatedRoute } from '@angular/router';
 import { emitterTypes } from '../../models/struct';
 import { SharedService } from '../../components/shared-service/shared-service.component';
-import { Language } from 'src/app/types/config';
 import { Identity } from 'src/app/types/user';
 import { Image } from 'src/app/types/image';
 
@@ -37,8 +36,8 @@ export class HomeComponent implements OnInit {
     public isLast: boolean = false;
     public loaded: boolean = false;
     public imagError: number = 0;
-    public language: Language[];
-    public currentLang: Language;
+    public language: any;
+    public currentLang: any;
     public lang: number = 1;
     public emitType: number;
 
@@ -55,7 +54,7 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
-        this._sharedService.changeVar.subscribe(value => {
+        this._sharedService.statusNotifier$.subscribe(value => {
             if (value === true) {
                 this._sharedService.needsReload(false);
                 // this.ngOnInit();
@@ -87,7 +86,7 @@ export class HomeComponent implements OnInit {
 
         this.pageImages();
 
-        this.currentLang = this.getLang(this.lang);
+        this.currentLang = {};
         this._commonService.changeLangAttr(this.lang);
     }
 
@@ -145,34 +144,5 @@ export class HomeComponent implements OnInit {
 
     onEmited(emit) {
         console.log(emit);
-    }
-
-    getLang(lang: number) {
-        this.language = [
-            {
-                lang: "english",
-                attributes: {
-                    title: "Latest",
-                    suchEmpty: "Such empty!",
-                    tip: "There are no pictures yet. Why not be the first one?",
-                    by: "By",
-                    previous: "Previous",
-                    next: "Next"
-                }
-            },
-
-            {
-                lang: "spanish",
-                attributes: {
-                    title: "Novedades",
-                    suchEmpty: "¡Qué vacío!",
-                    tip: "No hay imágenes todavía. ¿Por qué no ser el primero?",
-                    by: "Por",
-                    previous: "Anterior",
-                    next: "Siguiente"
-                }
-            }
-        ];
-        return this.language[(lang - 1)];
     }
 }

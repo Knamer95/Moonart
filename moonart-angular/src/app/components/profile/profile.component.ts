@@ -83,7 +83,7 @@ export class ProfileComponent implements OnInit {
     }
 
     ngOnInit() {
-        this._sharedService.changeVar.subscribe(value => {
+        this._sharedService.statusNotifier$.subscribe(value => {
             if (value === true) {
                 this._sharedService.needsReload(false);
                 // this.ngOnInit();
@@ -153,7 +153,7 @@ export class ProfileComponent implements OnInit {
         this._userService.checkFollowing(this);
 
         this.lang = JSON.parse(localStorage.getItem("config")).lang;
-        this.currentLang = this.getLang(this.lang);
+        this.currentLang = {};
         this._commonService.changeLangAttr(this.lang);
     }
 
@@ -372,46 +372,5 @@ export class ProfileComponent implements OnInit {
 
     prop(el) {
         jQuery(el).modal("show");
-    }
-
-    getLang(lang) {
-        this.language = [
-            {
-                lang: "english",
-                attributes: {
-                    title: "Profile",
-                    edit: "Edit",
-                    followers: "Followers",
-                    following: "Following",
-                    noDescription: "User didn't add a description.",
-                    comments: "Comments",
-                    gallery: "Gallery",
-                    likes: "Likes",
-                    favs: "Favs",
-                    wrongUserTitle: "User does not exist or has been deleted",
-                    wrongUserBody: "If you think this is an error, please contact us at sistemas@moonart.com",
-                    goBack: "Back to home"
-                }
-            },
-
-            {
-                lang: "spanish",
-                attributes: {
-                    title: "Perfil",
-                    edit: "Editar",
-                    followers: "Seguidores",
-                    following: "Siguiendo",
-                    noDescription: "El usuario no ha agregado ninguna descripción.",
-                    comments: "Comentarios",
-                    gallery: "Galería",
-                    likes: "Likes",
-                    favs: "Favs",
-                    wrongUserTitle: "El usuario no existe o ha borrado su cuenta",
-                    wrongUserBody: "Si crees que es un error de la página, por favor contáctanos en sistemas@moonart.com.",
-                    goBack: "Volver al inicio"
-                }
-            }
-        ];
-        return this.language[(lang - 1)];
     }
 }

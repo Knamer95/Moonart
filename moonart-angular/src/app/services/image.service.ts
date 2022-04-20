@@ -1,184 +1,222 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 // import { ImageComponent } from '../components/image/image.component';
-import { Observable } from 'rxjs';
-import { Image } from '../models/image';
-import { global } from './global';
+import { Observable } from "rxjs";
+import { Image } from "../models/image";
+import { global } from "./global";
 
 @Injectable()
 export class ImageService {
-
-    public url: string;
+    public apiURL: string;
     public chckError: number;
 
-    constructor(
-        public _http: HttpClient,
-    ) {
-        this.url = global.url;
+    constructor(public _http: HttpClient) {
+        this.apiURL = global.apiURL;
         this.chckError = 0;
     }
 
     upload(token, image): Observable<any> {
+        const url = `${this.apiURL}/image/new`;
+        const json = JSON.stringify(image);
+        const params = `json=${json}`;
 
-        let json = JSON.stringify(image);
-        let params = 'json=' + json;
-
-        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
-            .set('Authorization', token);
+        const headers = new HttpHeaders()
+            .set("Content-Type", "application/x-www-form-urlencoded")
+            .set("Authorization", token);
         // .set('Access-Control-Allow-Origin', '*')
         // .set('Access-Control-Request-Headers', '*');
 
-        return this._http.post(this.url + 'image/new', params, { headers: headers });
+        return this._http.post(url, params, { headers });
     }
 
     getImages(token): Observable<any> {
+        const url = `${this.apiURL}/image/list`;
 
-        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
-            .set('Authorization', token);
+        const headers = new HttpHeaders()
+            .set("Content-Type", "application/x-www-form-urlencoded")
+            .set("Authorization", token);
 
-        return this._http.get(this.url + 'image/list', { headers: headers });
+        return this._http.get(url, { headers });
     }
 
-    getAllImages(page, nsfw, epilepsy, user, isProfileUser = false): Observable<any> {
-        if (!page) {
-            page = 1;
-        }
-        return this._http.get(this.url + 'image/list/all?page=' + page + '&nsfw=' + nsfw + '&epilepsy=' + epilepsy
-            + '&user=' + user + '&isProfileUser=' + isProfileUser);
+    getAllImages(
+        page,
+        nsfw,
+        epilepsy,
+        user,
+        isProfileUser = false
+    ): Observable<any> {
+        const url = `${this.apiURL}/image/image/list/all?page=${
+            page || 1
+        } &nsfw=${nsfw}&epilepsy=${epilepsy}&user=${user}&isProfileUser=${isProfileUser}`;
+
+        return this._http.get(url);
     }
 
-    getSearchImages(page, nsfw, epilepsy, querySelector, search): Observable<any> {
+    getSearchImages(
+        page,
+        nsfw,
+        epilepsy,
+        querySelector,
+        search
+    ): Observable<any> {
+        const url = `${this.apiURL}/image/image/search?page=${
+            page || 1
+        } &nsfw=${nsfw}&epilepsy=${epilepsy}&querySelector=${querySelector}&search=${search}`;
 
-        if (!page) {
-            page = 1;
-        }
-        return this._http.get(this.url + 'image/search?page=' + page + '&nsfw=' + nsfw + '&epilepsy=' + epilepsy
-            + '&querySelector=' + querySelector + '&search=' + search);
+        return this._http.get(url);
     }
 
-    getProfileImages(page, nsfw, epilepsy, user_id, interaction, user = ""): Observable<any> {
+    getProfileImages(
+        page,
+        nsfw,
+        epilepsy,
+        user_id,
+        interaction,
+        user = ""
+    ): Observable<any> {
+        const url = `${this.apiURL}/image/image/faved?page=${
+            page || 1
+        } &nsfw=${nsfw}&epilepsy=${epilepsy}&user_id=${user_id}&interaction=${interaction}&user=${user}`;
 
-        if (!page) {
-            page = 1;
-        }
-        return this._http.get(this.url + 'image/faved?page=' + page + '&nsfw=' + nsfw + '&epilepsy=' + epilepsy
-            + '&user_id=' + user_id + '&interaction=' + interaction + '&user=' + user);
+        return this._http.get(url);
     }
 
     getImage(id): Observable<any> {
+        const url = `${this.apiURL}/image/details?id=${id}`;
 
-        return this._http.get(this.url + 'image/details?id=' + id);
+        return this._http.get(url);
     }
 
     update(token, image, id): Observable<any> {
+        const url = `${this.apiURL}/image/update-image/id=${id}`;
+        const json = JSON.stringify(image);
+        const params = `json=${json}`;
 
-        let json = JSON.stringify(image);
-        let params = 'json=' + json;
+        const headers = new HttpHeaders()
+            .set("Content-Type", "application/x-www-form-urlencoded")
+            .set("Authorization", token);
 
-        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
-            .set('Authorization', token);
-
-        return this._http.put(this.url + 'image/update-image/' + id, params, { headers: headers });
+        return this._http.put(url, params, { headers });
     }
 
     delete(token, id): Observable<any> {
+        const url = `${this.apiURL}/image/remove/${id}`;
 
-        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
-            .set('Authorization', token);
+        const headers = new HttpHeaders()
+            .set("Content-Type", "application/x-www-form-urlencoded")
+            .set("Authorization", token);
 
-        return this._http.delete(this.url + 'image/remove/' + id, { headers: headers });
+        return this._http.delete(url, { headers });
     }
 
     hide(token, id, action): Observable<any> {
+        const url = `${this.apiURL}/image/hide/${id}`;
+        const params = `action=${action}`;
 
-        let params = 'action=' + action;
+        const headers = new HttpHeaders()
+            .set("Content-Type", "application/x-www-form-urlencoded")
+            .set("Authorization", token);
 
-        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
-            .set('Authorization', token);
-
-        return this._http.put(this.url + 'image/hide/' + id, params, { headers: headers }); // If there aren't 3 args, headers is passed as param
+        return this._http.put(url, params, { headers }); // If there aren't 3 args, headers is passed as param
     }
 
     checkInteractions(token, data): Observable<any> {
-        let json = JSON.stringify(data);
-        let params = 'json=' + json;
-        // console.log(data);
+        const url = `${this.apiURL}/check`;
+        const json = JSON.stringify(data);
+        const params = `json=${json}`;
 
-        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
-            .set('Authorization', token);
+        const headers = new HttpHeaders()
+            .set("Content-Type", "application/x-www-form-urlencoded")
+            .set("Authorization", token);
 
-        return this._http.post(this.url + 'check', params, { headers: headers });
+        return this._http.post(url, params, { headers });
     }
 
     interact(token, data, status): Observable<any> {
-        let json = JSON.stringify(data);
-        let params = 'json=' + json;
+        const url = `${this.apiURL}/${
+            status ? "update_interaction" : "create_interaction"
+        }`;
+        const json = JSON.stringify(data);
+        const params = `json=${json}`;
 
-        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
-            .set('Authorization', token);
+        const headers = new HttpHeaders()
+            .set("Content-Type", "application/x-www-form-urlencoded")
+            .set("Authorization", token);
 
-        if (status) {
-            return this._http.put(this.url + 'update_interaction', params, { headers: headers });
-        }
-        else {
-            return this._http.post(this.url + 'create_interaction', params, { headers: headers });
-        }
+        return this._http[status ? "put" : "post"](url, params, { headers });
     }
 
     getComments(imageId): Observable<any> {
-        return this._http.get(this.url + 'image/get-comments?imageId=' + imageId);
+        const url = `${this.apiURL}/image/get-comments?imageId=${imageId}`;
+
+        return this._http.get(url);
     }
 
     addComment(token, json): Observable<any> {
-        let params = 'json=' + json;
+        const url = `${this.apiURL}/image/add-comment`;
+        const params = `json=${json}`;
 
-        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
-            .set('Authorization', token);
+        const headers = new HttpHeaders()
+            .set("Content-Type", "application/x-www-form-urlencoded")
+            .set("Authorization", token);
 
-        return this._http.post(this.url + 'image/add-comment', params, { headers: headers });
+        return this._http.post(url, params, { headers });
     }
 
     deleteComment(token, id): Observable<any> {
+        const url = `${this.apiURL}/image/comment/remove/${id}`;
 
-        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
-            .set('Authorization', token);
+        const headers = new HttpHeaders()
+            .set("Content-Type", "application/x-www-form-urlencoded")
+            .set("Authorization", token);
 
-        return this._http.delete(this.url + 'image/comment/remove/' + id, { headers: headers });
+        return this._http.delete(url, { headers });
     }
 
     getShared(token, index, quantity, nsfw, epilepsy): Observable<any> {
+        const url = `${this.apiURL}/user/feed?index=${index}&qt=${quantity}&nsfw=${nsfw}&epilepsy=${epilepsy}`;
 
-        let headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
-            .set('Authorization', token);
+        let headers = new HttpHeaders()
+            .set("Content-Type", "application/x-www-form-urlencoded")
+            .set("Authorization", token);
 
-        return this._http.get(this.url + 'user/feed?index=' + index + "&qt=" + quantity + "&nsfw=" + nsfw
-            + "&epilepsy=" + epilepsy, { headers: headers });
+        return this._http.get(url, { headers });
     }
 
     getInteractionsCount(id, user): Observable<any> {
+        const url = `${this.apiURL}/image/interactions?id=${id}&user=${user}`;
 
-        return this._http.get(this.url + 'image/interactions?id=' + id + '&user=' + user);
+        return this._http.get(url);
     }
-
 
     /*
      *
      * Common functions to multiple components
      * Depending on the attributes nsfw and epilepsy (user config), it will display them or not.
      * If it's an user profile, it will show their images. An user can see their own sensitive pictures, no matter their config
-     * 
+     *
      * Depending on if it's scroll or not, it will add it to an existing array or a new one
      *
      */
     showAllImages(that, page, isScroll, check, resolve) {
-        let isProfileUser = typeof that.isProfileUser !== 'undefined' ? that.isProfileUser : null;
-        let user = typeof that.username !== 'undefined' ? that.username : null;
-        this.getAllImages(page, that.nsfw, that.epilepsy, user, isProfileUser).subscribe(
-            response => {
+        let isProfileUser =
+            typeof that.isProfileUser !== "undefined"
+                ? that.isProfileUser
+                : null;
+        let user = typeof that.username !== "undefined" ? that.username : null;
+        this.getAllImages(
+            page,
+            that.nsfw,
+            that.epilepsy,
+            user,
+            isProfileUser
+        ).subscribe(
+            (response) => {
                 console.log(response);
-                if (typeof that.hasElements !== 'undefined')
-                    that.hasElements = (response.images.length > 0 || page > 1) ? true : false; // There should never be a totalSize equal to 0 after scrolling, since it returns isLast
-
+                if (typeof that.hasElements !== "undefined")
+                    that.hasElements =
+                        response.images.length > 0 || page > 1 ? true : false; // There should never be a totalSize equal to 0 after scrolling, since it returns isLast
 
                 if (!isScroll) {
                     that.images = response.images;
@@ -192,25 +230,25 @@ export class ImageService {
                     that.totalPages = response.total_pages;
                     if (page >= 2) {
                         that.prevPage = page - 1;
-                    }
-                    else {
+                    } else {
                         that.prevPage = 1;
                     }
 
                     if (page < response.total_pages) {
                         that.nextPage = page + 1;
-                    }
-                    else {
+                    } else {
                         that.nextPage = response.total_pages;
                     }
-                }
-                else {
+                } else {
                     for (let i = 0; i < response.images.length; i++) {
                         that.images.push(response.images[i]);
                     }
 
                     that.loaded = true;
-                    that.isLast = that.images.length == response.total_items ? true : false;
+                    that.isLast =
+                        that.images.length == response.total_items
+                            ? true
+                            : false;
                 }
 
                 if (check) {
@@ -223,7 +261,7 @@ export class ImageService {
                     resolve();
                 }
             },
-            error => {
+            (error) => {
                 console.log("getAllImages()");
                 console.log("Ero..." + " attempt: " + that.imagError);
                 if (that.imagError < 5) {
@@ -234,10 +272,15 @@ export class ImageService {
         );
     }
 
-
     showImageSearch(that, page, nsfw, epilepsy, querySelector, search) {
-        this.getSearchImages(page, nsfw, epilepsy, querySelector, search).subscribe(
-            response => {
+        this.getSearchImages(
+            page,
+            nsfw,
+            epilepsy,
+            querySelector,
+            search
+        ).subscribe(
+            (response) => {
                 console.log(response);
 
                 if (!that.scroll) {
@@ -252,45 +295,58 @@ export class ImageService {
                     that.totalPages = response.total_pages;
                     if (page >= 2) {
                         that.prevPage = page - 1;
-                    }
-                    else {
+                    } else {
                         that.prevPage = 1;
                     }
 
                     if (page < response.total_pages) {
                         that.nextPage = page + 1;
-                    }
-                    else {
+                    } else {
                         that.nextPage = response.total_pages;
                     }
-                }
-                else {
+                } else {
                     for (let i = 0; i < response.images.length; i++) {
                         that.images.push(response.images[i]);
                     }
 
                     that.loaded = true;
-                    that.isLast = that.images.length == response.total_items ? true : false;
+                    that.isLast =
+                        that.images.length == response.total_items
+                            ? true
+                            : false;
                 }
 
                 this.getInteractions(that);
                 that.searError = 0;
             },
-            error => {
+            (error) => {
                 console.log("getSearchImages()");
                 console.log("Ero..." + " attempt: " + that.searError);
                 if (that.searError < 5) {
-                    this.showImageSearch(that, page, nsfw, epilepsy, querySelector, search);
+                    this.showImageSearch(
+                        that,
+                        page,
+                        nsfw,
+                        epilepsy,
+                        querySelector,
+                        search
+                    );
                     that.searError++;
                 }
             }
         );
     }
 
-
     showProfileInteractions(that, page) {
-        this.getProfileImages(page, that.nsfw, that.epilepsy, that.id, that.interaction, that.username).subscribe(
-            response => {
+        this.getProfileImages(
+            page,
+            that.nsfw,
+            that.epilepsy,
+            that.id,
+            that.interaction,
+            that.username
+        ).subscribe(
+            (response) => {
                 console.log(response);
 
                 if (!that.scroll) {
@@ -305,38 +361,39 @@ export class ImageService {
                     that.totalPages = response.total_pages;
                     if (page >= 2) {
                         that.prevPage = page - 1;
-                    }
-                    else {
+                    } else {
                         that.prevPage = 1;
                     }
 
                     if (page < response.total_pages) {
                         that.nextPage = page + 1;
-                    }
-                    else {
+                    } else {
                         that.nextPage = response.total_pages;
                     }
-                }
-                else {
+                } else {
                     for (let i = 0; i < response.images.length; i++) {
                         that.images.push(response.images[i]);
                     }
 
                     that.loaded = true;
-                    that.isLast = that.images.length == response.total_items ? true : false;
+                    that.isLast =
+                        that.images.length == response.total_items
+                            ? true
+                            : false;
                 }
 
                 this.getInteractions(that);
             },
-            error => {
+            (error) => {
                 console.log(error);
             }
         );
     }
 
-    getInteractions(that, unique = false, env = null) {  // Called by , showAllFavs... 'that' is 'this' of the element that calls it 
+    getInteractions(that, unique = false, env = null) {
+        // Called by , showAllFavs... 'that' is 'this' of the element that calls it
         // (home.component, images.component...)
-        if (that.identity != null && that.identity.nick != 'guest') {
+        if (that.identity != null && that.identity.nick != "guest") {
             var less: boolean = false;
             var intImages: any;
 
@@ -345,21 +402,22 @@ export class ImageService {
                 intImages = that.image;
                 intImages.length = 1;
                 // console.log(that.image);
-            }
-            else {
+            } else {
                 intImages = that.images;
             }
 
             for (let i = 0; i < intImages.length; i++) {
-
-                var checkLoader = function checkLoader(those, i, chckError = 0) {
+                var checkLoader = function checkLoader(
+                    those,
+                    i,
+                    chckError = 0
+                ) {
                     var imageId, selector;
 
                     if (unique) {
                         imageId = intImages.id;
                         selector = ".image-actions";
-                    }
-                    else {
+                    } else {
                         imageId = intImages[i][0].id;
                         selector = "#id-" + imageId;
                     }
@@ -368,108 +426,231 @@ export class ImageService {
                         user_id: that.identity.sub,
                         image_id: imageId,
                         action: "",
-                        method: ""
+                        method: "",
                     };
 
-                    that._imageService.checkInteractions(that.token, data).subscribe(
-                        response => {
+                    that._imageService
+                        .checkInteractions(that.token, data)
+                        .subscribe(
+                            (response) => {
+                                // console.log(response);
+                                chckError = 0;
 
-                            // console.log(response);
-                            chckError = 0;
+                                if (document.querySelector(selector)) {
+                                    if (response.liked) {
+                                        that.render.addClass(
+                                            document
+                                                .querySelector(selector)
+                                                .parentElement.parentElement.querySelector(
+                                                    ".image-heart"
+                                                ),
+                                            "image-liked"
+                                        );
+                                    }
+                                    if (response.faved) {
+                                        that.render.addClass(
+                                            document
+                                                .querySelector(selector)
+                                                .parentElement.parentElement.querySelector(
+                                                    ".image-star"
+                                                ),
+                                            "image-faved"
+                                        );
+                                    }
+                                    if (response.shared) {
+                                        that.render.addClass(
+                                            document
+                                                .querySelector(selector)
+                                                .parentElement.parentElement.querySelector(
+                                                    ".image-arrows"
+                                                ),
+                                            "image-shared"
+                                        );
+                                    }
+                                } else if (env === "imageComponent") {
+                                    if (response.liked) {
+                                        that.render.setAttribute(
+                                            document.querySelector(
+                                                ".like-container"
+                                            ),
+                                            "data-status",
+                                            "1"
+                                        );
+                                        document.querySelector(
+                                            ".like-container span"
+                                        ).textContent = "LIKED";
+                                        document
+                                            .querySelector(".like-container i")
+                                            .classList.remove("far");
+                                        document
+                                            .querySelector(".like-container i")
+                                            .classList.add("fas");
+                                    } else {
+                                        that.render.setAttribute(
+                                            document.querySelector(
+                                                ".like-container"
+                                            ),
+                                            "data-status",
+                                            "0"
+                                        );
+                                        document.querySelector(
+                                            ".like-container span"
+                                        ).textContent = "LIKE";
+                                        document
+                                            .querySelector(".like-container i")
+                                            .classList.remove("fas");
+                                        document
+                                            .querySelector(".like-container i")
+                                            .classList.add("far");
+                                    }
+                                    if (response.faved) {
+                                        that.render.setAttribute(
+                                            document.querySelector(
+                                                ".fav-container"
+                                            ),
+                                            "data-status",
+                                            "1"
+                                        );
+                                        document.querySelector(
+                                            ".fav-container span"
+                                        ).textContent = "ADDED TO FAVOURITES";
+                                        document
+                                            .querySelector(".fav-container i")
+                                            .classList.remove("far");
+                                        document
+                                            .querySelector(".fav-container i")
+                                            .classList.add("fas");
+                                    } else {
+                                        that.render.setAttribute(
+                                            document.querySelector(
+                                                ".fav-container"
+                                            ),
+                                            "data-status",
+                                            "0"
+                                        );
+                                        document.querySelector(
+                                            ".fav-container span"
+                                        ).textContent = "ADD TO FAVOURITES";
+                                        document
+                                            .querySelector(".fav-container i")
+                                            .classList.remove("fas");
+                                        document
+                                            .querySelector(".fav-container i")
+                                            .classList.add("far");
+                                    }
+                                    if (response.shared) {
+                                        that.render.setAttribute(
+                                            document.querySelector(
+                                                ".share-container"
+                                            ),
+                                            "data-status",
+                                            "1"
+                                        );
+                                        document.querySelector(
+                                            ".share-container span"
+                                        ).textContent = "SHARED";
+                                    } else {
+                                        that.render.setAttribute(
+                                            document.querySelector(
+                                                ".share-container"
+                                            ),
+                                            "data-status",
+                                            "0"
+                                        );
+                                        document.querySelector(
+                                            ".share-container span"
+                                        ).textContent = "SHARE";
+                                    }
+                                } else if (env === "feedComponent") {
+                                    if (response.liked) {
+                                        that.render.setAttribute(
+                                            document.querySelector(".fa-heart"),
+                                            "data-status",
+                                            "1"
+                                        );
+                                    } else {
+                                        that.render.setAttribute(
+                                            document.querySelector(".fa-heart"),
+                                            "data-status",
+                                            "0"
+                                        );
+                                    }
+                                    if (response.faved) {
+                                        that.render.setAttribute(
+                                            document.querySelector(".fa-star"),
+                                            "data-status",
+                                            "1"
+                                        );
+                                    } else {
+                                        that.render.setAttribute(
+                                            document.querySelector(".fa-star"),
+                                            "data-status",
+                                            "0"
+                                        );
+                                    }
+                                    if (response.shared) {
+                                        that.render.setAttribute(
+                                            document.querySelector(
+                                                ".fa-retweet"
+                                            ),
+                                            "data-status",
+                                            "1"
+                                        );
+                                    } else {
+                                        that.render.setAttribute(
+                                            document.querySelector(
+                                                ".fa-retweet"
+                                            ),
+                                            "data-status",
+                                            "0"
+                                        );
+                                    }
+                                }
 
-                            if (document.querySelector(selector)) {
+                                var hasBeen = false;
 
-                                if (response.liked) {
-                                    that.render.addClass(document.querySelector(selector).parentElement.parentElement.querySelector(".image-heart"), "image-liked");
-                                }
-                                if (response.faved) {
-                                    that.render.addClass(document.querySelector(selector).parentElement.parentElement.querySelector(".image-star"), "image-faved");
-                                }
-                                if (response.shared) {
-                                    that.render.addClass(document.querySelector(selector).parentElement.parentElement.querySelector(".image-arrows"), "image-shared");
-                                }
-                            }
-                            else if (env === 'imageComponent') {
-                                if (response.liked) {
-                                    that.render.setAttribute(document.querySelector(".like-container"), "data-status", "1");
-                                    document.querySelector(".like-container span").textContent = "LIKED";
-                                    document.querySelector(".like-container i").classList.remove("far");
-                                    document.querySelector(".like-container i").classList.add("fas");
+                                if (
+                                    response.liked != null ||
+                                    response.faved != null ||
+                                    response.shared != null
+                                ) {
+                                    hasBeen = true;
                                 } else {
-                                    that.render.setAttribute(document.querySelector(".like-container"), "data-status", "0");
-                                    document.querySelector(".like-container span").textContent = "LIKE";
-                                    document.querySelector(".like-container i").classList.remove("fas");
-                                    document.querySelector(".like-container i").classList.add("far");
+                                    hasBeen = false;
                                 }
-                                if (response.faved) {
-                                    that.render.setAttribute(document.querySelector(".fav-container"), "data-status", "1");
-                                    document.querySelector(".fav-container span").textContent = "ADDED TO FAVOURITES";
-                                    document.querySelector(".fav-container i").classList.remove("far");
-                                    document.querySelector(".fav-container i").classList.add("fas");
-                                } else {
-                                    that.render.setAttribute(document.querySelector(".fav-container"), "data-status", "0");
-                                    document.querySelector(".fav-container span").textContent = "ADD TO FAVOURITES";
-                                    document.querySelector(".fav-container i").classList.remove("fas");
-                                    document.querySelector(".fav-container i").classList.add("far");
+
+                                if (
+                                    (response.liked == null ||
+                                        response.faved == null ||
+                                        response.shared == null) &&
+                                    hasBeen
+                                ) {
+                                    checkLoader(that, i);
                                 }
-                                if (response.shared) {
-                                    that.render.setAttribute(document.querySelector(".share-container"), "data-status", "1");
-                                    document.querySelector(".share-container span").textContent = "SHARED";
-                                } else {
-                                    that.render.setAttribute(document.querySelector(".share-container"), "data-status", "0");
-                                    document.querySelector(".share-container span").textContent = "SHARE";
+                            },
+                            (error) => {
+                                chckError++;
+
+                                if (chckError < 5) {
+                                    checkLoader(that, i, chckError);
                                 }
                             }
-                            else if (env === 'feedComponent') {
-                                if (response.liked) {
-                                    that.render.setAttribute(document.querySelector(".fa-heart"), "data-status", "1");
-                                } else {
-                                    that.render.setAttribute(document.querySelector(".fa-heart"), "data-status", "0");
-                                }
-                                if (response.faved) {
-                                    that.render.setAttribute(document.querySelector(".fa-star"), "data-status", "1");
-                                } else {
-                                    that.render.setAttribute(document.querySelector(".fa-star"), "data-status", "0");
-                                }
-                                if (response.shared) {
-                                    that.render.setAttribute(document.querySelector(".fa-retweet"), "data-status", "1");
-                                } else {
-                                    that.render.setAttribute(document.querySelector(".fa-retweet"), "data-status", "0");
-                                }
-                            }
-
-                            var hasBeen = false;
-
-                            if (response.liked != null || response.faved != null || response.shared != null) {
-                                hasBeen = true;
-                            }
-
-                            else {
-                                hasBeen = false;
-                            }
-
-                            if ((response.liked == null || response.faved == null || response.shared == null) && hasBeen) {
-                                checkLoader(that, i);
-                            }
-
-                        },
-                        error => {
-                            chckError++;
-
-                            if (chckError < 5) {
-                                checkLoader(that, i, chckError);
-                            }
-                        }
-                    );
-                }
+                        );
+                };
                 checkLoader(this, i);
             }
         }
     }
 
-
-
-    saveInteraction(event, that, action, unique = false, env = null, callback = null) { // 'unique' is an optional param, that if true, means it's a single image
+    saveInteraction(
+        event,
+        that,
+        action,
+        unique = false,
+        env = null,
+        callback = null
+    ) {
+        // 'unique' is an optional param, that if true, means it's a single image
 
         var id;
         var estado;
@@ -482,14 +663,15 @@ export class ImageService {
             selectedImage = document.querySelector(".image");
             selectedImage = selectedImage.src;
             id = that.imageId;
-        }
-        else {
-            selectedImage = newTarget.parentElement.parentElement.querySelector(".image-element").src;
+        } else {
+            selectedImage =
+                newTarget.parentElement.parentElement.querySelector(
+                    ".image-element"
+                ).src;
             selectedImage = selectedImage.split("/");
             selectedImage = selectedImage[selectedImage.length - 1];
 
             for (let i = 0; i < that.images.length; i++) {
-
                 if (that.images[i][0].url == selectedImage) {
                     id = that.images[i][0].id;
                 }
@@ -500,126 +682,250 @@ export class ImageService {
             user_id: that.identity.sub,
             image_id: id,
             action: "",
-            method: ""
+            method: "",
         };
 
         that._imageService.checkInteractions(that.token, data).subscribe(
-            response => {
-                if (!response.status || response.status != 'error') {
+            (response) => {
+                if (!response.status || response.status != "error") {
                     estado = response;
                     // console.log(response.isset_interactions);
                     data.action = action;
                     if (response.found) {
                         data.method = "PUT";
-                    }
-                    else {
+                    } else {
                         data.method = "POST";
                     }
 
-                    that._imageService.interact(that.token, data, estado).subscribe(
-                        response => {
-                            // console.log(env);
-                            if (!env) {
-                                if (response.params.liked) {
-                                    that.render.addClass(newTarget.parentElement.querySelector(".image-heart"), "image-liked");
-                                } else {
-                                    that.render.removeClass(newTarget.parentElement.querySelector(".image-heart"), "image-liked");
+                    that._imageService
+                        .interact(that.token, data, estado)
+                        .subscribe(
+                            (response) => {
+                                // console.log(env);
+                                if (!env) {
+                                    if (response.params.liked) {
+                                        that.render.addClass(
+                                            newTarget.parentElement.querySelector(
+                                                ".image-heart"
+                                            ),
+                                            "image-liked"
+                                        );
+                                    } else {
+                                        that.render.removeClass(
+                                            newTarget.parentElement.querySelector(
+                                                ".image-heart"
+                                            ),
+                                            "image-liked"
+                                        );
+                                    }
+                                    if (response.params.faved) {
+                                        that.render.addClass(
+                                            newTarget.parentElement.querySelector(
+                                                ".image-star"
+                                            ),
+                                            "image-faved"
+                                        );
+                                    } else {
+                                        that.render.removeClass(
+                                            newTarget.parentElement.querySelector(
+                                                ".image-star"
+                                            ),
+                                            "image-faved"
+                                        );
+                                    }
+                                    if (response.params.shared) {
+                                        that.render.addClass(
+                                            newTarget.parentElement.querySelector(
+                                                ".image-arrows"
+                                            ),
+                                            "image-shared"
+                                        );
+                                    } else {
+                                        that.render.removeClass(
+                                            newTarget.parentElement.querySelector(
+                                                ".image-arrows"
+                                            ),
+                                            "image-shared"
+                                        );
+                                    }
+                                } else if (env === "imageComponent") {
+                                    if (response.params.liked) {
+                                        that.render.setAttribute(
+                                            document.querySelector(
+                                                ".like-container"
+                                            ),
+                                            "data-status",
+                                            "1"
+                                        );
+                                        document.querySelector(
+                                            ".like-container span"
+                                        ).textContent = "LIKED";
+                                        document
+                                            .querySelector(".like-container i")
+                                            .classList.remove("far");
+                                        document
+                                            .querySelector(".like-container i")
+                                            .classList.add("fas");
+                                    } else {
+                                        that.render.setAttribute(
+                                            document.querySelector(
+                                                ".like-container"
+                                            ),
+                                            "data-status",
+                                            "0"
+                                        );
+                                        document.querySelector(
+                                            ".like-container span"
+                                        ).textContent = "LIKE";
+                                        document
+                                            .querySelector(".like-container i")
+                                            .classList.remove("fas");
+                                        document
+                                            .querySelector(".like-container i")
+                                            .classList.add("far");
+                                    }
+                                    if (response.params.faved) {
+                                        that.render.setAttribute(
+                                            document.querySelector(
+                                                ".fav-container"
+                                            ),
+                                            "data-status",
+                                            "1"
+                                        );
+                                        document.querySelector(
+                                            ".fav-container span"
+                                        ).textContent = "ADDED TO FAVOURITES";
+                                        document
+                                            .querySelector(".fav-container i")
+                                            .classList.remove("far");
+                                        document
+                                            .querySelector(".fav-container i")
+                                            .classList.add("fas");
+                                    } else {
+                                        that.render.setAttribute(
+                                            document.querySelector(
+                                                ".fav-container"
+                                            ),
+                                            "data-status",
+                                            "0"
+                                        );
+                                        document.querySelector(
+                                            ".fav-container span"
+                                        ).textContent = "ADD TO FAVOURITES";
+                                        document
+                                            .querySelector(".fav-container i")
+                                            .classList.remove("fas");
+                                        document
+                                            .querySelector(".fav-container i")
+                                            .classList.add("far");
+                                    }
+                                    if (response.params.shared) {
+                                        that.render.setAttribute(
+                                            document.querySelector(
+                                                ".share-container"
+                                            ),
+                                            "data-status",
+                                            "1"
+                                        );
+                                        document.querySelector(
+                                            ".share-container span"
+                                        ).textContent = "SHARED";
+                                    } else {
+                                        that.render.setAttribute(
+                                            document.querySelector(
+                                                ".share-container"
+                                            ),
+                                            "data-status",
+                                            "0"
+                                        );
+                                        document.querySelector(
+                                            ".share-container span"
+                                        ).textContent = "SHARE";
+                                    }
                                 }
-                                if (response.params.faved) {
-                                    that.render.addClass(newTarget.parentElement.querySelector(".image-star"), "image-faved");
-                                } else {
-                                    that.render.removeClass(newTarget.parentElement.querySelector(".image-star"), "image-faved");
-                                }
-                                if (response.params.shared) {
-                                    that.render.addClass(newTarget.parentElement.querySelector(".image-arrows"), "image-shared");
-                                } else {
-                                    that.render.removeClass(newTarget.parentElement.querySelector(".image-arrows"), "image-shared");
-                                }
-                            }
-                            else if (env === 'imageComponent') {
-                                if (response.params.liked) {
-                                    that.render.setAttribute(document.querySelector(".like-container"), "data-status", "1");
-                                    document.querySelector(".like-container span").textContent = "LIKED";
-                                    document.querySelector(".like-container i").classList.remove("far");
-                                    document.querySelector(".like-container i").classList.add("fas");
-                                } else {
-                                    that.render.setAttribute(document.querySelector(".like-container"), "data-status", "0");
-                                    document.querySelector(".like-container span").textContent = "LIKE";
-                                    document.querySelector(".like-container i").classList.remove("fas");
-                                    document.querySelector(".like-container i").classList.add("far");
-                                }
-                                if (response.params.faved) {
-                                    that.render.setAttribute(document.querySelector(".fav-container"), "data-status", "1");
-                                    document.querySelector(".fav-container span").textContent = "ADDED TO FAVOURITES";
-                                    document.querySelector(".fav-container i").classList.remove("far");
-                                    document.querySelector(".fav-container i").classList.add("fas");
-                                } else {
-                                    that.render.setAttribute(document.querySelector(".fav-container"), "data-status", "0");
-                                    document.querySelector(".fav-container span").textContent = "ADD TO FAVOURITES";
-                                    document.querySelector(".fav-container i").classList.remove("fas");
-                                    document.querySelector(".fav-container i").classList.add("far");
-                                }
-                                if (response.params.shared) {
-                                    that.render.setAttribute(document.querySelector(".share-container"), "data-status", "1");
-                                    document.querySelector(".share-container span").textContent = "SHARED";
-                                } else {
-                                    that.render.setAttribute(document.querySelector(".share-container"), "data-status", "0");
-                                    document.querySelector(".share-container span").textContent = "SHARE";
-                                }
-                            }
 
-                            if (env) {
-                                that.updateCounter(event, that, action);
+                                if (env) {
+                                    that.updateCounter(event, that, action);
+                                }
+                            },
+                            (error) => {
+                                console.log(error);
                             }
-                        },
-                        error => {
-                            console.log(error);
-                        }
-                    );
-                }
-                else {
+                        );
+                } else {
                 }
             },
-            error => {
-            }
+            (error) => {}
         );
     }
-
 
     // Methods to apply styles on hover to parents and children, for the interactions bar (gallery and profile)
 
     in(event, that, value) {
         var newTarget = event.target.parentElement;
 
-        that.render.addClass(newTarget.parentElement.parentElement.querySelector(".image-element"), "hovered-children");
-        that.render.addClass(newTarget.parentElement.parentElement.parentElement.querySelector(".image-parent"), "hovered-parent");
-
+        that.render.addClass(
+            newTarget.parentElement.parentElement.querySelector(
+                ".image-element"
+            ),
+            "hovered-children"
+        );
+        that.render.addClass(
+            newTarget.parentElement.parentElement.parentElement.querySelector(
+                ".image-parent"
+            ),
+            "hovered-parent"
+        );
 
         if (value == 1) {
-            that.render.addClass(newTarget.parentElement.parentElement.querySelector(".like"), "like-hovered");
-        }
-        else if (value == 2) {
-            that.render.addClass(newTarget.parentElement.parentElement.querySelector(".fav"), "fav-hovered");
-        }
-        else if (value == 3) {
-            that.render.addClass(newTarget.parentElement.parentElement.querySelector(".share"), "share-hovered");
+            that.render.addClass(
+                newTarget.parentElement.parentElement.querySelector(".like"),
+                "like-hovered"
+            );
+        } else if (value == 2) {
+            that.render.addClass(
+                newTarget.parentElement.parentElement.querySelector(".fav"),
+                "fav-hovered"
+            );
+        } else if (value == 3) {
+            that.render.addClass(
+                newTarget.parentElement.parentElement.querySelector(".share"),
+                "share-hovered"
+            );
         }
     }
 
     out(event, that, value) {
         var newTarget = event.target.parentElement;
 
-        that.render.removeClass(newTarget.parentElement.parentElement.querySelector(".image-element"), "hovered-children");
-        that.render.removeClass(newTarget.parentElement.parentElement.parentElement.querySelector(".image-parent"), "hovered-parent");
+        that.render.removeClass(
+            newTarget.parentElement.parentElement.querySelector(
+                ".image-element"
+            ),
+            "hovered-children"
+        );
+        that.render.removeClass(
+            newTarget.parentElement.parentElement.parentElement.querySelector(
+                ".image-parent"
+            ),
+            "hovered-parent"
+        );
 
         if (value == 1) {
-            that.render.removeClass(newTarget.parentElement.parentElement.querySelector(".like"), "like-hovered");
-        }
-        else if (value == 2) {
-            that.render.removeClass(newTarget.parentElement.parentElement.querySelector(".fav"), "fav-hovered");
-        }
-        else if (value == 3) {
-            that.render.removeClass(newTarget.parentElement.parentElement.querySelector(".share"), "share-hovered");
+            that.render.removeClass(
+                newTarget.parentElement.parentElement.querySelector(".like"),
+                "like-hovered"
+            );
+        } else if (value == 2) {
+            that.render.removeClass(
+                newTarget.parentElement.parentElement.querySelector(".fav"),
+                "fav-hovered"
+            );
+        } else if (value == 3) {
+            that.render.removeClass(
+                newTarget.parentElement.parentElement.querySelector(".share"),
+                "share-hovered"
+            );
         }
     }
 }

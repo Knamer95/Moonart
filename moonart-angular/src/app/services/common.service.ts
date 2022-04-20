@@ -6,12 +6,13 @@ import { global } from './global';
 import { UserService } from '../services/user.service';
 import { Router, RoutesRecognized } from '@angular/router';
 import { filter, pairwise } from 'rxjs/operators';
+import { Identity } from '../types/user';
 
 @Injectable()
 export class CommonService {
 
-    public url: string;
-    public identity: any;
+    public apiURL: string;
+    public identity: Identity;
     public token: string;
     public confError: number;
     public setCError: number;
@@ -24,7 +25,7 @@ export class CommonService {
         private _router: Router,
         private render: Renderer2
     ) {
-        this.url = global.url;
+        this.apiURL = global.apiURL;
         this.confError = 0;
         this.setCError = 0;
 
@@ -46,9 +47,11 @@ export class CommonService {
         return localStorage.getItem("lastURL");
     }
 
-    getUserConfig(that, token) { // Gets the getConfig returned object (AJAX request from user.service), and stores it
+    getUserConfig(that) { // Gets the getConfig returned object (AJAX request from user.service), and stores it
+        const token = this._userService.getToken();
+
         if (token != null) {
-            that._userService.getConfig(token).subscribe(
+            that._userService.getConfig().subscribe(
                 response => {
                     if (!response.status || response.status != 'error') {
                         var config;
@@ -92,7 +95,7 @@ export class CommonService {
                     console.log("getConfig()");
                     console.log("Ero..." + " attempt: " + this.confError);
                     if (this.confError < 5) {
-                        this.getUserConfig(that, token);
+                        this.getUserConfig(that);
                         this.confError++;
                     }
 
@@ -137,7 +140,7 @@ export class CommonService {
                     let configJSON = JSON.stringify(config);
 
                     localStorage.setItem('config', configJSON);
-                    this.getUserConfig(this, token);
+                    this.getUserConfig(this);
                 }
                 else {
                 }
