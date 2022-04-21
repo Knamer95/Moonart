@@ -42,7 +42,7 @@ export class AppComponent implements OnInit, DoCheck {
     public searchQuery = "";
     public navStatus: number;
     public lang;
-    public alertsArray: Alert[]; // Array<Object> = []; <- Leave as any, or create a new interface
+    public alertsArray: Alert[] = []; // Array<Object> = []; <- Leave as any, or create a new interface
     public alertCounter: number = 0;
 
     @ViewChild("loginElement") loginElement: ElementRef<HTMLElement>;
@@ -60,11 +60,14 @@ export class AppComponent implements OnInit, DoCheck {
 
     ngOnInit() {
         this.token = this._userService.getToken();
-        this._commonService.getUserConfig(this);
+        this._commonService.getUserConfig();
 
         const lsParsedConfig = JSON.parse(localStorage.getItem("config"));
-        const selectedLanguage = getCurrentLanguage(lsParsedConfig.lang);
-        this._sharedService.languageContext = languagePackage[selectedLanguage];
+        const selectedLanguage = getCurrentLanguage(
+            lsParsedConfig && lsParsedConfig.lang
+        );
+        this._sharedService.languageContext =
+            languagePackage[selectedLanguage.name];
         this.lang = this._sharedService.languageContext.app;
 
         this.navHeight = $(".clip").height();
@@ -101,7 +104,7 @@ export class AppComponent implements OnInit, DoCheck {
 
         if (!lsParsedConfig) {
             setTimeout(function () {
-                this.setHeader();
+                // this.setHeader();
             }, 100);
         } else {
             this.config = lsParsedConfig;
@@ -162,11 +165,11 @@ export class AppComponent implements OnInit, DoCheck {
     open(type) {
         let modalRef: any = [];
 
-        if (type === 1) {
+        if (type === "login") {
             modalRef = this.modalService.open(LoginComponent, {
                 windowClass: "modal-centered",
             });
-        } else if (type === 2) {
+        } else if (type === "register") {
             modalRef = this.modalService.open(RegisterComponent, {
                 windowClass: "modal-centered",
             });
@@ -206,7 +209,8 @@ export class AppComponent implements OnInit, DoCheck {
 
         switch (emit.type) {
             case 1:
-                this.lang = languagePackage[emit.lang].app;
+                const langName = getCurrentLanguage(emit.lang).name;
+                this.lang = languagePackage[langName].app;
                 this._commonService.changeLangAttr(emit.lang);
                 break;
 

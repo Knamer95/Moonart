@@ -1,64 +1,64 @@
 <div class="container-fluid col-md-6 container-ma">
-  <h1 class="index-title no-select">{{this.currentLang.attributes.title}}</h1>
+  <h1 class="index-title no-select">{{lang.title}}</h1>
   <hr>
   <div class="row-grid">
     <div class="config-title">
-      <span>{{this.currentLang.attributes.nightMode}}</span>
+      <span>{{lang.nightMode}}</span>
     </div>
     <div class="config-value">
-      <input type="checkbox" class="switch night" [checked]="nightMode==true" (change)="change($event,'nightMode')">
+      <input type="checkbox" class="switch night" [checked]="config.nightMode" (change)="change($event,'nightMode')">
     </div>
   </div>
 
   <div class="row-grid">
     <div class="config-title">
-      <span>{{this.currentLang.attributes.paginationType}}</span>
+      <span>{{lang.paginationType}}</span>
     </div>
     <div class="config-value">
-      <input type="checkbox" class="switch" [checked]="scroll==true" (change)="change($event,'scroll')">
+      <input type="checkbox" class="switch" [checked]="config.scroll" (change)="change($event,'scroll')">
     </div>
   </div>
 
   <div class="row-grid">
     <div class="config-title">
-      <span>{{this.currentLang.attributes.showNsfw}}</span>
+      <span>{{lang.showNsfw}}</span>
     </div>
     <div class="config-value">
-      <input type="checkbox" class="switch" [checked]="nsfw==true" (change)="change($event,'nsfw')">
+      <input type="checkbox" class="switch" [checked]="config.nsfw" (change)="change($event,'nsfw')">
     </div>
   </div>
 
   <div class="row-grid">
     <div class="config-title">
-      <span>{{this.currentLang.attributes.showEpilepsy}}</span>
+      <span>{{lang.showEpilepsy}}</span>
     </div>
     <div class="config-value">
-      <input type="checkbox" class="switch" [checked]="epilepsy==true" (change)="change($event,'epilepsy')">
+      <input type="checkbox" class="switch" [checked]="config.epilepsy" (change)="change($event,'epilepsy')">
     </div>
   </div>
 
   <div class="row-grid">
     <div class="config-title">
-      <span>{{this.currentLang.attributes.shareImages}}</span>
+      <span>{{lang.shareImages}}</span>
     </div>
     <div class="config-value">
-      <input type="checkbox" class="switch" [checked]="share==true" (change)="change($event,'share')">
+      <input type="checkbox" class="switch" [checked]="config.share" (change)="change($event,'share')">
     </div>
   </div>
 
   <div class="row-grid">
     <div class="config-title">
-      <span>{{this.currentLang.attributes.feedElements}}</span>
+      <span>{{lang.feedElements}}</span>
     </div>
     <div class="config-value">
-      <input type="number" class="feed" min="5" max="100" default="5" [(ngModel)]="feed"
+      <input type="number" class="feed" min="5" max="100" default="5" [(ngModel)]="config.feed"
         (change)="change($event,'feed')">
     </div>
   </div>
 
   <div class="row-grid">
     <div class="config-title">
-      <span class="event-emitter" (click)="updateLang(lang)">{{this.currentLang.attributes.language}}</span>
+      <span class="event-emitter" (click)="updateLang(lang)">{{lang.language}}</span>
     </div>
     <div class="config-value">
       <select class="lang">
@@ -84,7 +84,7 @@
 
   <div class="row-grid no-border">
     <div class="config-title">
-      <span>{{this.currentLang.attributes.themes}}</span>
+      <span>{{lang.themes}}</span>
     </div>
   </div>
   <div class="themes-container">

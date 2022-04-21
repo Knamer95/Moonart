@@ -66,10 +66,10 @@
                     <!-- <a class="navbar-brand ml-auto admin" href="#">Administrate</a> -->
                     <ul class="navbar-nav right-position log-reg">
                         <li class="nav-item" *ngIf="!identity || identity.nick == 'guest'">
-                            <a #loginElement class="nav-link" (click)="open(1)">{{lang.login}}</a>
+                            <a #loginElement class="nav-link" (click)="open('login')">{{lang.login}}</a>
                         </li>
                         <li class="nav-item" *ngIf="!identity || identity.nick == 'guest'">
-                            <a class="nav-link" (click)="open(2)">{{lang.register}}</a>
+                            <a class="nav-link" (click)="open('register')">{{lang.register}}</a>
                         </li>
 
                         <!-- <button class="btn btn-outline-info btn-toggle" onclick="blur(); swap();"><i class="fas fa-lightbulb"></i></button> -->

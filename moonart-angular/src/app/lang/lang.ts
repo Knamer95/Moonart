@@ -430,9 +430,22 @@ export const languagePackage: LanguageStruct = {
     },
 };
 
-export const defaultLanguage: Languages = "english";
+export const defaultLanguage: number = 1;
 
 export const admittedLanguages = Object.keys(languagePackage);
 
-export const getCurrentLanguage = (language) =>
-    admittedLanguages.includes(language) ? language : defaultLanguage;
+interface LanguageItem {
+    id: number;
+    name: Languages;
+}
+export const mappedLanguages: LanguageItem[] = [
+    { id: 1, name: "english" },
+    { id: 2, name: "spanish" },
+];
+
+export const getCurrentLanguage = (langID: string | number): LanguageItem => {
+    const parsedLangID = typeof langID === "string" ? parseInt(langID) : langID;
+    const languageStr = mappedLanguages.find((lang) => lang.id === parsedLangID);
+    const defaultLanguageStr = mappedLanguages.find((lang) => lang.id === defaultLanguage);
+    return languageStr || defaultLanguageStr;
+};

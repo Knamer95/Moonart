@@ -11,28 +11,14 @@ import { SharedService } from "../shared-service/shared-service.component";
     providers: [UserService, ImageService, CommonService],
 })
 export class ErrorComponent implements OnInit {
-    public pageTitle: string = "Error";
-    public identity: any;
-    public token: string;
-    public nightMode: boolean;
     public lang;
 
     constructor(
-        private _userService: UserService,
         private _sharedService: SharedService
-    ) {
-        this.pageTitle = "Error";
-    }
+    ) {}
 
     ngOnInit() {
-        document.title = this.pageTitle;
-
-        this.loadUser();
         this.lang = this._sharedService.languageContext.error;
-    }
-
-    loadUser() {
-        this.identity = this._userService.getIdentity();
-        this.token = this._userService.getToken();
+        this._sharedService.setTitle(this.lang.title);
     }
 }

@@ -40,9 +40,9 @@ export class LogoutComponent implements OnInit {
 
     logout() {
         this._route.params.subscribe((params) => {
-            let sure = +params["sure"];
+            const sure = parseInt(params["sure"]);
 
-            if (sure == 1) {
+            if (sure) {
                 localStorage.removeItem("identity");
                 localStorage.removeItem("token");
                 localStorage.removeItem("config");
@@ -50,7 +50,7 @@ export class LogoutComponent implements OnInit {
                 this._sharedService.identity = null;
                 this.token = null;
 
-                console.log(this._commonService.getLastUrl());
+                // console.log(this._commonService.getLastUrl());
                 this._router.navigateByUrl(this._commonService.getLastUrl());
             }
         });

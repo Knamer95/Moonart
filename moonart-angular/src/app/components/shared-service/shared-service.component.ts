@@ -1,6 +1,6 @@
 import { Component, Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { getCurrentLanguage, languagePackage } from "src/app/lang/lang";
+import { defaultLanguage, getCurrentLanguage, languagePackage } from "src/app/lang/lang";
 import { Config } from "src/app/types/config";
 import { Identity } from "src/app/types/user";
 
@@ -12,17 +12,16 @@ import { Identity } from "src/app/types/user";
 @Injectable()
 
 /*
-  Component to store variables shared between components, that we want to observe
+  Component to store variables shared between components
 */
 export class SharedService {
     private observableReload = new BehaviorSubject<boolean>(false);
     public statusNotifier$ = this.observableReload.asObservable();
-    public languageContext = languagePackage.english; // Initialized in AppComponent
 
-    public defaultConfig = {
+    public defaultConfig: Config = {
         nightMode: false,
         navBarAlwaysOnTop: true,
-        scroll: true,
+        scroll: true, // If true, shows galleries as scroll. Otherwise it shows them paginated
         nsfw: false,
         epilepsy: false,
         color: "zoe",
@@ -31,17 +30,37 @@ export class SharedService {
         feed: 15,
     };
 
-    private config = new BehaviorSubject<Config>(
-        JSON.parse(localStorage.getItem("config")) || this.defaultConfig
-    );
+    public config: Config =
+        JSON.parse(localStorage.getItem("config")) || this.defaultConfig;
+    private config$ = new BehaviorSubject<Config>(this.config);
+    public lang = getCurrentLanguage(this.config.lang).id; // Initialized in AppComponent
+    public languageContext = languagePackage[this.lang]; // Initialized in AppComponent
+
     public identity = {} as Identity;
     public token: String = "";
+    public title = "";
+
+    updateConfig(config: Config) {
+        this.lang = getCurrentLanguage(config.lang || defaultLanguage).id;
+        this.config = config;
+        console.log("---", {
+            lang: this.lang,
+            config: this.config,
+            languageContext: this.languageContext,
+        });
+    }
 
     needsReload(status: boolean) {
         this.observableReload.next(status);
     }
 
-    get config$() {
-        return this.config.asObservable();
+    configObserver() {
+        const langMapper = ["english", "spanish"];
+        return this.config$.asObservable();
+    }
+
+    setTitle(title) {
+        this.title = title;
+        document.title = this.title;
     }
 }

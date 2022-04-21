@@ -1,6 +1,6 @@
 {
   "name": "moonart-angular",
-  "version": "1.4.1",
+  "version": "2.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.js",

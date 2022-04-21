@@ -5,6 +5,8 @@ import { UserService } from "../../services/user.service";
 import { CommonService } from "../../services/common.service";
 import { emitterTypes } from "../../models/struct";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { SharedService } from "../shared-service/shared-service.component";
+import { Identity } from "src/app/types/user";
 
 @Component({
     selector: "login-component",
@@ -13,20 +15,14 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
     providers: [UserService, CommonService],
 })
 export class LoginComponent implements OnInit {
-    public pageTitle: string = "Login";
-    public identity;
+    public identity: Identity;
     public user: User;
     public checkData: boolean = false; // Flag to disable form while we check if data is correct
     public token: string;
     public status: string;
-    public nightMode: boolean;
-    public config: any;
-    public configJSON: string;
     public isFirst: boolean;
     public showPassword: boolean = false;
-    public language: Object;
-    public currentLang: any;
-    public lang: number;
+    public lang;
     public emitType: number;
 
     @Output() emitter: EventEmitter<any> = new EventEmitter();
@@ -36,39 +32,16 @@ export class LoginComponent implements OnInit {
         private _userService: UserService,
         private _commonService: CommonService,
         private _router: Router,
-        private _route: ActivatedRoute
+        private _route: ActivatedRoute,
+        public _sharedService: SharedService
     ) {
+        this._sharedService.setTitle(this.lang.title);
         this.user = new User(1, "", "", "", "", "", "ROLE_USER", "", "");
     }
 
     ngOnInit() {
-        // document.title = this.pageTitle;
-
-        if (
-            localStorage.getItem("config") == "undefined" ||
-            localStorage.getItem("config") == null
-        ) {
-            let config = {
-                nightMode: false,
-                navBarAlwaysOnTop: true,
-                scroll: true,
-                nsfw: false,
-                epilepsy: false,
-                color: "zoe",
-                lang: 1,
-                share: true,
-                feed: 15,
-            };
-            let configJSON = JSON.stringify(config);
-            localStorage.setItem("config", configJSON);
-        }
-
-        this.nightMode = JSON.parse(localStorage.getItem("config")).nightMode;
-        this._commonService.changeNightModeAttr(this.nightMode);
-
-        this.lang = JSON.parse(localStorage.getItem("config")).lang;
-        this.currentLang = {};
-        this._commonService.changeLangAttr(this.lang);
+        // this._sharedService.setTitle(this.lang.title); // Login is a component
+        this.lang = this._sharedService.languageContext.login;
     }
 
     toggle(el) {
@@ -95,18 +68,15 @@ export class LoginComponent implements OnInit {
                                 response.status != "error"
                             ) {
                                 this.status = "success";
+                                this._commonService.getUserConfig();
 
-                                this.token = response;
-
-                                this._commonService.getUserConfig(this);
-
-                                localStorage.setItem("token", this.token);
+                                localStorage.setItem("token", response);
                                 localStorage.setItem(
                                     "identity",
                                     JSON.stringify(this.identity)
                                 );
                                 localStorage.removeItem("config");
-                                this.updateDB(this.token);
+                                this.updateDB();
 
                                 // setTimeout(() => { this._router.navigate(['home']); }, 1500);
                             } else {
@@ -129,8 +99,8 @@ export class LoginComponent implements OnInit {
                 // If the status is error (meaning wrong credentials), response.status is 'error', but otherwise the response is just the token
                 let message =
                     response.status === "error"
-                        ? this.currentLang.attributes.messageError
-                        : this.currentLang.attributes.messageSuccess;
+                        ? this.lang.messageError
+                        : this.lang.messageSuccess;
 
                 this.emitter.emit({
                     type: emitterTypes.ALERT,
@@ -148,29 +118,16 @@ export class LoginComponent implements OnInit {
         );
     }
 
-    updateDB(token) {
+    updateDB() {
         this._userService.getConfig().subscribe(
             (response) => {
-                if (response.status == "error") {
+                console.log("response", response);
+                if (response.status === "error") {
                     this.isFirst = true;
-                    this.config = {
-                        nightMode: false,
-                        navBarAlwaysOnTop: true,
-                        scroll: true,
-                        nsfw: false,
-                        epilepsy: false,
-                        color: "zoe",
-                        lang: 1,
-                        share: true,
-                        feed: 15,
-                    };
-                    this.configJSON = JSON.stringify(this.config);
+                    const config = this._sharedService.config;
+                    const configJSON = JSON.stringify(config);
 
-                    this._commonService.setUserConfig(
-                        this,
-                        this.token,
-                        this.configJSON
-                    );
+                    this._commonService.setUserConfig(configJSON);
                 }
 
                 /*
@@ -178,9 +135,7 @@ export class LoginComponent implements OnInit {
                 this.nightMode = JSON.parse(localStorage.getItem("config")).nightMode;
                 this._commonService.changeNightModeAttr(this.nightMode);
                 */
-                console.log(
-                    `Changed to ${this.nightMode ? "night" : "day"} mode.`
-                );
+                // console.log(`Changed to ${this.nightMode ? "night" : "day"} mode.`);
 
                 this.emitter.emit({
                     type: emitterTypes.RELOAD,
