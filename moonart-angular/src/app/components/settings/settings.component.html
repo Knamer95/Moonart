@@ -95,31 +95,8 @@
   </div>
   <div class="themes-container">
     <div>
-      <div class="color zoe" (click)="pickColor($event, 'zoe')" data-toggle="tooltip" data-placement="top" title="Zoe">
+      <div *ngFor="let theme of themes" class="color" [ngClass]="getTheme(theme)" (click)="pickColor($event, theme)" data-toggle="tooltip" data-placement="top" [title]="theme">
       </div>
-
-      <div class="color light" (click)="pickColor($event, 'light')" data-toggle="tooltip" data-placement="top"
-      title="Light"></div>
-
-      <div class="color monster" (click)="pickColor($event, 'monster')" data-toggle="tooltip" data-placement="top"
-      title="Monster"></div>
-
-      <div class="color energy" (click)="pickColor($event, 'energy')" data-toggle="tooltip" data-placement="top"
-      title="Energy"></div>
-
-      <div class="color red" (click)="pickColor($event, 'red')" data-toggle="tooltip" data-placement="top" title="Red">
-      </div>
-
-      <div class="color green" (click)="pickColor($event, 'green')" data-toggle="tooltip" data-placement="top"
-        title="Green"></div>
-
-      <div class="color blue" (click)="pickColor($event, 'blue')" data-toggle="tooltip" data-placement="top"
-        title="Blue"></div>
-
-      <div class="color violet" (click)="pickColor($event, 'violet')" data-toggle="tooltip" data-placement="top"
-        title="Violet"></div>
-      <div class="color orange" (click)="pickColor($event, 'orange')" data-toggle="tooltip" data-placement="top"
-        title="Orange"></div>
 
       <!-- <div class="color yellow" (click)="pickColor($event, 'yellow')" data-toggle="tooltip" data-placement="top"
         title="Yellow"></div> -->

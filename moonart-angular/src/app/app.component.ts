@@ -64,21 +64,18 @@ export class AppComponent implements OnInit, DoCheck {
     ngOnInit() {
         this.token = this._userService.getToken();
         this._commonService.getUserConfig();
-        this.config = this._sharedService.config;
 
-        const selectedLanguage = getCurrentLanguage(
-            this.config && this.config.lang
+        this._sharedService.configSubject.subscribe(
+            ({ config, languageContext, langName }) => {
+                this.config = config;
+                this.lang = languageContext.app;
+                this._sharedService.setTitle(this.lang.title);
+                this.domInfo = {
+                    lang: langName,
+                    mode: this.config.nightMode ? "night" : "day",
+                };
+            }
         );
-
-        this._sharedService.languageContext =
-            languagePackage[selectedLanguage.name];
-        this.lang = this._sharedService.languageContext.app;
-        this._commonService.changeNightModeAttr(this.config.nightMode);
-
-        this.domInfo = {
-            lang: selectedLanguage.name,
-            mode: this.config.nightMode ? 'night' : 'day',
-        }
 
         this.navHeight = $(".clip").height();
         this.navStatus = 1;

@@ -50,7 +50,7 @@ class Config
     private $epilepsy = '0';
 
     /**
-     * @var string
+     * @var integer
      *
      * @ORM\Column(name="lang", type="integer", nullable=true, options={"default"="1"})
      */
@@ -71,7 +71,7 @@ class Config
     private $share = '1';
 
     /**
-     * @var string
+     * @var integer
      *
      * @ORM\Column(name="feed", type="integer", nullable=true, options={"default"="15"})
      */
@@ -140,12 +140,12 @@ class Config
         return $this;
     }
 
-    public function getLang(): ?string
+    public function getLang(): ?int
     {
         return $this->lang;
     }
 
-    public function setLang(string $lang): self
+    public function setLang(?int $lang): self
     {
         $this->lang = $lang;
 

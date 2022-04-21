@@ -365,13 +365,13 @@ ul{ margin-left:2em; }
 
 [data-mode='day'] .nav-container,
 [data-mode='day'] .nav-container + .toggle-menu{
-    box-shadow:0px 16px 0px rgba(0, 0, 0, 0.15);
+    /* box-shadow:0px 16px 0px rgba(0, 0, 0, 0.15); */
     background-color: rgba(0, 0, 0, 0.205); 
 }
 
 [data-mode='night'] .nav-container,
 [data-mode='night'] .nav-container + .toggle-menu{
-    box-shadow:0px 16px 0px rgba(0, 0, 0, 0.733);
+    /* box-shadow:0px 16px 0px rgba(0, 0, 0, 0.733); */
     background-color: rgb(0 0 0 / 68%); 
 }
 

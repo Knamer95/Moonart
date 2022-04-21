@@ -101,9 +101,6 @@ export class CommonService {
     }
 
     setUserConfig(data) {
-        console.log("data to store", data);
-        const token = this._userService.getToken();
-
         this._userService.setConfig(data).subscribe(
             (response) => {
                 if (!response.status || response.status != "error") {
@@ -121,9 +118,7 @@ export class CommonService {
                     };
 
                     localStorage.setItem("config", JSON.stringify(config));
-                } else {
                 }
-                // console.log(response);
 
                 this.setCError = 0;
             },

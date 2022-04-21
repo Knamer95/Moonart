@@ -19,7 +19,7 @@ import { AppComponent } from "../../app.component";
 import { emitterTypes } from "../../models/struct";
 import { SharedService } from "../shared-service/shared-service.component";
 import { Identity } from "src/app/types/user";
-import { Config } from "src/app/types/config";
+import { Config, Themes } from "src/app/types/config";
 import { mappedLanguages } from "src/app/lang/lang";
 
 declare var jQuery: any;
@@ -29,7 +29,6 @@ declare var jQuery: any;
     styleUrls: ["./settings.component.css"],
     providers: [UserService, CommonService, AppComponent],
 })
-
 export class SettingsComponent implements OnInit, AfterViewInit {
     public identity: Identity;
     public config: Config;
@@ -37,6 +36,17 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     public mappedLanguages = mappedLanguages;
     public selectedLangID: number;
     public emitType: number;
+    public themes: Themes[] = [
+        "zoe",
+        "light",
+        "monster",
+        "energy",
+        "red",
+        "green",
+        "blue",
+        "violet",
+        "orange",
+    ];
 
     // @Input()
     // set currentLang(currentLang: any) {
@@ -69,17 +79,15 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     ) {}
 
     ngOnInit() {
-        this.lang = this._sharedService.languageContext.settings;
-        this._sharedService.setTitle(this.lang.title);
+        this._sharedService.configSubject.subscribe(
+            ({ config, languageContext }) => {
+                this.config = config;
+                this.lang = languageContext.settings;
+                this._sharedService.setTitle(this.lang.title);
+            }
+        );
 
         this.loadUser();
-
-        this.config = this._sharedService.config;
-        console.log('ewe', this.config);
-        this.render.addClass(
-            document.querySelector("." + this.config.color),
-            "chosen"
-        );
     }
 
     ngAfterViewInit() {
@@ -155,12 +163,6 @@ export class SettingsComponent implements OnInit, AfterViewInit {
                 $("select option:selected").attr("data-id")
             );
 
-            // Update the general config
-            this._sharedService.updateConfig({
-                ...this.config,
-                lang: this.selectedLangID,
-            });
-
             // Update the config in the database
             this.updateDB(this._sharedService.config);
 
@@ -172,18 +174,15 @@ export class SettingsComponent implements OnInit, AfterViewInit {
 
     pickColor(event, color) {
         if (this.config.color != color) {
-            this.render.removeClass(
-                event.target.parentElement.parentElement.parentElement.querySelector(
-                    ".chosen"
-                ),
-                "chosen"
-            );
-            this.render.addClass(event.target, "chosen");
             this.config.color = color;
-            this.updateDB(this.config);
 
+            this.updateDB(this.config);
             this._appComponent.changeColor(this.config.color);
         }
+    }
+
+    getTheme(theme) {
+     return `${theme} ${this.config.color === theme ? 'chosen' : ''}`        
     }
 
     loadUser() {
@@ -200,6 +199,8 @@ export class SettingsComponent implements OnInit, AfterViewInit {
             share: config.share || 0,
             lang: config.lang || 1,
         };
+
+        this._sharedService.updateConfig(this.config);
 
         this._commonService.setUserConfig(JSON.stringify(parsedConfig));
         const i = 0;

@@ -35,10 +35,7 @@ class UserController extends AbstractController
         return $response;
     }
 
-
-
-    public function index()
-    {
+    public function index() {
 
         $user_repo = $this->getDoctrine()->getRepository(User::class);
         $image_repo = $this->getDoctrine()->getRepository(Image::class);
@@ -66,9 +63,7 @@ class UserController extends AbstractController
         return $this->ajson($user);
     }
 
-
-
-    public function newUser(Request $request){ // Hacer validación en Frontend y Backend
+    public function newUser(Request $request) { // Hacer validación en Frontend y Backend
 
         // Recoger los datos por POST
         $json = $request->get('json', null);
@@ -85,7 +80,7 @@ class UserController extends AbstractController
         /* Example for postman PostMan {"name":"Marie","nick":"Marie99","password":"marieposa","email":"marieposa@gmail.com"} */
 
         // Check and validate data
-        if ($json != null){
+        if ($json != null) {
             
             $name = (!empty($params->name)) ? $params->name : null; // If not empty, assign name. Otherwise, null
             $nick = (!empty($params->nick)) ? $params->nick : null;
@@ -98,7 +93,7 @@ class UserController extends AbstractController
             ]);
 
             if (!empty($name) && !empty($nick) && !empty($email) && count($validate_email) == 0 
-                && !empty($password)){
+                && !empty($password)) {
 
                 // If validation is correct, create user object
                 $user = new User();
@@ -127,7 +122,7 @@ class UserController extends AbstractController
                 ));
 
                 // If not, save it on DB
-                if (count($isset_email) == 0 && count($isset_nick) == 0){
+                if (count($isset_email) == 0 && count($isset_nick) == 0) {
                     $em->persist($user);
                     $em->flush();
 
@@ -170,8 +165,6 @@ class UserController extends AbstractController
         // return new JsonResponse($data);
     }
 
-
-
     public function login(Request $request, JwtAuth $jwt_auth){
 
         // Get POST data
@@ -213,8 +206,6 @@ class UserController extends AbstractController
         // If it returns correct data, HTTP response
         return $this->ajson($data);
     }
-
-
 
     public function update(Request $request, JwtAuth $jwt_auth){
 
@@ -357,8 +348,6 @@ class UserController extends AbstractController
         return $this->ajson($data); // The $user values are defined in Controller/User.php
     }
 
-
-
     public function setConfig(Request $request, JwtAuth $jwt_auth){
 
         $token = $request->headers->get('Authorization');
@@ -428,8 +417,6 @@ class UserController extends AbstractController
         return $this->ajson($data);
     }
 
-
-        
     public function getConfig(Request $request, JwtAuth $jwt_auth){
 
         $token = $request->headers->get('Authorization');
@@ -459,9 +446,6 @@ class UserController extends AbstractController
         }
             return $this->ajson($data);
     }
-
-
-
 
     public function getUserByNick(Request $request, JwtAuth $jwt_auth){
    

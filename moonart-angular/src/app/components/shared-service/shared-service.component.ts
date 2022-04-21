@@ -1,7 +1,11 @@
 import { Component, Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { defaultLanguage, getCurrentLanguage, languagePackage } from "src/app/lang/lang";
-import { Config } from "src/app/types/config";
+import {
+    defaultLanguage,
+    getCurrentLanguage,
+    languagePackage,
+} from "src/app/lang/lang";
+import { Config, Languages, LanguageStructItem } from "src/app/types/config";
 import { Identity } from "src/app/types/user";
 
 @Component({
@@ -32,21 +36,31 @@ export class SharedService {
 
     public config: Config =
         JSON.parse(localStorage.getItem("config")) || this.defaultConfig;
-    // private config$ = new BehaviorSubject<Config>(this.config); // Not in use
-    public lang = getCurrentLanguage(this.config.lang).id; // Initialized in AppComponent
-    public languageContext = languagePackage[this.lang]; // Initialized in AppComponent
+
+    public langName = getCurrentLanguage(this.config.lang).name; // Initialized in AppComponent
+    public languageContext = languagePackage[this.langName]; // Initialized in AppComponent
+
+    public configSubject = new BehaviorSubject<{
+        config: Config;
+        languageContext: LanguageStructItem;
+        langName: Languages;
+    }>({
+        config: this.config,
+        languageContext: languagePackage[this.langName],
+        langName: this.langName,
+    }); // Not in use
 
     public identity = {} as Identity;
     public token: String = "";
     public title = "";
 
     updateConfig(config: Config) {
-        this.lang = getCurrentLanguage(config.lang || defaultLanguage).id;
+        this.langName = getCurrentLanguage(config.lang || defaultLanguage).name;
         this.config = config;
-        console.log("---", {
-            lang: this.lang,
+        this.configSubject.next({
             config: this.config,
-            languageContext: this.languageContext,
+            languageContext: languagePackage[this.langName],
+            langName: this.langName,
         });
     }
 
@@ -54,13 +68,10 @@ export class SharedService {
         this.observableReload.next(status);
     }
 
-    /*
+    // /*
     // Not in use
-    configObserver() {
-        const langMapper = ["english", "spanish"];
-        return this.config$.asObservable();
-    }
-    */
+    // configObserver = () =>
+    // */
 
     setTitle(title) {
         this.title = title;
