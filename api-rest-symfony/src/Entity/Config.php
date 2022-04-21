@@ -52,7 +52,7 @@ class Config
     /**
      * @var string
      *
-     * @ORM\Column(name="lang", type="string", length=12, nullable=true, options={"default"=""})
+     * @ORM\Column(name="lang", type="integer", nullable=true, options={"default"="1"})
      */
     private $lang;
 

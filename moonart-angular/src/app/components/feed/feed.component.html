@@ -1,6 +1,6 @@
 <div class="row no-padding">
   <div class="col-md-2"></div>
-  <div class="container-fluid col-md-8 container-ma" [ngClass]="{'error': this.hasElements === false}">
+  <div class="container-fluid col-md-8 container-ma" data-type="component-container" [ngClass]="{'error': this.hasElements === false}">
     <div *ngIf="this.hasElements === true; else elseBlock">
       <div class="tweet" *ngFor="let element of sharedImages; let i = index">
 

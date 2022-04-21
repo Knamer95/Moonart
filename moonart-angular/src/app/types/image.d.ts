@@ -3,6 +3,7 @@ export interface Image {
     id?: number;
     url: string,
     description: string,
+    name?: string,
     user: {
         image: string,
         nick: string,

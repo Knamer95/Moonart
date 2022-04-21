@@ -20,7 +20,7 @@ import { emitterTypes } from "../../models/struct";
 import { SharedService } from "../shared-service/shared-service.component";
 import { Identity } from "src/app/types/user";
 import { Config } from "src/app/types/config";
-import { defaultLanguage, getCurrentLanguage } from "src/app/lang/lang";
+import { mappedLanguages } from "src/app/lang/lang";
 
 declare var jQuery: any;
 @Component({
@@ -34,6 +34,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     public identity: Identity;
     public config: Config;
     public lang;
+    public mappedLanguages = mappedLanguages;
     public selectedLangID: number;
     public emitType: number;
 
@@ -74,6 +75,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
         this.loadUser();
 
         this.config = this._sharedService.config;
+        console.log('ewe', this.config);
         this.render.addClass(
             document.querySelector("." + this.config.color),
             "chosen"

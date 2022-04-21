@@ -147,7 +147,7 @@ export class UserService {
 
         // console.log(that.username);
 
-        if (name != false) {
+        if (name !== false) {
             that.username = name;
             unique = false;
             selector = "button[name=" + userclass + "]";

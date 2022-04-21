@@ -1,4 +1,4 @@
-<div class="container-fluid col-md-6 container-ma">
+<div class="container-fluid col-md-6 container-ma" data-type="component-container">
   <h1 class="index-title no-select">{{lang.title}}</h1>
   <hr>
   <div class="row-grid">
@@ -62,8 +62,14 @@
     </div>
     <div class="config-value">
       <select class="lang">
-        <option data-id="1" data-value="english">English</option>
-        <option data-id="2" data-value="spanish">Español</option>
+        <option 
+            *ngFor="let language of mappedLanguages" 
+            [attr.data-id]="language.id" 
+            [attr.data-value]="language.name" 
+            [selected]="language.id === config.lang"
+            >
+            {{language.name}}
+        </option>
       </select>
     </div>
   </div>

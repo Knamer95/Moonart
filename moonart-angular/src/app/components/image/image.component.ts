@@ -1,26 +1,30 @@
-import { Component, OnInit, ElementRef, EventEmitter, Output } from '@angular/core';
-import { UserService } from '../../services/user.service';
-import { ImageService } from '../../services/image.service';
-import { CommonService } from '../../services/common.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Renderer2 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { emitterTypes } from '../../models/struct';
-import { SharedService } from '../../components/shared-service/shared-service.component';
-import { Identity, Roles } from 'src/app/types/user';
-import { Image } from 'src/app/types/image';
+import {
+    Component,
+    OnInit,
+    ElementRef,
+    EventEmitter,
+    Output,
+} from "@angular/core";
+import { UserService } from "../../services/user.service";
+import { ImageService } from "../../services/image.service";
+import { CommonService } from "../../services/common.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Renderer2 } from "@angular/core";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { emitterTypes } from "../../models/struct";
+import { SharedService } from "../../components/shared-service/shared-service.component";
+import { Identity, Roles } from "src/app/types/user";
+import { Image } from "src/app/types/image";
 
 // TODO - Remove the scrollbar when viewing images in fullscreen (overflow: hidden)
 declare var jQuery: any;
 
 @Component({
-    selector: 'app-image',
-    templateUrl: './image.component.html',
-    styleUrls: ['./image.component.css']
+    selector: "app-image",
+    templateUrl: "./image.component.html",
+    styleUrls: ["./image.component.css"],
 })
-
 export class ImageComponent implements OnInit {
-
     public pageTitle: string = "Image";
     public identity: Identity;
     public token: string;
@@ -43,8 +47,8 @@ export class ImageComponent implements OnInit {
     public images: Image[] = [];
     public hasLeft: boolean = false;
     public hasRight: boolean = false;
-    public prevImage: Image = null;
-    public nextImage: Image = null;
+    public prevImage = {} as Image;
+    public nextImage = {} as Image;
 
     public maximized: boolean = false; // Set as false when initialized
 
@@ -66,7 +70,6 @@ export class ImageComponent implements OnInit {
     public nShares: number = 0;
     public commentToDelete: string;
     public customAlert: string;
-
 
     formVar: FormGroup;
     public commError: number = 0;
@@ -93,24 +96,24 @@ export class ImageComponent implements OnInit {
         private fb: FormBuilder,
         private elementRef: ElementRef,
         private _route: ActivatedRoute,
-        private render: Renderer2,
+        private render: Renderer2
     ) {
         this.image = {
-            url: '',
-            description: '',
+            url: "",
+            description: "",
             user: {
-                image: '',
-                nick: '',
+                image: "",
+                nick: "",
             },
-            status: '',
-        }
+            status: "",
+        };
     }
 
     ngOnInit() {
         this.loading = true;
-        setTimeout(() => this.loadingDelay = true, 300);
+        setTimeout(() => (this.loadingDelay = true), 300);
 
-        this._sharedService.statusNotifier$.subscribe(value => {
+        this._sharedService.statusNotifier$.subscribe((value) => {
             if (value === true) {
                 this._sharedService.needsReload(false);
                 // this.ngOnInit();
@@ -123,7 +126,7 @@ export class ImageComponent implements OnInit {
             const location = window.location.href.split("/");
 
             for (let i = 0; i < location.length; i++) {
-                if (location[i] === "images" && (i + 1) < location.length) {
+                if (location[i] === "images" && i + 1 < location.length) {
                     this.imageId = parseInt(location[i + 1]);
                 }
             }
@@ -140,7 +143,7 @@ export class ImageComponent implements OnInit {
 
         const lsConfig = localStorage.getItem("config");
 
-        if (![null, 'undefined'].includes(lsConfig)) {
+        if (![null, "undefined"].includes(lsConfig)) {
             const lsParsedConfig = JSON.parse(lsConfig);
             this.nsfw = lsParsedConfig.nsfw;
             this.epilepsy = lsParsedConfig.epilepsy;
@@ -150,7 +153,7 @@ export class ImageComponent implements OnInit {
         }
 
         this.formVar = this.fb.group({
-            comment: ''
+            comment: "",
         });
 
         this.getAllComments(this.imageId);
@@ -164,10 +167,11 @@ export class ImageComponent implements OnInit {
         // console.log("A");
     }
 
-
     ngAfterViewInit() {
         this.tarea = document.getElementById("tarea");
-        jQuery(this.elementRef.nativeElement).find('[data-toggle="tooltip"]').tooltip();
+        jQuery(this.elementRef.nativeElement)
+            .find('[data-toggle="tooltip"]')
+            .tooltip();
 
         // console.log(this.tarea);
     }
@@ -176,25 +180,33 @@ export class ImageComponent implements OnInit {
         this.ngOnInit();
     }
 
-    /* 
+    /*
      *
      * Function to load a new image by updating all the data, but without actually reloading the whole script
-     * 
+     *
      */
     reload(event: MouseEvent, newImg: Image) {
-
         const self: string = "selected-image"; // Clicked elements that should prop the view
-        const classes: Array<string> = (<HTMLInputElement>event.target).classList.value.split(" ");
+        const classes: Array<string> = (<HTMLInputElement>(
+            event.target
+        )).classList.value.split(" ");
 
         if (newImg && !classes.includes(self)) {
             this.imageId = newImg[0].id;
 
             if (window.history.replaceState) {
                 //prevents browser from storing history with each change:
-                window.history.replaceState('page', 'Title', '/images/' + this.imageId);
-            }
-            else {
-                window.history.pushState('page', 'Title', '/images/' + this.imageId);
+                window.history.replaceState(
+                    "page",
+                    "Title",
+                    "/images/" + this.imageId
+                );
+            } else {
+                window.history.pushState(
+                    "page",
+                    "Title",
+                    "/images/" + this.imageId
+                );
             }
 
             this.ngOnInit();
@@ -202,20 +214,19 @@ export class ImageComponent implements OnInit {
         }
     }
 
-
     /**
-     * 
+     *
      * Function that loads the current image displayed.
-     * 
+     *
      * In order to prevent errors from VSCode, I used that, because this.image.name for example seems to be invalid, since it's assigned in an AJAX call.
      * Another way would be to declare the objects with initial attributes from the beginning, but it's the same...
-     * 
+     *
      */
     loadImage(that) {
-        that._imageService.getImage(that.imageId).subscribe(
-            response => {
+        this._imageService.getImage(this.imageId).subscribe(
+            (response) => {
                 if (response.status === "success") {
-                    setTimeout(() => this.loading = false, 300);
+                    setTimeout(() => (this.loading = false), 300);
 
                     this.loadingDelay = false;
                     console.log(response);
@@ -223,47 +234,78 @@ export class ImageComponent implements OnInit {
                     // Idk what the purpose of this was, it didn't seem to do anything
                     // this._commonService.displayNotification(null, false, response.status);
 
-                    that.username = response.image.user.nick;
+                    this.username = response.image.user.nick;
 
                     this._userService.checkFollowing(that);
-                    that.image = response.image;
-                    document.title = that.image.name;
+                    this.image = response.image;
+                    document.title = this.image.name;
                     this.getMoreImages();
 
                     // that.images = that.image;
                     // console.log(that.images);
 
-                    if (that.image.status === 'hidden') {
+                    if (that.image.status === "hidden") {
                         this.alertStatus = "success";
 
-                        this._commonService.displayNotification(this.currentLang.attributes.hiddenImage, true, null);
-                    }
-                    else {
+                        this._commonService.displayNotification(
+                            this.currentLang.attributes.hiddenImage,
+                            true,
+                            null
+                        );
+                    } else {
                         this.alertStatus = "idle";
                     }
 
-                    this._imageService.getInteractions(this, true, "imageComponent");
+                    this._imageService.getInteractions(
+                        this,
+                        true,
+                        "imageComponent"
+                    );
 
                     if (that.image.description != null) {
-                        that.image.description = that._commonService.noscript(that.image.description);
-                        that.image.description = that._commonService.formatText(that.image.description);
+                        that.image.description = that._commonService.noscript(
+                            that.image.description
+                        );
+                        that.image.description = that._commonService.formatText(
+                            that.image.description
+                        );
                     }
 
-                    that.image.createdAt = that._commonService.dateFormat(that.image.createdAt, this.lang, "timestamp");
+                    that.image.createdAt = that._commonService.dateFormat(
+                        that.image.createdAt,
+                        this.lang,
+                        "timestamp"
+                    );
 
                     // that.image.rights = that.image.rights.charAt(0).toUpperCase() + that.image.rights.slice(1);
 
                     switch (that.image.rights) {
-                        case "ninguno": that.image.rights = this.currentLang.attributes.none; break;
-                        case "parciales": that.image.rights = this.currentLang.attributes.partial; break;
-                        case "totales": default: that.image.rights = this.currentLang.attributes.total; break;
+                        case "ninguno":
+                            that.image.rights =
+                                this.currentLang.attributes.none;
+                            break;
+                        case "parciales":
+                            that.image.rights =
+                                this.currentLang.attributes.partial;
+                            break;
+                        case "totales":
+                        default:
+                            that.image.rights =
+                                this.currentLang.attributes.total;
+                            break;
                     }
 
                     that.nsfw = JSON.parse(localStorage.getItem("config")).nsfw;
-                    that.epilepsy = JSON.parse(localStorage.getItem("config")).epilepsy;
+                    that.epilepsy = JSON.parse(
+                        localStorage.getItem("config")
+                    ).epilepsy;
 
-                    if (that.identity.nick != that.image.user.nick && ((that.nsfw === false && that.image.nsfw === true)
-                        || (that.epilepsy === false && that.image.epilepsy === true))) {
+                    if (
+                        that.identity.nick != that.image.user.nick &&
+                        ((that.nsfw === false && that.image.nsfw === true) ||
+                            (that.epilepsy === false &&
+                                that.image.epilepsy === true))
+                    ) {
                         that.visible = false;
                     }
 
@@ -275,13 +317,16 @@ export class ImageComponent implements OnInit {
 
                     that.customAlert = this.currentLang.attributes.imageAlert1;
                     if (that.image.nsfw)
-                        that.customAlert += this.currentLang.attributes.imageAlert2;
+                        that.customAlert +=
+                            this.currentLang.attributes.imageAlert2;
 
                     if (that.image.nsfw && that.image.epilepsy)
-                        that.customAlert += this.currentLang.attributes.imageAlert3;
+                        that.customAlert +=
+                            this.currentLang.attributes.imageAlert3;
 
                     if (that.image.epilepsy)
-                        that.customAlert += this.currentLang.attributes.imageAlert4;
+                        that.customAlert +=
+                            this.currentLang.attributes.imageAlert4;
 
                     that.customAlert += this.currentLang.attributes.imageAlert5;
 
@@ -290,13 +335,12 @@ export class ImageComponent implements OnInit {
                         this.moreImagesLoaded = true;
                         this.getMoreImages(); // We load more images by the user
                     }
-                }
-                else {
+                } else {
                     this.error();
                 }
                 that.loadError = 0;
             },
-            error => {
+            (error) => {
                 console.log("Ero..." + " attempt: " + that.loadError);
                 if (that.loadError < 5) {
                     that.loadImage(that);
@@ -305,9 +349,8 @@ export class ImageComponent implements OnInit {
             }
         );
 
-        this.getInteractionsInfo(that);
+        this.getInteractionsInfo();
     }
-
 
     /*
      *
@@ -320,7 +363,6 @@ export class ImageComponent implements OnInit {
         this._imageURL = this.identity.image;
     }
 
-
     /*
      *
      * Function to check if the user visualizing the image follows the image owner or not
@@ -328,7 +370,7 @@ export class ImageComponent implements OnInit {
      */
     follow(token, nick) {
         this._userService.follow(token, nick).subscribe(
-            response => {
+            (response) => {
                 if (response.status === "success") {
                     // No need to display since you can visually see it
                     // this._commonService.displayNotification(null, false, response.status);
@@ -336,7 +378,7 @@ export class ImageComponent implements OnInit {
                 }
                 this.isFwError = 0;
             },
-            error => {
+            (error) => {
                 console.log("Ero..." + " attempt: " + this.isFwError);
                 if (this.isFwError < 5) {
                     this.follow(token, nick);
@@ -346,11 +388,9 @@ export class ImageComponent implements OnInit {
         );
     }
 
-
     error() {
-        this._router.navigate(['error']);
+        this._router.navigate(["error"]);
     }
-
 
     /*
      *
@@ -359,35 +399,50 @@ export class ImageComponent implements OnInit {
      */
     getAllComments(imageId) {
         this._imageService.getComments(imageId).subscribe(
-            response => {
+            (response) => {
                 this.comments = response.comments;
                 this.commentsLength = this.comments.length;
                 for (let i = 0; i < this.comments.length; i++) {
                     this.comments[i].children = [];
                 }
 
-                for (let i = 0; i < this.comments.length; i++) { // To dormat dates
+                for (let i = 0; i < this.comments.length; i++) {
+                    // To dormat dates
 
                     // console.log(this.comments[i].user);
 
-                    this.comments[i].createdAt = this._commonService.dateFormat(this.comments[i].createdAt, this.lang, "lapsed");
+                    this.comments[i].createdAt = this._commonService.dateFormat(
+                        this.comments[i].createdAt,
+                        this.lang,
+                        "lapsed"
+                    );
                     try {
-                        this.comments[i].comment = JSON.parse(this.comments[i].comment);
-                    }
-                    catch (err) { }
+                        this.comments[i].comment = JSON.parse(
+                            this.comments[i].comment
+                        );
+                    } catch (err) {}
 
                     if (this.comments[i].status === "deleted") {
-                        this.comments[i].comment = this.currentLang.attributes.deletedComment;
+                        this.comments[i].comment =
+                            this.currentLang.attributes.deletedComment;
                     }
 
-                    this.comments[i].comment = this._commonService.noscript(this.comments[i].comment);
-                    this.comments[i].comment = this._commonService.formatText(this.comments[i].comment);
+                    this.comments[i].comment = this._commonService.noscript(
+                        this.comments[i].comment
+                    );
+                    this.comments[i].comment = this._commonService.formatText(
+                        this.comments[i].comment
+                    );
 
                     if (this.comments[i].parent) {
                         let found = false;
                         for (let j = 0; j < this.comments.length; j++) {
-                            if (this.comments[j].id === this.comments[i].parent) {
-                                this.comments[j].children.push(this.comments[i]);
+                            if (
+                                this.comments[j].id === this.comments[i].parent
+                            ) {
+                                this.comments[j].children.push(
+                                    this.comments[i]
+                                );
                                 found = true;
                             }
                         }
@@ -402,7 +457,7 @@ export class ImageComponent implements OnInit {
                 // console.log(this.comments);
                 this.commError = 0;
             },
-            error => {
+            (error) => {
                 console.log("Ero..." + " attempt: " + this.commError);
                 if (this.commError < 5) {
                     this.getAllComments(imageId);
@@ -410,7 +465,6 @@ export class ImageComponent implements OnInit {
                 }
             }
         );
-
     }
 
     /*
@@ -425,7 +479,8 @@ export class ImageComponent implements OnInit {
         if (comment) {
             for (let i = 0; i < comment.length; i++) {
                 if (comment.charCodeAt(i) === 10) {
-                    comment = comment.substr(0, i) + '\\n' + comment.substr(i + 1);
+                    comment =
+                        comment.substr(0, i) + "\\n" + comment.substr(i + 1);
                 }
             }
 
@@ -436,46 +491,47 @@ export class ImageComponent implements OnInit {
                 userId: this.identity.sub,
                 imageId: this.imageId,
                 parent: this.parent ? this.parent : null,
-                comment: this.formVar.value.comment
-            }
+                comment: this.formVar.value.comment,
+            };
             let json = JSON.stringify(data);
             this._imageService.addComment(this.token, json).subscribe(
-                response => {
+                (response) => {
                     if (response.status === "success") {
                         this.emitter.emit({
                             type: emitterTypes.ALERT,
                             status: response.status,
                             notificationType: response.status,
                             message: this.currentLang.attributes.commentAdded,
-                            timer: 3000
+                            timer: 3000,
                         });
 
                         form.reset();
 
-                        this.getAllComments(this.imageId); // Reloads the comments, so you don't have to reload the page to see the one you added 
+                        this.getAllComments(this.imageId); // Reloads the comments, so you don't have to reload the page to see the one you added
                         // console.log(response);
-                    }
-                    else {
+                    } else {
                         console.log(response);
                     }
                 },
-                error => {
+                (error) => {
                     console.log(error);
                 }
             );
         }
     }
 
-    addName(event, nick, taVal) { // taVal = textarea value (on the html it's 'tarea')
+    addName(event, nick, taVal) {
+        // taVal = textarea value (on the html it's 'tarea')
         // console.log(event.target.closest(".comment"));
-        this.parent = event.target.closest(".comment").getElementsByClassName("comment-id")[0].id.replace("comment-", "");
+        this.parent = event.target
+            .closest(".comment")
+            .getElementsByClassName("comment-id")[0]
+            .id.replace("comment-", "");
         // console.log(this.parent);
         this.addComment = "@" + nick + " " + taVal;
     }
 
-    doSomething(index: number) {
-
-    }
+    doSomething(index: number) {}
 
     /*
      *
@@ -484,23 +540,26 @@ export class ImageComponent implements OnInit {
      */
     delete(id) {
         this._imageService.delete(this.token, id).subscribe(
-            response => {
-                let message = response.status === "success" ? this.currentLang.attributes.deletedImage : this.currentLang.attributes.deletedImageError;
+            (response) => {
+                let message =
+                    response.status === "success"
+                        ? this.currentLang.attributes.deletedImage
+                        : this.currentLang.attributes.deletedImageError;
 
                 this.emitter.emit({
                     type: emitterTypes.ALERT,
                     status: response.status,
                     notificationType: response.status,
                     message: message,
-                    timer: 3000
+                    timer: 3000,
                 });
 
                 if (response.status === "success") {
                     this.deleted = true;
-                    this._router.navigate(['home']);
+                    this._router.navigate(["home"]);
                 }
             },
-            error => {
+            (error) => {
                 // console.log(error);
             }
         );
@@ -511,9 +570,8 @@ export class ImageComponent implements OnInit {
     }
 
     deleteComment(id) {
-
         this._imageService.deleteComment(this.token, id).subscribe(
-            response => {
+            (response) => {
                 console.log(response);
                 if (response.status === "success") {
                     this.ngOnInit();
@@ -523,56 +581,59 @@ export class ImageComponent implements OnInit {
                         status: response.status,
                         notificationType: response.status,
                         message: this.currentLang.attributes.deletedComment2,
-                        timer: 3000
+                        timer: 3000,
                     });
                 }
             },
-            error => {
+            (error) => {
                 // console.log(error);
             }
         );
     }
 
-
     /*
      *
      * Function to hide an image if role user_role === role_admin || role_mod (Image status is set to hidden, so only the owner can see it at their profile)
-     * Only if the user hiding it is not the owner, cause it wouldn't make sense otherwise to hide your own image 
+     * Only if the user hiding it is not the owner, cause it wouldn't make sense otherwise to hide your own image
      *
      */
     hideToggle(id, action) {
         this._imageService.hide(this.token, id, action).subscribe(
-            response => {
+            (response) => {
                 console.log(response);
                 if (response.status === "success") {
-
                     this.alertStatus = "success";
 
                     // If it's published when we call the function, it hides it, and vice-versa
                     if (action === "published")
-                        this._commonService.displayNotification(this.currentLang.attributes.hiddenImage, true, null);
+                        this._commonService.displayNotification(
+                            this.currentLang.attributes.hiddenImage,
+                            true,
+                            null
+                        );
                     else
                         this.emitter.emit({
                             type: emitterTypes.ALERT,
                             status: response.status,
                             notificationType: response.status,
                             message: this.currentLang.attributes.unbannedImage,
-                            timer: 3000
+                            timer: 3000,
                         });
 
                     this.hidden = true;
-                    setTimeout(() => { this._router.navigate(['home']); }, 1500);
+                    setTimeout(() => {
+                        this._router.navigate(["home"]);
+                    }, 1500);
                 }
             },
-            error => {
+            (error) => {
                 console.log(error);
             }
         );
     }
 
-
     navigate(tag) {
-        this._router.navigateByUrl("/search?q=tag:" + tag)
+        this._router.navigateByUrl("/search?q=tag:" + tag);
     }
 
     /*
@@ -586,13 +647,15 @@ export class ImageComponent implements OnInit {
 
     addEvents() {
         // console.log(this.comments);
-        let elements = document.querySelectorAll('.user-at');
+        let elements = document.querySelectorAll(".user-at");
         // that.image.description.querySelector('[data-link]').addEventListener('click', ));
         // console.log(elements);
 
         elements.forEach((element) => {
-            element.addEventListener('click', () => {
-                this._commonService.redirectToProfile(element.getAttribute("data-link"));
+            element.addEventListener("click", () => {
+                this._commonService.redirectToProfile(
+                    element.getAttribute("data-link")
+                );
             });
         });
     }
@@ -603,30 +666,31 @@ export class ImageComponent implements OnInit {
         // console.log(this.parent);
     }
 
-
     updateCounter(event, that, action) {
-        this.getInteractionsInfo(that);
+        this.getInteractionsInfo();
     }
 
-    getInteractionsInfo(that) {
-        that._imageService.getInteractionsCount(that.imageId, that.identity.sub).subscribe(
-            response => {
-                // console.log(response);
-                this.nLikes = response.likes;
-                this.nFavs = response.favs;
-                this.nShares = response.shares;
+    getInteractionsInfo() {
+        this._imageService
+            .getInteractionsCount(this.imageId, this.identity.sub)
+            .subscribe(
+                (response) => {
+                    // console.log(response);
+                    this.nLikes = response.likes;
+                    this.nFavs = response.favs;
+                    this.nShares = response.shares;
 
-                that.iCntError = 0;
-            },
-            error => {
-                console.log(error);
-                console.log("Ero..." + " attempt: " + that.iCntError);
-                if (that.iCntError < 5) {
-                    that.getInteractionsInfo(that);
-                    that.iCntError++;
+                    this.iCntError = 0;
+                },
+                (error) => {
+                    console.log(error);
+                    console.log("Ero..." + " attempt: " + this.iCntError);
+                    if (this.iCntError < 5) {
+                        this.getInteractionsInfo();
+                        this.iCntError++;
+                    }
                 }
-            }
-        );
+            );
     }
 
     getMoreImages() {
@@ -649,7 +713,8 @@ export class ImageComponent implements OnInit {
     getNextPrevImages(current) {
         const iid = current !== null ? current : this.image.id;
         this.hasLeft = iid === this.images[0][0].id ? false : true;
-        this.hasRight = iid === this.images[this.images.length - 1][0].id ? false : true;
+        this.hasRight =
+            iid === this.images[this.images.length - 1][0].id ? false : true;
 
         var imageIndex: number = null;
 
@@ -679,8 +744,7 @@ export class ImageComponent implements OnInit {
 
         if (img.clientWidth > img.clientHeight) {
             img.classList.add("aspect-width");
-        }
-        else {
+        } else {
             img.classList.add("aspect-height");
         }
     }
@@ -694,19 +758,24 @@ export class ImageComponent implements OnInit {
         if (this.identity.nick === "guest" || !this.identity.nick) {
             this.emitter.emit({
                 type: emitterTypes.LOGIN,
-                status: 'not-logged',
+                status: "not-logged",
                 notificationType: null,
                 message: null,
-                timer: 0
+                timer: 0,
             });
+        } else {
         }
-        else { }
     }
 
-
     setMaximized(event: MouseEvent, status: boolean) {
-        const closeTargets: Array<string> = ["maximized-view", "maximized-close", "image"]; // Clicked elements that should prop the view
-        const classes: Array<string> = (<HTMLInputElement>event.target).classList.value.split(" ");
+        const closeTargets: Array<string> = [
+            "maximized-view",
+            "maximized-close",
+            "image",
+        ]; // Clicked elements that should prop the view
+        const classes: Array<string> = (<HTMLInputElement>(
+            event.target
+        )).classList.value.split(" ");
         let prevent: boolean = true;
 
         for (let i = 0; i < classes.length; i++) {
@@ -716,8 +785,7 @@ export class ImageComponent implements OnInit {
             }
         }
 
-        if (!prevent)
-            this.maximized = status;
+        if (!prevent) this.maximized = status;
 
         console.log(this.maximized);
         console.log(classes);

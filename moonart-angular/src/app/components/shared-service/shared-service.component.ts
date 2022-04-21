@@ -32,7 +32,7 @@ export class SharedService {
 
     public config: Config =
         JSON.parse(localStorage.getItem("config")) || this.defaultConfig;
-    private config$ = new BehaviorSubject<Config>(this.config);
+    // private config$ = new BehaviorSubject<Config>(this.config); // Not in use
     public lang = getCurrentLanguage(this.config.lang).id; // Initialized in AppComponent
     public languageContext = languagePackage[this.lang]; // Initialized in AppComponent
 
@@ -54,10 +54,13 @@ export class SharedService {
         this.observableReload.next(status);
     }
 
+    /*
+    // Not in use
     configObserver() {
         const langMapper = ["english", "spanish"];
         return this.config$.asObservable();
     }
+    */
 
     setTitle(title) {
         this.title = title;

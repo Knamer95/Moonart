@@ -14,10 +14,11 @@ import { LoginComponent } from "./components/login/login.component";
 import { RegisterComponent } from "./components/register/register.component";
 import { ImageComponent } from "./components/image/image.component";
 import { SharedService } from "./components/shared-service/shared-service.component";
-import { Alert, Config } from "./types/config";
+import { Alert, Config, TypeMode } from "./types/config";
 import { Identity } from "./types/user";
 import * as $ from "jquery";
 import { getCurrentLanguage, languagePackage } from "./lang/lang";
+import { emitterTypes } from "./models/struct";
 
 @Component({
     selector: "app-root",
@@ -35,13 +36,15 @@ export class AppComponent implements OnInit, DoCheck {
     public identity: Identity;
     public token: string;
     public config: Config;
+    public lang;
+    public typeMode: TypeMode;
 
-    public configJSON: string;
+    public domInfo = {};
+
     public navHeight: number;
     public i: number = 0;
     public searchQuery = "";
     public navStatus: number;
-    public lang;
     public alertsArray: Alert[] = []; // Array<Object> = []; <- Leave as any, or create a new interface
     public alertCounter: number = 0;
 
@@ -61,14 +64,21 @@ export class AppComponent implements OnInit, DoCheck {
     ngOnInit() {
         this.token = this._userService.getToken();
         this._commonService.getUserConfig();
+        this.config = this._sharedService.config;
 
-        const lsParsedConfig = JSON.parse(localStorage.getItem("config"));
         const selectedLanguage = getCurrentLanguage(
-            lsParsedConfig && lsParsedConfig.lang
+            this.config && this.config.lang
         );
+
         this._sharedService.languageContext =
             languagePackage[selectedLanguage.name];
         this.lang = this._sharedService.languageContext.app;
+        this._commonService.changeNightModeAttr(this.config.nightMode);
+
+        this.domInfo = {
+            lang: selectedLanguage.name,
+            mode: this.config.nightMode ? 'night' : 'day',
+        }
 
         this.navHeight = $(".clip").height();
         this.navStatus = 1;
@@ -208,13 +218,12 @@ export class AppComponent implements OnInit, DoCheck {
         console.log({ emit });
 
         switch (emit.type) {
-            case 1:
+            case emitterTypes.LANG:
                 const langName = getCurrentLanguage(emit.lang).name;
                 this.lang = languagePackage[langName].app;
                 this._commonService.changeLangAttr(emit.lang);
                 break;
-
-            case 2:
+            case emitterTypes.ALERT:
                 const position =
                     this.alertsArray.length &&
                     this.alertsArray[0].position === 0
@@ -259,15 +268,17 @@ export class AppComponent implements OnInit, DoCheck {
                 });
 
                 break;
-            case 3:
+            case emitterTypes.LOGIN:
                 this.isGuest(null);
                 break;
-
-            case 4:
+            case emitterTypes.RELOAD:
                 this._sharedService.needsReload(true);
                 window.location.reload();
 
                 // this._imageComponent.update();
+                break;
+            case emitterTypes.NIGHT_MODE:
+                this.typeMode = emit.data;
                 break;
             default:
                 break;

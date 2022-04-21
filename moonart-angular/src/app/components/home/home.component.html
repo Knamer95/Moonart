@@ -1,4 +1,4 @@
-<div class="container-fluid col-md-12 container-ma deviantart-version" [ngClass]="{'error': this.hasElements === false}">
+<div class="container-fluid col-md-12 container-ma deviantart-version" data-type="component-container" [ngClass]="{'error': this.hasElements === false}">
     <div *ngIf="this.hasElements === true; else elseBlock">
     <h1 class="index-title no-select">&nbsp;&nbsp;{{this.currentLang.attributes.title}}</h1>
     <hr>

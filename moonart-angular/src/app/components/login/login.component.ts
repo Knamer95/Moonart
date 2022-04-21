@@ -35,13 +35,13 @@ export class LoginComponent implements OnInit {
         private _route: ActivatedRoute,
         public _sharedService: SharedService
     ) {
-        this._sharedService.setTitle(this.lang.title);
         this.user = new User(1, "", "", "", "", "", "ROLE_USER", "", "");
     }
 
     ngOnInit() {
         // this._sharedService.setTitle(this.lang.title); // Login is a component
         this.lang = this._sharedService.languageContext.login;
+        this._sharedService.setTitle(this.lang.title);
     }
 
     toggle(el) {

@@ -420,7 +420,7 @@ class UserController extends AbstractController
                 $data = [
                     'status'    => 'success',
                     'message'   => 'Config saved successfully.',
-                    'config'      => $config
+                    'config'    => $config,
                 ];
             }
         }

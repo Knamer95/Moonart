@@ -35,6 +35,12 @@ export interface Config {
 
 export type AlertType = "success" | "error" | "idle";
 
+export interface TypeMode {
+  containerMode: "day-container" | "night-container",
+  navbarMode: "navbar-day" | "navbar-night",
+  dataMode: "day-bg" | "night-bg",
+}
+
 export interface Alert {
     ref?: number;
     type: AlertType;

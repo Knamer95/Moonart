@@ -1,35 +1,104 @@
 <!-- <div class="alert alert-success notification" data-type="alert" *ngIf="alertStatus == 'success'"></div> -->
 <!-- <div class="alert alert-danger notification" data-type="alert" *ngIf="alertStatus == 'error'"></div> -->
+<div class="app-container" [attr.data-lang]="domInfo.lang" [attr.data-mode]="domInfo.mode">
+    <div class="background-image"></div>
 
-<!-- https://stackoverflow.com/questions/34542619/how-can-i-write-data-attributes-using-angular -->
-<div *ngFor="let alert of alertsArray; let i = index" class="alert notification" [ngClass]="alert.type"
-    data-type="alert" [attr.data-ref]="alert.ref" [ngStyle]="{'bottom': alert.position+'px'}">{{alert.message}}</div>
+    <!-- https://stackoverflow.com/questions/34542619/how-can-i-write-data-attributes-using-angular -->
+    <div *ngFor="let alert of alertsArray; let i = index" class="alert notification" [ngClass]="alert.type"
+        data-type="alert" [attr.data-ref]="alert.ref" [ngStyle]="{'bottom': alert.position+'px'}">{{alert.message}}</div>
 
+    <div class="nav-wrapper nav-small">
+        <!-- data-navbar="not-fixed" -->
+        <!-- <div class="clip"> -->
+        <div class="nav-background">
+            <!-- No longer where we set the theme, due to some issues -->
 
-<div class="nav-wrapper nav-small">
-    <!-- data-navbar="not-fixed" -->
-    <!-- <div class="clip"> -->
-    <div class="nav-background">
-        <!-- No longer where we set the theme, due to some issues -->
+            <div class="navbar" [attr.data-theme]="zoe" [attr.data-status]="liquid">
+                <div class="nav-container" [attr.data-position]="fixed">
 
-        <div class="navbar navbar-dark" data-theme="zoe" data-status="liquid">
-            <div class="nav-container">
+                    <div class="nav-el-1">
+                        <a><img class="img-over tremble" src="assets/img/moon2-ico.png"></a>
+                        <span><a [routerLink]="['/home']" class="nav-title">MoonArt</a></span>
+                        <!--button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarColor01"
+                            aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                            </button-->
+                        <div class="menu-toggle">
+                            <i class="fas fa-bars" (click)="toggle()"></i>
+                        </div>
+                    </div>
 
-                <div class="nav-el-1">
-                    <a><img class="img-over tremble" src="assets/img/moon2-ico.png"></a>
-                    <span><a [routerLink]="['/home']" class="nav-title">MoonArt</a></span>
-                    <!--button class="navbar-toggler" type="button" data-toggle="collapse"
-                        data-target="#navbarColor01"
-                        aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                        </button-->
-                    <div class="menu-toggle">
-                        <i class="fas fa-bars" (click)="toggle()"></i>
+                    <div class="nav-el-2">
+                        <ul>
+                            <li class="nav-item">
+                                <a class="nav-link" [routerLink]="['/home']"
+                                    (click)="toggle()">{{lang.gallery}}<span
+                                        class="sr-only">(current)</span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" [routerLink]="['/feed']"
+                                    (click)="toggle(); isGuest('/feed')">{{lang.feed}}<span
+                                        class="sr-only"></span></a>
+                            </li>
+                            <!--
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['/discover']">Discover</a>
+                    </li>
+                -->
+                            <li class="nav-item mr-auto">
+                                <a class="nav-link themed" [routerLink]="['/upload-image']" data-theme="zoe"
+                                    (click)="toggle(); isGuest('/upload-image')">{{lang.uploadImage}}&nbsp;<i
+                                        class="fas fa-upload"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-el-3">
+                        <div class="search-box">
+                            <input type="text" class="text search-input" [(ngModel)]="searchQuery"
+                                placeholder="{{lang.searchImage}}" (keyup.enter)="validateSearch()"
+                                required pattern="[A-z0-9_-]+" />
+                            <i class="fas fa-search searchbar" (click)="validateSearch()"></i>
+                        </div>
+                    </div>
+
+                    <div class="nav-el-4">
+                        <!-- <a class="navbar-brand ml-auto admin" href="#">Administrate</a> -->
+                        <ul class="navbar-nav right-position log-reg">
+                            <li class="nav-item" *ngIf="!identity || identity.nick == 'guest'">
+                                <a #loginElement class="nav-link" (click)="open('login')">{{lang.login}}</a>
+                            </li>
+                            <li class="nav-item" *ngIf="!identity || identity.nick == 'guest'">
+                                <a class="nav-link" (click)="open('register')">{{lang.register}}</a>
+                            </li>
+
+                            <!-- <button class="btn btn-outline-info btn-toggle" onclick="blur(); swap();"><i class="fas fa-lightbulb"></i></button> -->
+                            <li class="nav-item welcome-container" *ngIf="identity && identity.nick != 'guest'">
+                                <span class="nav-welcome">{{lang.welcomeMsg}},</span>
+                                <div class="dropdown show">
+                                    <button class="btn dropdown-toggle username nav-link nav-item themed" data-theme="zoe"
+                                        role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">{{identity.nick}}</button>
+
+                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                                        <!-- Changed from href to routerLink, due to error of profile not updating fixed (apparently) now. Check constructor on profile for more info -->
+                                        <a class="dropdown-item" id="view-profile"
+                                            [routerLink]="['/profile/' + identity.nick]">{{lang.profile}}</a>
+                                        <a class="dropdown-item" id="edit-profile"
+                                            [routerLink]="['/edit']">{{lang.editProfile}}</a>
+                                        <a class="dropdown-item" id="edit-profile"
+                                            [routerLink]="['/settings']">{{lang.config}}</a>
+                                        <a class="dropdown-item" id="logout"
+                                            [routerLink]="['/logout/1']">{{lang.exit}}</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-
-                <div class="nav-el-2">
-                    <ul>
+                <div class="toggle-menu" data-view="0">
+                    <ul class="phone-menu">
                         <li class="nav-item">
                             <a class="nav-link" [routerLink]="['/home']"
                                 (click)="toggle()">{{lang.gallery}}<span
@@ -40,116 +109,48 @@
                                 (click)="toggle(); isGuest('/feed')">{{lang.feed}}<span
                                     class="sr-only"></span></a>
                         </li>
-                        <!--
-                <li class="nav-item">
-                    <a class="nav-link" [routerLink]="['/discover']">Discover</a>
-                </li>
-            -->
-                        <li class="nav-item mr-auto">
+                        <li class="nav-item">
                             <a class="nav-link themed" [routerLink]="['/upload-image']" data-theme="zoe"
                                 (click)="toggle(); isGuest('/upload-image')">{{lang.uploadImage}}&nbsp;<i
                                     class="fas fa-upload"></i></a>
                         </li>
-                    </ul>
-                </div>
-
-                <div class="nav-el-3">
-                    <div class="search-box">
-                        <input type="text" class="text search-input" [(ngModel)]="searchQuery"
-                            placeholder="{{lang.searchImage}}" (keyup.enter)="validateSearch()"
-                            required pattern="[A-z0-9_-]+" />
-                        <i class="fas fa-search searchbar" (click)="validateSearch()"></i>
-                    </div>
-                </div>
-
-                <div class="nav-el-4">
-                    <!-- <a class="navbar-brand ml-auto admin" href="#">Administrate</a> -->
-                    <ul class="navbar-nav right-position log-reg">
-                        <li class="nav-item" *ngIf="!identity || identity.nick == 'guest'">
-                            <a #loginElement class="nav-link" (click)="open('login')">{{lang.login}}</a>
+                        <li class="separator"></li>
+                        <li class="nav-item small" *ngIf="identity && identity.nick != 'guest'">
+                            <a class="nav-link" id="view-profile-2" [routerLink]="['/profile/' + identity.nick]"
+                                (click)="toggle()">{{lang.profile}}</a>
                         </li>
-                        <li class="nav-item" *ngIf="!identity || identity.nick == 'guest'">
-                            <a class="nav-link" (click)="open('register')">{{lang.register}}</a>
+                        <li class="nav-item small" *ngIf="identity && identity.nick != 'guest'">
+                            <a class="nav-link" id="edit-profile-2" [routerLink]="['/edit']"
+                                (click)="toggle()">{{lang.editProfile}}</a>
+                        </li>
+                        <li class="nav-item small" *ngIf="identity && identity.nick != 'guest'">
+                            <a class="nav-link" id="edit-profile-2" [routerLink]="['/settings']"
+                                (click)="toggle()">{{lang.config}}</a>
+                        </li>
+                        <li class="nav-item small" *ngIf="identity && identity.nick != 'guest'">
+                            <a class="nav-link" id="logout-2" [routerLink]="['/logout/1']"
+                                (click)="toggle()">{{lang.exit}}</a>
                         </li>
 
-                        <!-- <button class="btn btn-outline-info btn-toggle" onclick="blur(); swap();"><i class="fas fa-lightbulb"></i></button> -->
-                        <li class="nav-item welcome-container" *ngIf="identity && identity.nick != 'guest'">
-                            <span class="nav-welcome">{{lang.welcomeMsg}},</span>
-                            <div class="dropdown show">
-                                <button class="btn dropdown-toggle username nav-link nav-item themed" data-theme="zoe"
-                                    role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
-                                    aria-expanded="false">{{identity.nick}}</button>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                                    <!-- Changed from href to routerLink, due to error of profile not updating fixed (apparently) now. Check constructor on profile for more info -->
-                                    <a class="dropdown-item" id="view-profile"
-                                        [routerLink]="['/profile/' + identity.nick]">{{lang.profile}}</a>
-                                    <a class="dropdown-item" id="edit-profile"
-                                        [routerLink]="['/edit']">{{lang.editProfile}}</a>
-                                    <a class="dropdown-item" id="edit-profile"
-                                        [routerLink]="['/settings']">{{lang.config}}</a>
-                                    <a class="dropdown-item" id="logout"
-                                        [routerLink]="['/logout/1']">{{lang.exit}}</a>
-                                </div>
-                            </div>
+                        <li class="nav-item small" *ngIf="!identity || identity.nick == 'guest'">
+                            <a class="nav-link"
+                                (click)="toggle(); open(1)">{{lang.login}}</a>
+                        </li>
+                        <li class="nav-item small" *ngIf="!identity || identity.nick == 'guest'">
+                            <a class="nav-link"
+                                (click)="toggle(); open(2)">{{lang.register}}</a>
                         </li>
                     </ul>
                 </div>
-            </div>
-            <div class="toggle-menu" data-view="0">
-                <ul class="phone-menu">
-                    <li class="nav-item">
-                        <a class="nav-link" [routerLink]="['/home']"
-                            (click)="toggle()">{{lang.gallery}}<span
-                                class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" [routerLink]="['/feed']"
-                            (click)="toggle(); isGuest('/feed')">{{lang.feed}}<span
-                                class="sr-only"></span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link themed" [routerLink]="['/upload-image']" data-theme="zoe"
-                            (click)="toggle(); isGuest('/upload-image')">{{lang.uploadImage}}&nbsp;<i
-                                class="fas fa-upload"></i></a>
-                    </li>
-                    <li class="separator"></li>
-                    <li class="nav-item small" *ngIf="identity && identity.nick != 'guest'">
-                        <a class="nav-link" id="view-profile-2" [routerLink]="['/profile/' + identity.nick]"
-                            (click)="toggle()">{{lang.profile}}</a>
-                    </li>
-                    <li class="nav-item small" *ngIf="identity && identity.nick != 'guest'">
-                        <a class="nav-link" id="edit-profile-2" [routerLink]="['/edit']"
-                            (click)="toggle()">{{lang.editProfile}}</a>
-                    </li>
-                    <li class="nav-item small" *ngIf="identity && identity.nick != 'guest'">
-                        <a class="nav-link" id="edit-profile-2" [routerLink]="['/settings']"
-                            (click)="toggle()">{{lang.config}}</a>
-                    </li>
-                    <li class="nav-item small" *ngIf="identity && identity.nick != 'guest'">
-                        <a class="nav-link" id="logout-2" [routerLink]="['/logout/1']"
-                            (click)="toggle()">{{lang.exit}}</a>
-                    </li>
-
-                    <li class="nav-item small" *ngIf="!identity || identity.nick == 'guest'">
-                        <a class="nav-link"
-                            (click)="toggle(); open(1)">{{lang.login}}</a>
-                    </li>
-                    <li class="nav-item small" *ngIf="!identity || identity.nick == 'guest'">
-                        <a class="nav-link"
-                            (click)="toggle(); open(2)">{{lang.register}}</a>
-                    </li>
-                </ul>
-            </div>
-        </div> <!-- End of navigation bar -->
+            </div> <!-- End of navigation bar -->
+        </div>
+        <!-- </div> -->
     </div>
-    <!-- </div> -->
+    <div class="nav-spacing" data-view="0"></div>
+
+    <!-- Content -->
+    <router-outlet (activate)="onActivate($event)"></router-outlet>
 </div>
-<div class="nav-spacing" data-view="0"></div>
-
-<!-- Content -->
-<router-outlet (activate)="onActivate($event)"></router-outlet>
-
 
 <!--   
     We add onActivate, and in the ts we specify that the event 

@@ -1,4 +1,10 @@
-import { Component, Injectable, Renderer2 } from "@angular/core";
+import {
+    Component,
+    Injectable,
+    Renderer2,
+    EventEmitter,
+    Output,
+} from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { User } from "../models/user";
@@ -8,7 +14,8 @@ import { Router, RoutesRecognized } from "@angular/router";
 import { filter, pairwise } from "rxjs/operators";
 import { Identity } from "../types/user";
 import { SharedService } from "../components/shared-service/shared-service.component";
-import { Config } from "../types/config";
+import { Config, TypeMode } from "../types/config";
+import { emitterTypes } from "../models/struct";
 
 @Injectable()
 export class CommonService {
@@ -19,6 +26,8 @@ export class CommonService {
     public setCError: number;
     public lastURL: string = "not defined";
     public events: Array<any> = [];
+
+    @Output() emitter = new EventEmitter();
 
     constructor(
         public _http: HttpClient,
@@ -70,8 +79,6 @@ export class CommonService {
                                 navBarAlwaysOnTop: true, // Change once it's implemented
                             };
                         }
-
-                        localStorage.setItem("config", JSON.stringify(config));
                     } else {
                     }
                     this.confError = 0;
@@ -114,7 +121,6 @@ export class CommonService {
                     };
 
                     localStorage.setItem("config", JSON.stringify(config));
-                    this.getUserConfig();
                 } else {
                 }
                 // console.log(response);
@@ -132,48 +138,33 @@ export class CommonService {
         );
     }
 
-    changeNightModeAttr(nightMode) {
-        let container = nightMode == true ? "night-container" : "day-container";
-        let background = nightMode == true ? "night-bg" : "day-bg";
-        let array = ["day-container", "night-container", "day-bg", "night-bg"];
+    changeNightModeAttr(nightMode: boolean) {
+        const typeModes: { day: TypeMode; night: TypeMode } = {
+            day: {
+                containerMode: "day-container",
+                navbarMode: "navbar-day",
+                dataMode: "day-bg",
+            },
+            night: {
+                containerMode: "night-container",
+                navbarMode: "navbar-night",
+                dataMode: "night-bg",
+            },
+        };
+        const selectedTypeMode = nightMode ? typeModes.night : typeModes.day;
 
-        if (nightMode == true) {
-            this.render.setAttribute(
-                document.querySelector(".container-ma"),
-                "data-container",
-                array[1]
-            );
-            this.render.setAttribute(document.body, "data-mode", array[3]);
-            this.render.setAttribute(
-                document.querySelector(".nav-container"),
-                "data-navbar",
-                "navbar-night"
-            );
-        } else {
-            this.render.setAttribute(
-                document.querySelector(".container-ma"),
-                "data-container",
-                array[0]
-            );
-            this.render.setAttribute(document.body, "data-mode", array[2]);
-            this.render.setAttribute(
-                document.querySelector(".nav-container"),
-                "data-navbar",
-                "navbar-day"
-            );
-        }
+        this.emitter.emit({
+            type: emitterTypes.NIGHT_MODE,
+            status: "success",
+            data: selectedTypeMode,
+            timer: 3000,
+        });
     }
 
     changeLangAttr(lang) {
         let array = ["en", "es"];
 
         if (!(lang > 0 && lang <= array.length)) lang = 1;
-
-        this.render.setAttribute(
-            document.querySelector(".container-ma"),
-            "data-language",
-            array[lang - 1]
-        );
     }
 
     /*

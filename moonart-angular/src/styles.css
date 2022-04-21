@@ -14,7 +14,7 @@ body {
     font-size: 12px !important;
 }
 
-[data-mode="night-bg"]{
+[data-mode="night"]{
     background: rgb(27, 27, 27);
 }
 
@@ -23,35 +23,35 @@ body {
     padding: 4px 10px !important;
 }
 
-[data-container="day-container"]{ background: rgba(255, 255, 255, 0.801); color: black;}    /* ***      CUSTOMIZABLES      *** */
-[data-container="night-container"]{ background: rgba(34, 33, 36, 0.801); color: white; }      /* ***      CUSTOMIZABLES      *** */
-[data-mode="day-bg"] .background-image{ background: white url("assets/img/light-bg.jpg") no-repeat; }      /* ***      CUSTOMIZABLES      *** */
-[data-mode="night-bg"] .background-image{ background: linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url("assets/img/dark-bg.jpg") no-repeat; }     /* ***      CUSTOMIZABLES      *** */
+[data-mode='day'] [data-type="component-container"]{ background: rgba(255, 255, 255, 0.801); color: black;}    /* ***      CUSTOMIZABLES      *** */
+[data-mode='night'] [data-type="component-container"]{ background: rgba(34, 33, 36, 0.801); color: white; }      /* ***      CUSTOMIZABLES      *** */
+[data-mode="day"] .background-image{ background: white url("assets/img/light-bg.jpg") no-repeat; }      /* ***      CUSTOMIZABLES      *** */
+[data-mode="night"] .background-image{ background: linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url("assets/img/dark-bg.jpg") no-repeat; }     /* ***      CUSTOMIZABLES      *** */
 .background-image{ position: fixed; padding: 0; margin: 0; top: 0; left: 0; width: 100%; height: 100%; background-size: cover !important; }
-[data-container="night-container"] .button{ background: rgba(34, 33, 36, 0.801); color: white !important }
+[data-mode='night'] [data-type="component-container"] .button{ background: rgba(34, 33, 36, 0.801); color: white !important }
 
-[data-container="night-container"]>h1{ color: lightgrey; }
+[data-mode='night'] [data-type="component-container"]>h1{ color: lightgrey; }
 
-[data-container="night-container"] input, 
-[data-mode="night-bg"] .form-control,
-[data-container="night-container"] textarea, 
-[data-container="night-container"] select {
+[data-mode='night'] [data-type="component-container"] input, 
+[data-mode="night"] .form-control,
+[data-mode='night'] [data-type="component-container"] textarea, 
+[data-mode='night'] [data-type="component-container"] select {
     color: #d7d7d7 !important;
 } 
 
-[data-container="night-container"] input:not(.custom), 
-[data-mode="night-bg"] .form-control:not(.custom),
-[data-container="night-container"] textarea:not(.custom), 
-[data-container="night-container"] select:not(.custom) { 
+[data-mode='night'] [data-type="component-container"] input:not(.custom), 
+[data-mode="night"] .form-control:not(.custom),
+[data-mode='night'] [data-type="component-container"] textarea:not(.custom), 
+[data-mode='night'] [data-type="component-container"] select:not(.custom) { 
     background: #2c2b2f !important; 
     border: none;
     outline: none;
     letter-spacing: 2px;
 }
 
-[data-container="night-container"] option { background: #222222db !important; }
+[data-mode='night'] [data-type="component-container"] option { background: #222222db !important; }
 
-[data-container="night-container"] input:focus, [data-container="night-container"] textarea:focus{ background: black; color: white; }
+[data-mode='night'] [data-type="component-container"] input:focus, [data-mode='night'] [data-type="component-container"] textarea:focus{ background: black; color: white; }
 
 *,
 *:after,
@@ -91,7 +91,7 @@ a:hover{text-decoration: none;}
     cursor: pointer !important;
 }
 
-[data-mode="day-bg"] .btn-success, [data-mode="night-bg"] .btn-success {
+[data-mode="day"] .btn-success, [data-mode="night"] .btn-success {
     background: #037ca0 !important;
 }
 
@@ -110,7 +110,7 @@ Test to make navbar not fixed. Add to app.component in the place the comment is 
 Not configurable for now, since there are issues to solve, as the rect property for phone view hiding the user menu (Profile, Edit profile...).
 Also whenever you select text, and drag mouse to the top while selecting (so it'll scroll to the top), the navbar disappears :O
 */
-[data-navbar='not-fixed'] .nav-spacing{
+.nav-container[data-position='not-fixed'] .nav-spacing{
     height: 0px;
 }
 
@@ -134,7 +134,7 @@ Also whenever you select text, and drag mouse to the top while selecting (so it'
     margin: auto auto;
 }
 
-.modal .modal-body { /* [data-mode="night-bg"] */
+.modal .modal-body { /* [data-mode="night"] */
     /* color: white; */
     padding: 1rem 2rem 1rem;
 }
@@ -150,7 +150,7 @@ Also whenever you select text, and drag mouse to the top while selecting (so it'
     transition: all 0.3s;
 }
 
-[data-mode="night-bg"].modal .close:hover {
+[data-mode="night"].modal .close:hover {
     color: white;
 }
 
@@ -184,41 +184,41 @@ Also whenever you select text, and drag mouse to the top while selecting (so it'
     padding: 1rem 2rem 0rem !important;
 }
 
-[data-mode="night-bg"] .modal .modal-content {
+[data-mode="night"] .modal .modal-content {
     color: lightgrey;
     background-color: #222222;
     border: 1px solid rgb(0 0 0 / 25%);
 }
 
-[data-mode="night-bg"] .modal .close {
+[data-mode="night"] .modal .close {
     color: white;
 }
 
-[data-mode="day-bg"] .followers-list .follower-item, [data-mode="day-bg"] .following-list .followed-item {
+[data-mode="day"] .followers-list .follower-item, [data-mode="day"] .following-list .followed-item {
     border-bottom: 1px solid #dfdfdf;
 }
 
-[data-mode="day-bg"] #followersModal .modal-header, [data-mode="day-bg"] #followingModal .modal-header {
+[data-mode="day"] #followersModal .modal-header, [data-mode="day"] #followingModal .modal-header {
     border-bottom: 1px solid #dfdfdf;
 }
 
-[data-mode="night-bg"] .followers-list .follower-item, [data-mode="night-bg"] .following-list .followed-item {
+[data-mode="night"] .followers-list .follower-item, [data-mode="night"] .following-list .followed-item {
     border-bottom: 1px solid grey;
 }
 
-[data-mode="night-bg"] #followersModal .modal-header, [data-mode="night-bg"] #followingModal .modal-header {
+[data-mode="night"] #followersModal .modal-header, [data-mode="night"] #followingModal .modal-header {
     border-bottom: 1px solid grey;
 }
 
-[data-mode="night-bg"] .followers:hover, [data-mode="night-bg"] .followers:hover *, [data-mode="night-bg"] .following:hover, [data-mode="night-bg"] .following:hover * {
+[data-mode="night"] .followers:hover, [data-mode="night"] .followers:hover *, [data-mode="night"] .following:hover, [data-mode="night"] .following:hover * {
     color: white;
 }
 
-[data-mode="day-bg"] .followers:hover, [data-mode="day-bg"] .followers:hover *, [data-mode="day-bg"] .following:hover, [data-mode="day-bg"] .following:hover * {
+[data-mode="day"] .followers:hover, [data-mode="day"] .followers:hover *, [data-mode="day"] .following:hover, [data-mode="day"] .following:hover * {
     color: black;
 }
 
-[data-mode="night-bg"] .followers-list button, [data-mode="night-bg"] .following-list button {
+[data-mode="night"] .followers-list button, [data-mode="night"] .following-list button {
     color: white !important;
 }
 
@@ -240,7 +240,7 @@ Also whenever you select text, and drag mouse to the top while selecting (so it'
     height: 88px
 }
 
-[data-navbar='not-fixed'] .clip{
+[data-position='not-fixed'] .clip{
     position: relative !important;
 }
 
@@ -271,8 +271,8 @@ ul{ margin-left:2em; }
 .navbar[data-theme="zoe"][data-status="solid"] { background: linear-gradient(45deg, #fcba67, #b358c3) }
 .navbar[data-theme="light"] { background: rgb(255, 255, 255, 0.6); }
 .navbar[data-theme="light"][data-status="solid"]  { background: rgb(255 255 255); }
-[data-mode="night-bg"] .navbar[data-theme="light"] { background: rgb(255 255 255 / 22%); }
-[data-mode="night-bg"] .navbar[data-theme="light"][data-status="solid"]  { background: rgb(255 255 255); }
+[data-mode="night"] .navbar[data-theme="light"] { background: rgb(255 255 255 / 22%); }
+[data-mode="night"] .navbar[data-theme="light"][data-status="solid"]  { background: rgb(255 255 255); }
 
 .navbar[data-theme="red"] { background-image: url("assets/img/nav-bg-red.jpg"); }
 .navbar[data-theme="green"] { background-image: url("assets/img/nav-bg-green.jpg"); }
@@ -363,14 +363,14 @@ ul{ margin-left:2em; }
     align-self: flex-end !important;
 }
 
-[data-navbar="navbar-day"],
-[data-navbar="navbar-day"] + .toggle-menu{
+[data-mode='day'] .nav-container,
+[data-mode='day'] .nav-container + .toggle-menu{
     box-shadow:0px 16px 0px rgba(0, 0, 0, 0.15);
     background-color: rgba(0, 0, 0, 0.205); 
 }
 
-[data-navbar="navbar-night"],
-[data-navbar="navbar-night"] + .toggle-menu{
+[data-mode='night'] .nav-container,
+[data-mode='night'] .nav-container + .toggle-menu{
     box-shadow:0px 16px 0px rgba(0, 0, 0, 0.733);
     background-color: rgb(0 0 0 / 68%); 
 }
@@ -415,9 +415,9 @@ ul{ margin-left:2em; }
     outline: 0;
 }
 
-[data-navbar="navbar-night"] .nav-link:hover,
-/* [data-navbar="navbar-night"] .nav-link:focus, */
-[data-navbar="navbar-night"] .btn:focus{
+[data-mode='night'] .nav-container .nav-link:hover,
+[data-mode='night'] .nav-container .nav-link:focus, */
+[data-mode='night'] .nav-container .btn:focus{
     background: rgb(136 136 136 / 26%) !important;
 }
 
@@ -495,13 +495,13 @@ ul{ margin-left:2em; }
 .olive{ color: rgb(125, 255, 212) !important; font-weight: bold;}
 
 
-.container-ma{ 
+[data-type="component-container"]{ 
     z-index: 2;
     position: relative;
     padding: 24px 32px 32px 32px;
 }
 
-.container-ma.block{ 
+[data-type="component-container"].block{ 
     margin-top: 32px; 
     margin-bottom: 32px; 
     border-radius: 5px; 
@@ -565,7 +565,7 @@ ul{ margin-left:2em; }
 */
 /*
 .image-element{ background: white; }
-[data-container="night-container"] .image-element{ background: black; }
+[data-mode='night'] [data-type="component-container"] .image-element{ background: black; }
 
 .image-wrapper:hover{
     background: #384500;
@@ -591,7 +591,7 @@ ul{ margin-left:2em; }
 }
 
 .image-element{ background: white; }
-[data-container="night-container"] .image-element{ background: black; }
+[data-mode='night'] [data-type="component-container"] .image-element{ background: black; }
 
 
 
@@ -707,27 +707,27 @@ ul{ margin-left:2em; }
 
 /* ******************************************* BLACK ******************************************* */
 /*
-[data-container="day-container"] .image-heart.black{ background-image: url("assets/img/heart-b.png"); }
-[data-container="day-container"] .image-heart:hover, [data-container="day-container"] .image-liked{ background-image: url("assets/img/heart-active.png")!important; }
+[data-mode='day'] [data-type="component-container"] .image-heart.black{ background-image: url("assets/img/heart-b.png"); }
+[data-mode='day'] [data-type="component-container"] .image-heart:hover, [data-mode='day'] [data-type="component-container"] .image-liked{ background-image: url("assets/img/heart-active.png")!important; }
 
-[data-container="day-container"] .image-star.black{ background-image: url("assets/img/star-b.png"); }
-[data-container="day-container"] .image-star:hover, [data-container="day-container"] .image-faved{ background-image: url("assets/img/star-active.png") !important; }
+[data-mode='day'] [data-type="component-container"] .image-star.black{ background-image: url("assets/img/star-b.png"); }
+[data-mode='day'] [data-type="component-container"] .image-star:hover, [data-mode='day'] [data-type="component-container"] .image-faved{ background-image: url("assets/img/star-active.png") !important; }
 
-[data-container="day-container"] .image-arrows.black{ background-image: url("assets/img/repost-b.png"); }
-[data-container="day-container"] .image-arrows:hover, [data-container="day-container"] .image-shared{ background-image: url("assets/img/repost-active.png") !important; }
+[data-mode='day'] [data-type="component-container"] .image-arrows.black{ background-image: url("assets/img/repost-b.png"); }
+[data-mode='day'] [data-type="component-container"] .image-arrows:hover, [data-mode='day'] [data-type="component-container"] .image-shared{ background-image: url("assets/img/repost-active.png") !important; }
 
 */
 /* ******************************************* WHITE ******************************************* */
 /*
 
-[data-container="night-container"] .image-heart.black{ background-image: url("assets/img/heart.png"); }
-[data-container="night-container"] .image-heart:hover, [data-container="night-container"] .image-liked{background-image: url("assets/img/heart-active.png")!important; }
+[data-mode='night'] [data-type="component-container"] .image-heart.black{ background-image: url("assets/img/heart.png"); }
+[data-mode='night'] [data-type="component-container"] .image-heart:hover, [data-mode='night'] [data-type="component-container"] .image-liked{background-image: url("assets/img/heart-active.png")!important; }
 
-[data-container="night-container"] .image-star.black{ background-image: url("assets/img/star.png"); }
-[data-container="night-container"] .image-star:hover, [data-container="night-container"] .image-faved{ background-image: url("assets/img/star-active.png") !important; }
+[data-mode='night'] [data-type="component-container"] .image-star.black{ background-image: url("assets/img/star.png"); }
+[data-mode='night'] [data-type="component-container"] .image-star:hover, [data-mode='night'] [data-type="component-container"] .image-faved{ background-image: url("assets/img/star-active.png") !important; }
 
-[data-container="night-container"] .image-arrows.black{ background-image: url("assets/img/repost.png"); }
-[data-container="night-container"] .image-arrows:hover, [data-container="night-container"] .image-shared{ background-image: url("assets/img/repost-active.png") !important; }
+[data-mode='night'] [data-type="component-container"] .image-arrows.black{ background-image: url("assets/img/repost.png"); }
+[data-mode='night'] [data-type="component-container"] .image-arrows:hover, [data-mode='night'] [data-type="component-container"] .image-shared{ background-image: url("assets/img/repost-active.png") !important; }
 
 */
 /* ********************************************************************************************* */
@@ -802,7 +802,7 @@ ul{ margin-left:2em; }
     z-index: 200
 }
 
-[data-navbar='not-fixed'] .fixed-top{
+[data-position='not-fixed'] .fixed-top{
     position: relative !important;
 }
 
@@ -844,11 +844,11 @@ ul{ margin-left:2em; }
     background: #33333361;
 }
 
-[data-mode="night-bg"] .search-box .search-input{
+[data-mode="night"] .search-box .search-input{
     background: #38383878;
 }
 
-[data-mode="night-bg"] .search-input:focus{
+[data-mode="night"] .search-input:focus{
 background: #e4e4e42e;
 }
 
@@ -946,23 +946,23 @@ textarea:focus{
     color: #6a6a6aeb;
 }
 
-[data-container="night-container"] .grey-text{
+[data-mode='night'] [data-type="component-container"] .grey-text{
     color: #cccccceb;
 }
 
 /* width */
-.container-ma ::-webkit-scrollbar {
+[data-type="component-container"] ::-webkit-scrollbar {
     width: 4px;
     height: 10px;
 }
 
-.container-ma [data-mode="night-bg"]::-webkit-scrollbar,
-.container-ma [data-mode="night-bg"] ::-webkit-scrollbar {
+[data-mode="night"] [data-type="component-container"] ::-webkit-scrollbar,
+[data-mode="night"] [data-type="component-container"] ::-webkit-scrollbar {
     background: #202020;
 }
 
 /* Track */
-.container-ma ::-webkit-scrollbar-track {
+[data-type="component-container"] ::-webkit-scrollbar-track {
     /* box-shadow: inset 0 0 2px grey; */
     background: #80808054;
     border-radius: 10px;
@@ -970,13 +970,13 @@ textarea:focus{
 }
 
 /* Handle */
-.container-ma ::-webkit-scrollbar-thumb {
+[data-type="component-container"] ::-webkit-scrollbar-thumb {
     background: #00808d;
     border-radius: 0px;
 }
 
 /* Handle on hover */
-.container-ma ::-webkit-scrollbar-thumb:hover {
+[data-type="component-container"] ::-webkit-scrollbar-thumb:hover {
     background: #0093a2; 
 }
 
@@ -1001,11 +1001,11 @@ textarea:focus{
     top: -3px;
 }
 
-[data-mode="night-bg"] .bs-tooltip-auto[x-placement^=top] .arrow::before, [data-mode="night-bg"] .bs-tooltip-top .arrow::before{
+[data-mode="night"] .bs-tooltip-auto[x-placement^=top] .arrow::before, [data-mode="night"] .bs-tooltip-top .arrow::before{
     border-top-color: turquoise;
 }
 
-[data-mode="night-bg"] .tooltip-inner {
+[data-mode="night"] .tooltip-inner {
     background: turquoise;
     color: #242424;
 }
@@ -1026,13 +1026,13 @@ textarea:focus{
     background: #ffffff14 !important;
 }
 
-[data-container="night-container"] .select2-selection .select2-selection__rendered{
+[data-mode='night'] [data-type="component-container"] .select2-selection .select2-selection__rendered{
     color: white !important;
 }
 
-[data-mode="night-bg"] .select2-dropdown,
-[data-mode="night-bg"] .select2-results__option:not(.select2-results__option--highlighted),
-[data-mode="night-bg"] .select2-search__field{
+[data-mode="night"] .select2-dropdown,
+[data-mode="night"] .select2-results__option:not(.select2-results__option--highlighted),
+[data-mode="night"] .select2-search__field{
     background: #2a2a2a !important;
     color: white !important;
 }
@@ -1133,18 +1133,18 @@ textarea:focus{
 /*      ERRORS       */
 /*===================*/ 
 
-.container-ma.error{ 
+[data-type="component-container"].error{ 
     text-align: center; 
     margin: 40px auto !important;
     padding: 64px 0 !important;
 }
 
-.container-ma.error img{ 
+[data-type="component-container"].error img{ 
     width: 224px; 
     margin-bottom: 32px; 
 }
 
-[data-container="night-container"].error img{
+[data-mode='night'] [data-type="component-container"].error img{
     filter: invert(1);
 }
 
@@ -1408,7 +1408,7 @@ textarea:focus{
         top: 0px;
     }
 
-    .container-ma{
+    [data-type="component-container"]{
         max-width: 100% !important;
     }
 
