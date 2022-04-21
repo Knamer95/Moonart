@@ -1,4 +1,5 @@
 export type Languages = "spanish" | "english";
+export type LanguagesFormatted = "Español" | "English";
 
 export interface LanguageStruct {
     english: LanguageStructItem;

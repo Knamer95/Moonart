@@ -1,4 +1,4 @@
-import { Languages, LanguageStruct } from "../types/config";
+import { Languages, LanguagesFormatted, LanguageStruct } from "../types/config";
 
 export const languagePackage: LanguageStruct = {
     english: {
@@ -437,15 +437,20 @@ export const admittedLanguages = Object.keys(languagePackage);
 interface LanguageItem {
     id: number;
     name: Languages;
+    label?: LanguagesFormatted;
 }
 export const mappedLanguages: LanguageItem[] = [
-    { id: 1, name: "english" },
-    { id: 2, name: "spanish" },
+    { id: 1, name: "english", label: 'English' },
+    { id: 2, name: "spanish", label: 'Español' },
 ];
 
 export const getCurrentLanguage = (langID: string | number): LanguageItem => {
     const parsedLangID = typeof langID === "string" ? parseInt(langID) : langID;
-    const languageStr = mappedLanguages.find((lang) => lang.id === parsedLangID);
-    const defaultLanguageStr = mappedLanguages.find((lang) => lang.id === defaultLanguage);
+    const languageStr = mappedLanguages.find(
+        (lang) => lang.id === parsedLangID
+    );
+    const defaultLanguageStr = mappedLanguages.find(
+        (lang) => lang.id === defaultLanguage
+    );
     return languageStr || defaultLanguageStr;
 };

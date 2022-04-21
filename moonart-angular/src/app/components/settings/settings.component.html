@@ -68,7 +68,7 @@
             [attr.data-value]="language.name" 
             [selected]="language.id === config.lang"
             >
-            {{language.name}}
+            {{language.label}}
         </option>
       </select>
     </div>
@@ -95,7 +95,7 @@
   </div>
   <div class="themes-container">
     <div>
-      <div *ngFor="let theme of themes" class="color" [ngClass]="getTheme(theme)" (click)="pickColor($event, theme)" data-toggle="tooltip" data-placement="top" [title]="theme">
+      <div *ngFor="let theme of themes" class="color" [ngClass]="getTheme(theme)" (click)="pickColor($event, theme)" data-toggle="tooltip" data-placement="top" [title]="theme.charAt(0).toUpperCase() + theme.slice(1)">
       </div>
 
       <!-- <div class="color yellow" (click)="pickColor($event, 'yellow')" data-toggle="tooltip" data-placement="top"
