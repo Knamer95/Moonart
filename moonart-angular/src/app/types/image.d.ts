@@ -19,8 +19,18 @@ export interface Image {
     },
 }
 
-export interface UserImage {
-    like: boolean,
-    fav: boolean,
-    share: boolean,
+export interface UserInteractions {
+    liked: boolean,
+    faved: boolean,
+    shared: boolean,
+    saving?: {
+        liked: boolean,
+        faved: boolean,
+        shared: boolean,
+    },
+}
+
+export interface FollowStatus {
+    following: boolean,
+    followed: boolean,
 }

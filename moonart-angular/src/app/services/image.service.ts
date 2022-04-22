@@ -121,8 +121,9 @@ export class ImageService {
         return this._http.put(url, params, { headers }); // If there aren't 3 args, headers is passed as param
     }
 
+    // Remove once image doesn't depend on this
     checkInteractions(token, data): Observable<any> {
-        const url = `${this.apiURL}/check`;
+        const url = `${this.apiURL}/image/check_interactions`;
         const json = JSON.stringify(data);
         const params = `json=${json}`;
 
@@ -133,9 +134,9 @@ export class ImageService {
         return this._http.post(url, params, { headers });
     }
 
-    interact(token, data, status): Observable<any> {
-        const url = `${this.apiURL}/${
-            status ? "update_interaction" : "create_interaction"
+    interact(token, data): Observable<any> {
+        const url = `${this.apiURL}/image/${
+            data.method === "PUT" ? "update_interaction" : "create_interaction"
         }`;
         const json = JSON.stringify(data);
         const params = `json=${json}`;
@@ -144,7 +145,11 @@ export class ImageService {
             .set("Content-Type", "application/x-www-form-urlencoded")
             .set("Authorization", token);
 
-        return this._http[status ? "put" : "post"](url, params, { headers });
+        console.log('interactData', json);
+        console.log('url', url);
+        console.log('data.method.toLowerCase()', data.method.toLowerCase());
+
+        return this._http[data.method.toLowerCase()](url, params, { headers });
     }
 
     getComments(imageId): Observable<any> {
@@ -642,220 +647,39 @@ export class ImageService {
         }
     }
 
+    // TODO - Pass ID!!
     saveInteraction(
-        event,
-        that,
-        action,
-        unique = false,
-        env = null,
+        data, // {id, action}
         callback = null
     ) {
+        const { user, image, action } = data;
         // 'unique' is an optional param, that if true, means it's a single image
 
-        var id;
-        var estado;
-        var selectedImage;
-
         // console.log(that);
-        var newTarget = event.target.parentElement;
 
-        if (unique) {
-            selectedImage = document.querySelector(".image");
-            selectedImage = selectedImage.src;
-            id = that.imageId;
-        } else {
-            selectedImage =
-                newTarget.parentElement.parentElement.querySelector(
-                    ".image-element"
-                ).src;
-            selectedImage = selectedImage.split("/");
-            selectedImage = selectedImage[selectedImage.length - 1];
-
-            for (let i = 0; i < that.images.length; i++) {
-                if (that.images[i][0].url == selectedImage) {
-                    id = that.images[i][0].id;
-                }
-            }
-        }
-
-        var data = {
-            user_id: that.identity.sub,
-            image_id: id,
+        const formattedData = {
+            user_id: user.sub,
+            image_id: image.id,
             action: "",
             method: "",
         };
 
-        that._imageService.checkInteractions(that.token, data).subscribe(
+        this.checkInteractions(user.token, formattedData).subscribe(
             (response) => {
                 if (!response.status || response.status != "error") {
-                    estado = response;
                     // console.log(response.isset_interactions);
-                    data.action = action;
-                    if (response.found) {
-                        data.method = "PUT";
-                    } else {
-                        data.method = "POST";
-                    }
+                    formattedData.action = action;
+                    formattedData.method = response.found ? "PUT" : "POST";
 
-                    that._imageService
-                        .interact(that.token, data, estado)
-                        .subscribe(
-                            (response) => {
-                                // console.log(env);
-                                if (!env) {
-                                    if (response.params.liked) {
-                                        that.render.addClass(
-                                            newTarget.parentElement.querySelector(
-                                                ".image-heart"
-                                            ),
-                                            "image-liked"
-                                        );
-                                    } else {
-                                        that.render.removeClass(
-                                            newTarget.parentElement.querySelector(
-                                                ".image-heart"
-                                            ),
-                                            "image-liked"
-                                        );
-                                    }
-                                    if (response.params.faved) {
-                                        that.render.addClass(
-                                            newTarget.parentElement.querySelector(
-                                                ".image-star"
-                                            ),
-                                            "image-faved"
-                                        );
-                                    } else {
-                                        that.render.removeClass(
-                                            newTarget.parentElement.querySelector(
-                                                ".image-star"
-                                            ),
-                                            "image-faved"
-                                        );
-                                    }
-                                    if (response.params.shared) {
-                                        that.render.addClass(
-                                            newTarget.parentElement.querySelector(
-                                                ".image-arrows"
-                                            ),
-                                            "image-shared"
-                                        );
-                                    } else {
-                                        that.render.removeClass(
-                                            newTarget.parentElement.querySelector(
-                                                ".image-arrows"
-                                            ),
-                                            "image-shared"
-                                        );
-                                    }
-                                } else if (env === "imageComponent") {
-                                    if (response.params.liked) {
-                                        that.render.setAttribute(
-                                            document.querySelector(
-                                                ".like-container"
-                                            ),
-                                            "data-status",
-                                            "1"
-                                        );
-                                        document.querySelector(
-                                            ".like-container span"
-                                        ).textContent = "LIKED";
-                                        document
-                                            .querySelector(".like-container i")
-                                            .classList.remove("far");
-                                        document
-                                            .querySelector(".like-container i")
-                                            .classList.add("fas");
-                                    } else {
-                                        that.render.setAttribute(
-                                            document.querySelector(
-                                                ".like-container"
-                                            ),
-                                            "data-status",
-                                            "0"
-                                        );
-                                        document.querySelector(
-                                            ".like-container span"
-                                        ).textContent = "LIKE";
-                                        document
-                                            .querySelector(".like-container i")
-                                            .classList.remove("fas");
-                                        document
-                                            .querySelector(".like-container i")
-                                            .classList.add("far");
-                                    }
-                                    if (response.params.faved) {
-                                        that.render.setAttribute(
-                                            document.querySelector(
-                                                ".fav-container"
-                                            ),
-                                            "data-status",
-                                            "1"
-                                        );
-                                        document.querySelector(
-                                            ".fav-container span"
-                                        ).textContent = "ADDED TO FAVOURITES";
-                                        document
-                                            .querySelector(".fav-container i")
-                                            .classList.remove("far");
-                                        document
-                                            .querySelector(".fav-container i")
-                                            .classList.add("fas");
-                                    } else {
-                                        that.render.setAttribute(
-                                            document.querySelector(
-                                                ".fav-container"
-                                            ),
-                                            "data-status",
-                                            "0"
-                                        );
-                                        document.querySelector(
-                                            ".fav-container span"
-                                        ).textContent = "ADD TO FAVOURITES";
-                                        document
-                                            .querySelector(".fav-container i")
-                                            .classList.remove("fas");
-                                        document
-                                            .querySelector(".fav-container i")
-                                            .classList.add("far");
-                                    }
-                                    if (response.params.shared) {
-                                        that.render.setAttribute(
-                                            document.querySelector(
-                                                ".share-container"
-                                            ),
-                                            "data-status",
-                                            "1"
-                                        );
-                                        document.querySelector(
-                                            ".share-container span"
-                                        ).textContent = "SHARED";
-                                    } else {
-                                        that.render.setAttribute(
-                                            document.querySelector(
-                                                ".share-container"
-                                            ),
-                                            "data-status",
-                                            "0"
-                                        );
-                                        document.querySelector(
-                                            ".share-container span"
-                                        ).textContent = "SHARE";
-                                    }
-                                }
-
-                                if (env) {
-                                    that.updateCounter(event, that, action);
-                                }
-                            },
-                            (error) => {
-                                console.log(error);
-                            }
-                        );
+                    this.interact(user.token, formattedData).subscribe(
+                        (response) => {
+                            // console.log(env);
+                        },
+                        (error) => console.log(error)
+                    );
                 } else {
                 }
-            },
-            (error) => {}
+            }
         );
     }
 

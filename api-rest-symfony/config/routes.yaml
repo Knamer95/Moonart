@@ -108,23 +108,23 @@ shared_images:
 # ROUTES FOR THE CONTROLLER: INTERACTIONS #
 
 create_interaction:
-    path: /create_interaction
-    controller: App\Controller\InteractionsController::interact
+    path: /image/create_interaction
+    controller: App\Controller\InteractionsController::addUserInteraction
     methods: [POST]
 
 update_interaction:
-    path: /update_interaction
-    controller: App\Controller\InteractionsController::interact
+    path: /image/update_interaction
+    controller: App\Controller\InteractionsController::addUserInteraction
     methods: [PUT]
 
 check:
-    path: /check
-    controller: App\Controller\InteractionsController::check
+    path: /image/check_interactions
+    controller: App\Controller\InteractionsController::checkUserInteractions
     methods: [POST]
 
 get_image_interactions:
     path: /image/interactions
-    controller: App\Controller\InteractionsController::countInteractions
+    controller: App\Controller\InteractionsController::countImageInteractions
     methods: [GET]
 
     

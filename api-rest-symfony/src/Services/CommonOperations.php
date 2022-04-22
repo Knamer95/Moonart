@@ -2,29 +2,38 @@
 
 namespace App\Services;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
 use App\Entity\User;
 use App\Entity\Image;
+use App\Entity\UserInteractsWithImage;
 use App\Entity\UserComment;
 use App\Entity\ImageComment;
+use Doctrine\ORM\EntityManagerInterface;
 
-class CommonOperations{
+class CommonOperations extends AbstractController {
+    public $em;
+
+    public function __construct(EntityManagerInterface $em) {
+        $this->em = $em;
+    }
 
     /* 
-    * Function to check if the user is allowed to do an operation
-    * params
-    *       $user           -> User trying to do the request
-    *       $owner          -> Owner of the element to be deleted
-    *       $parent_owner   -> Owner of the main image/profile/etc...
-    *       $type   -> Operation: {1: user, 2: image, 3: user_comment, 4: image_comment}
-    *
-    *       Since an owner from an image/profile has full rights over everything (except if it comes from an admin/mod), it's important to differentiate element owner, and "container/parent" owner. 
-    *      
-    *       Normal can:          none, delete image comments, delete profile comments => From self                                  -- Level 0
-    *         Mods can:   Hide images, delete image comments, delete profile comments => From everyone, except admins/other mods    -- Level 1
-    *       Owners can: Delete images, delete image comments, delete profile comments => From everyone, except admins/mods          -- Level 2
-    *       Admins can: Delete images, delete image comments, delete profile comments => From everyone, except other admins         -- Level 2
-    *      
-    */
+     * Function to check if the user is allowed to do an operation
+     * params
+     *       $user           -> User trying to do the request
+     *       $owner          -> Owner of the element to be deleted
+     *       $parent_owner   -> Owner of the main image/profile/etc...
+     *       $type   -> Operation: {1: user, 2: image, 3: user_comment, 4: image_comment}
+     *
+     *       Since an owner from an image/profile has full rights over everything (except if it comes from an admin/mod), it's important to differentiate element owner, and "container/parent" owner. 
+     *      
+     *       Normal can:          none, delete image comments, delete profile comments => From self                                  -- Level 0
+     *          Mods can:   Hide images, delete image comments, delete profile comments => From everyone, except admins/other mods    -- Level 1
+     *        Owners can: Delete images, delete image comments, delete profile comments => From everyone, except admins/mods          -- Level 2
+     *       Admins can: Delete images, delete image comments, delete profile comments => From everyone, except other admins         -- Level 2
+     *      
+     */
 
     function checkHierarchyPermissions($user, $owner, $parent_owner, $type) {
 
@@ -70,5 +79,28 @@ class CommonOperations{
 
         return false;
         // if ($user->role !== "role_mod" && $user->role !== "role_admin") {}
+    }
+
+    public function getImageInteractions($image) {
+        $interactions_likes = $this->em->getRepository(UserInteractsWithImage::class)->findBy([
+            'image'         => $image,
+            'liked'         => 1
+        ]);
+
+        $interactions_favs = $this->em->getRepository(UserInteractsWithImage::class)->findBy([
+            'image'         => $image,
+            'faved'         => 1
+        ]);
+
+        $interactions_shares = $this->em->getRepository(UserInteractsWithImage::class)->findBy([
+            'image'         => $image,
+            'shared'         => 1
+        ]);
+
+        return [
+            'likes' => sizeof($interactions_likes),
+            'favs' => sizeof($interactions_favs),
+            'shares' => sizeof($interactions_shares),
+        ];
     }
 }

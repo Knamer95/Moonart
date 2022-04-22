@@ -93,6 +93,8 @@ class Image
 
     private $interactions = [];
 
+    private $follow_status = [];
+
     /**
      * @var \User
      *
@@ -237,6 +239,17 @@ class Image
     {
         $this->interactions = $interactions;
     }
+
+    public function getFollowStatus(): ?Array
+    {
+        return $this->follow_status;
+    }
+
+    public function setFollowStatus($follow_status)
+    {
+        $this->follow_status = $follow_status;
+    }
+
 
     public function getUser(): ?User
     {

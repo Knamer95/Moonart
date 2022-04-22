@@ -60,25 +60,25 @@ class FollowController extends AbstractController
             if(!empty($user_to_follow)){
 
                 $user_repo = $this->getDoctrine()->getRepository(User::class);
-                $user_1_instance = $user_repo->findOneBy([
+                $request_user = $user_repo->findOneBy([
                     'id' => $identity->sub
                 ]);
     
-                $user_2_instance = $user_repo->findOneBy([
+                $user_to_check = $user_repo->findOneBy([
                     'nick' => $user_to_follow
                 ]);
     
 
                 $is_following = $this->getDoctrine()->getRepository(UserFollowsUser::class)->findOneBy([
                     'follower' => $identity->sub,
-                    'followed' => $user_2_instance->getId()
+                    'followed' => $user_to_check->getId()
                 ]);
 
                 if (!($is_following && is_object($is_following))){
 
                     $is_following = new UserFollowsUser();
-                    $is_following->setFollower($user_1_instance);
-                    $is_following->setFollowed($user_2_instance);
+                    $is_following->setFollower($request_user);
+                    $is_following->setFollowed($user_to_check);
                     $is_following->setFollowedAt(new \Datetime('now'));
                     $em->persist($is_following);
                     $em->flush();
@@ -119,41 +119,37 @@ class FollowController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $identity = $jwt_auth->checkToken($token, true);
 
-            $user_id = ($identity->sub != null) ? $identity->sub : null;
-            
+            $user_id = ($identity->sub !== null) ? $identity->sub : null;
             $nick = $request->get('nick', null);
-
        
             if(!empty($nick)){
-
                 $user_repo = $this->getDoctrine()->getRepository(User::class);
-                $user_1_instance = $user_repo->findOneBy([
+                $request_user = $user_repo->findOneBy([
                     'id' => $identity->sub
                 ]);
     
-                $user_2_instance = $user_repo->findOneBy([
+                $user_to_check = $user_repo->findOneBy([
                     'nick' => $nick
                 ]);
     
+                if ($request_user && $user_to_check) {
+                    $is_following = $this->getDoctrine()->getRepository(UserFollowsUser::class)->findOneBy([
+                        'follower' => $identity->sub,
+                        'followed' => $user_to_check->getId(),
+                    ]);
 
-                $is_following = $this->getDoctrine()->getRepository(UserFollowsUser::class)->findOneBy([
-                    'follower' => $identity->sub,
-                    'followed' => $user_2_instance->getId()
-                ]);
-
-                if (!($is_following && is_object($is_following))){
-                    
+                    $is_followed = $this->getDoctrine()->getRepository(UserFollowsUser::class)->findOneBy([
+                        'follower' => $user_to_check->getId(),
+                        'followed' => $identity->sub,
+                    ]);
+                        
                     $data = [
                         'status'    => 'success',
-                        'following' => false                    
+                        'following' => ($is_following && is_object($is_following)),
+                        'followed' => ($is_followed && is_object($is_followed)),
                     ];
-                }
-                else{
-
-                    $data = [
-                        'status'    => 'success',
-                        'following' => true                    
-                    ];
+                } else {
+                    $data['message'] = 'Unexistant user(s)';
                 }
             }
         }

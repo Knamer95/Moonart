@@ -15,6 +15,8 @@ use App\Entity\User;
 use App\Entity\Image;
 use App\Entity\UserInteractsWithImage;
 use App\Services\JwtAuth;
+use App\Services\CommonOperations;
+
 // use App\Services\ImageUploader;
 
 class InteractionsController extends AbstractController
@@ -36,7 +38,7 @@ class InteractionsController extends AbstractController
         return $response;
     }
 
-    public function check(Request $request, JwtAuth $jwt_auth){
+    public function checkUserInteractions(Request $request, JwtAuth $jwt_auth){
 
         $token = $request->headers->get('Authorization');
         $authCheck = $jwt_auth->checkToken($token);
@@ -86,7 +88,8 @@ class InteractionsController extends AbstractController
         return $this->ajson($data);
     }
 
-    public function interact(Request $request, JwtAuth $jwt_auth){
+    public function addUserInteraction(Request $request, JwtAuth $jwt_auth) {
+        sleep(2);
 
         // Array por defecto para devolver
         $data = [
@@ -103,12 +106,13 @@ class InteractionsController extends AbstractController
         if ($authCheck){
             // Recoger datos por POST
             $json = $request->get('json', null);
+            $data['json'] = $json;
             $params = json_decode($json);
 
             // Recoger el objeto del usuario identificado
             $identity = $jwt_auth->checkToken($token, true);
 
-            if ($json != null){
+            if ($json !== null){
                 
                 $user_id = (!empty($params->user_id)) ? $params->user_id : null;
                 $image_id = (!empty($params->image_id)) ? $params->image_id : null;
@@ -125,64 +129,56 @@ class InteractionsController extends AbstractController
                         'id' => $image_id
                     ]);
 
-                    if ($params->method == "POST"){
-                        $interactions = new UserInteractsWithImage();
-                        $interactions->setLiked(false);
-                        $interactions->setFaved(false);
-                        $interactions->setShared(false);
-                        $interactions->setLikedAt(null);
-                        $interactions->setFavedAt(null);
-                        $interactions->setSharedAt(null);
-
+                    if ($params->method === "POST"){
+                        $user_interactions = new UserInteractsWithImage();
+                        $user_interactions->setLiked(false);
+                        $user_interactions->setFaved(false);
+                        $user_interactions->setShared(false);
+                        $user_interactions->setLikedAt(null);
+                        $user_interactions->setFavedAt(null);
+                        $user_interactions->setSharedAt(null);
                     }
                     else{
-                        $interactions = $this->getDoctrine()->getRepository(UserInteractsWithImage::class)->findOneby([
+                        $user_interactions = $this->getDoctrine()->getRepository(UserInteractsWithImage::class)->findOneby([
                             'user'   => $user_id,
                             'image'  => $image_id
                         ]);
                     }
-                    $interactions->setUser($user);
-                    $interactions->setImage($image);
+                    $user_interactions->setUser($user);
+                    $user_interactions->setImage($image);
+
                     $date = new \Datetime('now');
 
-                    if ($action == "like"){
-                        if($interactions->getLiked() != true){
-                            $interactions->setLiked(true);
-                            $interactions->setLikedAt($date);
-                        }
-                        else{
-                            $interactions->setLiked(false);
-                            $interactions->setLikedAt(null);
-                        }
+                    $liked = $user_interactions->getLiked();
+                    $faved = $user_interactions->getFaved();
+                    $shared = $user_interactions->getShared();
+
+                    if ($action === "like"){
+                        $user_interactions->setLiked(!$liked);
+                        $user_interactions->setLikedAt($liked ? $date : null);
                     }
-                    else if ($action == "fav"){
-                        if($interactions->getFaved() != true){
-                            $interactions->setFaved(true);
-                            $interactions->setFavedAt($date); 
-                        }
-                        else{
-                            $interactions->setFaved(false);
-                            $interactions->setFavedAt(null); 
-                        }
+                    else if ($action === "fav"){
+                        $user_interactions->setFaved(!$faved);
+                        $user_interactions->setFavedAt($faved ? $date : null);
                     }
-                    else if ($action == "share"){
-                        if($interactions->getShared() != true){
-                            $interactions->setShared(true);
-                            $interactions->setSharedAt($date); 
-                        }
-                        else{
-                            $interactions->setShared(false);
-                            $interactions->setSharedAt(null); 
-                        }
+                    else if ($action === "share"){
+                        $user_interactions->setShared(!$shared);
+                        $user_interactions->setSharedAt($shared ? $date : null);
                     }
 
-                    $em->persist($interactions);
+                    $em->persist($user_interactions);
                     $em->flush();
+
+                    // After updating the data, so we get the newest values
+                    $CO = new CommonOperations($this->getDoctrine()->getManager());
+                    $image_interactions = $CO->getImageInteractions($image);
+                    $user_interactions->getImage()->setInteractions($image_interactions);
+
 
                     $data = [
                         'status'    => 'success',
-                        'message'   => 'Data:',
-                        'params'    => $interactions
+                        'message'   => 'Returned the image interactions data',
+                        'data'    => $user_interactions
                     ];
                 }
             }
@@ -192,8 +188,7 @@ class InteractionsController extends AbstractController
         return $this->ajson($data);
     }
 
-
-    public function countInteractions(Request $request){
+    public function countImageInteractions(Request $request){
 
         // Default response
 
@@ -283,9 +278,9 @@ class InteractionsController extends AbstractController
                         'shares'        => $shares,
                     ],
                     'userInteractions' => [
-                        'like'      => $user_like ? 1 : 0,
-                        'fav'       => $user_fav ? 1 : 0,
-                        'share'     => $user_share ? 1 : 0,
+                        'liked'      => $user_like ? 1 : 0,
+                        'faved'       => $user_fav ? 1 : 0,
+                        'shared'     => $user_share ? 1 : 0,
                     ],
                 ];
                 // sizeof($interactions_likes)

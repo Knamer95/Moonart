@@ -17,6 +17,7 @@ use App\Entity\UserInteractsWithImage;
 use App\Entity\UserFollowsUser;
 use App\Services\JwtAuth;
 use App\Services\ImageUploader;
+use App\Services\CommonOperations;
 
 class ImageController extends AbstractController
 {
@@ -37,15 +38,14 @@ class ImageController extends AbstractController
         return $response;
     }
 
-    public function index()
-    {
+    public function index() {
         return $this->json([
             'message' => 'Welcome to your new controller!',
             'path' => 'src/Controller/ImagesController.php',
         ]);
     }
 
-    function cmp($a, $b){
+    function cmp($a, $b) {
         $param_1 = $a->getSharedAt()->format('Y-m-d H:i:s');
         $param_2 = $b->getSharedAt()->format('Y-m-d H:i:s');
 
@@ -541,8 +541,7 @@ class ImageController extends AbstractController
     }
 
     // Get liked and faved images (For user profile view)
-    public function interactedUser(Request $request, PaginatorInterface $paginator){
-
+    public function interactedUser(Request $request, PaginatorInterface $paginator) {
         $data = [
             'status'    => 'error',
             'messsage'  => 'Error al cargar las imágenes'
@@ -560,78 +559,78 @@ class ImageController extends AbstractController
 
         if ($interaction != "null"){
 
-        $check_user = $this->getDoctrine()->getRepository(User::class)->findOneBy([
-            'id'    => $user_id,
-            'nick'  => $user
-        ]);
+            $check_user = $this->getDoctrine()->getRepository(User::class)->findOneBy([
+                'id'    => $user_id,
+                'nick'  => $user
+            ]);
 
-        $is_profile_user = false;
+            $is_profile_user = false;
 
-        if ($check_user && is_object($check_user)){
-            $is_profile_user = true;
+            if ($check_user && is_object($check_user)){
+                $is_profile_user = true;
+            }
+            
+            $where = "";
+            $and = "";
+
+            if($nsfw == "true" && $epilepsy == "true" || $is_profile_user == true){
+                $where = " AND i.id > 0 ";
+            }
+
+            else if($nsfw == "true" && $epilepsy == "false"){
+                $where = " AND i.epilepsy = 0 ";
+            }
+
+            else if($nsfw == "false" && $epilepsy == "true"){
+                $where = " AND i.nsfw = 0 ";
+            }
+
+            else{
+                $where = " AND i.nsfw = 0 AND i.epilepsy = 0 ";
+            }
+            $and = " AND i.status = 'published' ";
+
+            $dql =  "SELECT i, u.nick AS username, w.faved
+                    FROM 
+                    App\Entity\Image i 
+                    INNER JOIN
+                    App\Entity\UserInteractsWithImage w 
+                    WITH i.id = w.image
+                    INNER JOIN
+                    App\Entity\User u
+                    WITH i.user = u.id
+                    WHERE w.user = " . $user_id . " 
+                    AND w." . $interaction . " = 1" . 
+                    $where . $and . "
+                    ORDER BY w." . $interaction . "At DESC";
+            
+
+            $query = $em->createQuery($dql);
+
+
+            // Get page parameter from URL
+            $page = $request->query->getInt('page', 1); // Por defecto, 1
+            $items_per_page = 24;
+
+            // Invoke pagination
+            $pagination = $paginator->paginate($query, $page, $items_per_page);
+
+            $total = $pagination->getTotalItemCount();
+
+            // Prepare data array to return
+            $data = [
+                'status'            => 'success',
+                'messsage'          => 'Images loaded successfully.',
+                'settings'          => $where,
+                'total_items'       => $total,
+                'page'              => $page,
+                'items_per_page'    => $items_per_page,
+                'total_pages'       => ceil($total / $items_per_page),
+                'images'            => $pagination, // Here is where images go!!
+                'paginator'         => $paginator
+            ];
         }
-        
-        $where = "";
-        $and = "";
-
-        if($nsfw == "true" && $epilepsy == "true" || $is_profile_user == true){
-            $where = " AND i.id > 0 ";
-        }
-
-        else if($nsfw == "true" && $epilepsy == "false"){
-            $where = " AND i.epilepsy = 0 ";
-        }
-
-        else if($nsfw == "false" && $epilepsy == "true"){
-            $where = " AND i.nsfw = 0 ";
-        }
-
-        else{
-            $where = " AND i.nsfw = 0 AND i.epilepsy = 0 ";
-        }
-        $and = " AND i.status = 'published' ";
-
-        $dql =  "SELECT i, u.nick AS username, w.faved
-                FROM 
-                App\Entity\Image i 
-                INNER JOIN
-                App\Entity\UserInteractsWithImage w 
-                WITH i.id = w.image
-                INNER JOIN
-                App\Entity\User u
-                WITH i.user = u.id
-                WHERE w.user = " . $user_id . " 
-                AND w." . $interaction . " = 1" . 
-                $where . $and . "
-                ORDER BY w." . $interaction . "At DESC";
-        
-
-        $query = $em->createQuery($dql);
-
-
-        // Get page parameter from URL
-        $page = $request->query->getInt('page', 1); // Por defecto, 1
-        $items_per_page = 24;
-
-        // Invoke pagination
-        $pagination = $paginator->paginate($query, $page, $items_per_page);
-
-        $total = $pagination->getTotalItemCount();
-
-        // Prepare data array to return
-        $data = [
-            'status'            => 'success',
-            'messsage'          => 'Images loaded successfully.',
-            'settings'          => $where,
-            'total_items'       => $total,
-            'page'              => $page,
-            'items_per_page'    => $items_per_page,
-            'total_pages'       => ceil($total / $items_per_page),
-            'images'            => $pagination, // Here is where images go!!
-            'paginator'         => $paginator
-        ];
-    }
-    return $this->ajson($data);
+        return $this->ajson($data);
     }
 
     /*
@@ -685,6 +684,7 @@ class ImageController extends AbstractController
             $merged = [];
             $is_last = false;
             $arr_return = [];
+            $request_user_interactions = [];
 
             // We include every shared image from each user
             for($i = 0; $i < sizeof($followed_users); $i++){
@@ -695,33 +695,38 @@ class ImageController extends AbstractController
 
                 // Loop through the array of pictures shared by user
                 for ($j = 0; $j < sizeof($user_shared[$i]); $j++) {
-                // /*
-                    $image = $user_shared[$i][$j]->getImage();
+                    $item = $user_shared[$i][$j];
+                    $image = $item->getImage();
 
-                    $interactions_likes = $this->getDoctrine()->getRepository(UserInteractsWithImage::class)->findBy([
-                        'image'         => $image,
-                        'liked'         => 1
+                    $request_user_interactions = $this->getDoctrine()->getRepository(UserInteractsWithImage::class)->findOneby([
+                        'user'   => $user,
+                        'image'  => $image
                     ]);
 
-                    $interactions_favs = $this->getDoctrine()->getRepository(UserInteractsWithImage::class)->findBy([
-                        'image'         => $image,
-                        'faved'         => 1
+                    $item->setLiked($request_user_interactions->getLiked());
+                    $item->setFaved($request_user_interactions->getFaved());
+                    $item->setShared($request_user_interactions->getShared());
+
+                    $is_following = $this->getDoctrine()->getRepository(UserFollowsUser::class)->findOneBy([
+                        'follower' => $identity->sub,
+                        'followed' => $image->getUser()->getId(),
                     ]);
 
-                    $interactions_shares = $this->getDoctrine()->getRepository(UserInteractsWithImage::class)->findBy([
-                        'image'         => $image,
-                        'shared'         => 1
+                    $is_followed = $this->getDoctrine()->getRepository(UserFollowsUser::class)->findOneBy([
+                        'follower' => $image->getUser()->getId(),
+                        'followed' => $identity->sub,
                     ]);
 
-                    $image_interactions = [
-                        'likes' => sizeof($interactions_likes),
-                        'favs' => sizeof($interactions_favs),
-                        'shares' => sizeof($interactions_shares),
+                    $CO = new CommonOperations($this->getDoctrine()->getManager());
+                    $image_interactions = $CO->getImageInteractions($image);
+
+                    $follow_status = [
+                        'following' => ($is_following && is_object($is_following)),
+                        'followed' => ($is_followed && is_object($is_followed)),
                     ];
 
                     $image->setInteractions($image_interactions);
-
-                // */
+                    $image->setFollowStatus($follow_status);
                 }
 
                 array_push($all, $user_shared[$i]);
@@ -774,7 +779,6 @@ class ImageController extends AbstractController
                     array_push($arr_return, $merged[$i]);
                     
                     if($i > 0){
-
                         $arr_return_length = 0;
                         if (sizeof($arr_return) > 1){
                             $arr_return_length = sizeof($arr_return) - 1;
@@ -803,7 +807,7 @@ class ImageController extends AbstractController
 
                 $new_index = $num_iterations + $index;
         }
-
+        
         $data = [
             'status'            => 'success',
             'messsage'          => 'Images loaded successfully.',
@@ -813,10 +817,39 @@ class ImageController extends AbstractController
             'times'             => $duplicated,
             'total_size'        => sizeof($merged),
             'isLast'            => $is_last,
-            'element'           => $arr_return,
+            'item'              => $arr_return,
         ];
-        }
+
+        // $data = [
+        //     'interactions'      => $request_user_interactions,
+        // ];
+    }
 
         return $this->ajson($data);
     }
+
+    /*
+    public function utilsGetInteractions($image) {
+        $interactions_likes = $this->getDoctrine()->getRepository(UserInteractsWithImage::class)->findBy([
+            'image'         => $image,
+            'liked'         => 1
+        ]);
+
+        $interactions_favs = $this->getDoctrine()->getRepository(UserInteractsWithImage::class)->findBy([
+            'image'         => $image,
+            'faved'         => 1
+        ]);
+
+        $interactions_shares = $this->getDoctrine()->getRepository(UserInteractsWithImage::class)->findBy([
+            'image'         => $image,
+            'shared'         => 1
+        ]);
+
+        return [
+            'likes' => sizeof($interactions_likes),
+            'favs' => sizeof($interactions_favs),
+            'shares' => sizeof($interactions_shares),
+        ];
+    }
+    */
 }

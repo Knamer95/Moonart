@@ -147,23 +147,21 @@ export class UploadImageComponent implements OnInit {
                     this.status = "success";
 
                     if (this.config.share == true) {
-                        let estado = false;
-                        let data = {
+                        const data = {
                             user_id: response.image.user.id,
                             image_id: response.image.id,
                             action: "share",
                             method: "POST"
-                        }
-                        this._imageService.interact(this.token, data, estado).subscribe(
+                        };
+
+                        this._imageService.interact(this.token, data).subscribe(
                             response => {
-                                if (response.status == "success") {
+                                if (response.status === "success") {
                                     this._router.navigate(['home']);
                                 }
                                 console.log(response);
                             },
-                            error => {
-                                console.log(error);
-                            }
+                            error => console.log(error)
                         );
                     }
                     form.reset();

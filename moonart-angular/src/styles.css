@@ -1072,19 +1072,19 @@ textarea:focus{
     margin-right: 12px;
 }
 
-.fa-heart[data-status="1"], .fa-heart[data-status="0"]:hover{
+.fa-heart[data-interacted="true"], .fa-heart[data-interacted="false"]:hover{
     color: red;
 }
 
-.fa-star[data-status="1"], .fa-star[data-status="0"]:hover{
+.fa-star[data-interacted="true"], .fa-star[data-interacted="false"]:hover{
     color: yellow;
 }
 
-.fa-retweet[data-status="1"], .fa-retweet[data-status="0"]:hover{
+.fa-retweet[data-interacted="true"], .fa-retweet[data-interacted="false"]:hover{
     color: turquoise;
 }
 
-.fa-heart[data-status="1"]:hover, .fa-star[data-status="1"]:hover, .fa-retweet[data-status="1"]:hover{
+.fa-heart[data-interacted="true"]:hover, .fa-star[data-interacted="true"]:hover, .fa-retweet[data-interacted="true"]:hover{
     color: #868686;
 }
 
