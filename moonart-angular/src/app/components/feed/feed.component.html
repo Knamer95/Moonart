@@ -6,7 +6,7 @@
 
         <div class="row" *ngIf="element.user.nick != element.image.user.nick else empty">
           <div class="shared-by">
-            <i class="fas fa-retweet"></i>{{this.currentLang.attributes.sharedBy}}&nbsp;<a class="user-sharing"
+            <i class="fas fa-retweet"></i>{{lang.sharedBy}}&nbsp;<a class="user-sharing"
               [routerLink]="['/profile', element.user.nick]">{{element.user.nick}}</a>
           </div>
           <div class="col-md-8"></div>
@@ -28,7 +28,7 @@
                 <a [routerLink]="['/images', element.image.id]" class="name">{{element.image.name}}</a>
               </div>
               <div class="col-md-12">
-                <span class="by">{{this.currentLang.attributes.by}}&nbsp;</span> <a
+                <span class="by">{{lang.by}}&nbsp;</span> <a
                   [routerLink]="['/profile', element.image.user.nick]" class="by-user">{{element.image.user.nick}}</a>
                 <button type="button" *ngIf="element.image.user.nick != this.identity.nick"
                   class="button button-follow no-follow ml-3" [name]="'user-' + element.image.user.nick"
@@ -43,7 +43,7 @@
                     (click)="this._commonService.redirectToProfile($event)"></span>
                 </div>
                 <ng-template #nodescr>
-                  <span class="grey-text">{{this.currentLang.attributes.noDescription}}</span>
+                  <span class="grey-text">{{lang.noDescription}}</span>
                 </ng-template>
               </div>
             </div>
@@ -62,7 +62,7 @@
               </div>
 
               <div class="date no-select">
-                {{this.currentLang.attributes.the}}{{element.image.createdAt}}{{this.currentLang.attributes.ago}}
+                {{lang.the}}{{element.image.createdAt}}{{lang.ago}}
                 <!-- <br> -->
                 <!-- CE {{element.sharedAt}} -->
               </div>
@@ -74,9 +74,9 @@
     <ng-template #elseBlock>
       <div>
         <img src="assets/img/404.png">
-        <h2>{{this.currentLang.attributes.suchEmpty}}</h2>
+        <h2>{{lang.suchEmpty}}</h2>
         <br><br>
-        <p>{{this.currentLang.attributes.followTip}}</p>
+        <p>{{lang.followTip}}</p>
       </div>
     </ng-template>
   </div>

@@ -277,12 +277,16 @@ class InteractionsController extends AbstractController
                     'status'        => 'success',
                     'messsage'      => 'Image details',
                     // 'image'        => $image,
-                    'likes'         => $likes,
-                    'favs'          => $favs,
-                    'shares'        => $shares,
-                    'userLike'      => $user_like ? 1 : 0,
-                    'userFav'      => $user_fav ? 1 : 0,
-                    'userShare'      => $user_share ? 1 : 0,
+                    'interactions'  => [
+                        'likes'         => $likes,
+                        'favs'          => $favs,
+                        'shares'        => $shares,
+                    ],
+                    'userInteractions' => [
+                        'like'      => $user_like ? 1 : 0,
+                        'fav'       => $user_fav ? 1 : 0,
+                        'share'     => $user_share ? 1 : 0,
+                    ],
                 ];
                 // sizeof($interactions_likes)
             }

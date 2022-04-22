@@ -91,6 +91,8 @@ class Image
      */
     private $tags;
 
+    private $interactions = [];
+
     /**
      * @var \User
      *
@@ -224,6 +226,16 @@ class Image
         $this->tags = $tags;
 
         return $this;
+    }
+
+    public function getInteractions(): ?Array
+    {
+        return $this->interactions;
+    }
+
+    public function setInteractions($interactions)
+    {
+        $this->interactions = $interactions;
     }
 
     public function getUser(): ?User

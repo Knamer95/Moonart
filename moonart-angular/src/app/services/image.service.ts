@@ -46,9 +46,9 @@ export class ImageService {
         user,
         isProfileUser = false
     ): Observable<any> {
-        const url = `${this.apiURL}/image/image/list/all?page=${
+        const url = `${this.apiURL}/image/list/all?page=${
             page || 1
-        } &nsfw=${nsfw}&epilepsy=${epilepsy}&user=${user}&isProfileUser=${isProfileUser}`;
+        }&nsfw=${nsfw}&epilepsy=${epilepsy}&user=${user}&isProfileUser=${isProfileUser}`;
 
         return this._http.get(url);
     }
@@ -207,8 +207,8 @@ export class ImageService {
         let user = typeof that.username !== "undefined" ? that.username : null;
         this.getAllImages(
             page,
-            that.nsfw,
-            that.epilepsy,
+            that.config.nsfw,
+            that.config.epilepsy,
             user,
             isProfileUser
         ).subscribe(

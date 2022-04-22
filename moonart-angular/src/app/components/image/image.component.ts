@@ -15,6 +15,7 @@ import { emitterTypes } from "../../models/struct";
 import { SharedService } from "../../components/shared-service/shared-service.component";
 import { Identity, Roles } from "src/app/types/user";
 import { Image } from "src/app/types/image";
+import { Config } from "src/app/types/config";
 
 // TODO - Remove the scrollbar when viewing images in fullscreen (overflow: hidden)
 declare var jQuery: any;
@@ -25,14 +26,13 @@ declare var jQuery: any;
     styleUrls: ["./image.component.css"],
 })
 export class ImageComponent implements OnInit {
-    public pageTitle: string = "Image";
     public identity: Identity;
     public token: string;
+    public config: Config;
+    public lang: { [key: string]: string | null };
+
     public imageId: number;
     public tarea: HTMLElement; // Textarea
-    public nightMode: boolean = false;
-    public nsfw: boolean = true;
-    public epilepsy: boolean = true;
     public username: string;
     public followStatus: string;
     public description: string;
@@ -79,9 +79,6 @@ export class ImageComponent implements OnInit {
     public moreError: number = 0;
     public chckError: number = 0;
     public imagError: number = 0;
-    public language: Object;
-    public lang: number;
-    public currentLang: any;
     public alertStatus: String;
     public emitType: number;
 
@@ -139,26 +136,14 @@ export class ImageComponent implements OnInit {
         if (!/^[0-9]*$/.test(String(this.imageId))) {
             this.error();
         }
-        this.loadImage(this);
-
-        const lsConfig = localStorage.getItem("config");
-
-        if (![null, "undefined"].includes(lsConfig)) {
-            const lsParsedConfig = JSON.parse(lsConfig);
-            this.nsfw = lsParsedConfig.nsfw;
-            this.epilepsy = lsParsedConfig.epilepsy;
-            this.nightMode = lsParsedConfig.nightMode;
-            this.lang = lsParsedConfig.lang;
-            this._commonService.changeNightModeAttr(this.nightMode);
-        }
 
         this.formVar = this.fb.group({
             comment: "",
         });
 
+        this.loadImage(this);
         this.getAllComments(this.imageId);
 
-        this.currentLang = {};
         this._commonService.changeLangAttr(this.lang);
     }
 
@@ -248,7 +233,7 @@ export class ImageComponent implements OnInit {
                         this.alertStatus = "success";
 
                         this._commonService.displayNotification(
-                            this.currentLang.attributes.hiddenImage,
+                            this.lang.hiddenImage,
                             true,
                             null
                         );
@@ -280,18 +265,18 @@ export class ImageComponent implements OnInit {
                     // that.image.rights = that.image.rights.charAt(0).toUpperCase() + that.image.rights.slice(1);
 
                     switch (that.image.rights) {
-                        case "ninguno":
+                        case "none":
                             that.image.rights =
-                                this.currentLang.attributes.none;
+                                this.lang.none;
                             break;
-                        case "parciales":
+                        case "partial":
                             that.image.rights =
-                                this.currentLang.attributes.partial;
+                                this.lang.partial;
                             break;
-                        case "totales":
+                        case "total":
                         default:
                             that.image.rights =
-                                this.currentLang.attributes.total;
+                                this.lang.total;
                             break;
                     }
 
@@ -315,20 +300,20 @@ export class ImageComponent implements OnInit {
                         // console.log(that.tags[0].charAt(0));
                     }
 
-                    that.customAlert = this.currentLang.attributes.imageAlert1;
+                    that.customAlert = this.lang.imageAlert1;
                     if (that.image.nsfw)
                         that.customAlert +=
-                            this.currentLang.attributes.imageAlert2;
+                            this.lang.imageAlert2;
 
                     if (that.image.nsfw && that.image.epilepsy)
                         that.customAlert +=
-                            this.currentLang.attributes.imageAlert3;
+                            this.lang.imageAlert3;
 
                     if (that.image.epilepsy)
                         that.customAlert +=
-                            this.currentLang.attributes.imageAlert4;
+                            this.lang.imageAlert4;
 
-                    that.customAlert += this.currentLang.attributes.imageAlert5;
+                    that.customAlert += this.lang.imageAlert5;
 
                     if (!this.moreImagesLoaded) {
                         // console.log(this.moreImagesLoaded);
@@ -424,7 +409,7 @@ export class ImageComponent implements OnInit {
 
                     if (this.comments[i].status === "deleted") {
                         this.comments[i].comment =
-                            this.currentLang.attributes.deletedComment;
+                            this.lang.deletedComment;
                     }
 
                     this.comments[i].comment = this._commonService.noscript(
@@ -501,7 +486,7 @@ export class ImageComponent implements OnInit {
                             type: emitterTypes.ALERT,
                             status: response.status,
                             notificationType: response.status,
-                            message: this.currentLang.attributes.commentAdded,
+                            message: this.lang.commentAdded,
                             timer: 3000,
                         });
 
@@ -543,8 +528,8 @@ export class ImageComponent implements OnInit {
             (response) => {
                 let message =
                     response.status === "success"
-                        ? this.currentLang.attributes.deletedImage
-                        : this.currentLang.attributes.deletedImageError;
+                        ? this.lang.deletedImage
+                        : this.lang.deletedImageError;
 
                 this.emitter.emit({
                     type: emitterTypes.ALERT,
@@ -580,7 +565,7 @@ export class ImageComponent implements OnInit {
                         type: emitterTypes.ALERT,
                         status: response.status,
                         notificationType: response.status,
-                        message: this.currentLang.attributes.deletedComment2,
+                        message: this.lang.deletedComment2,
                         timer: 3000,
                     });
                 }
@@ -607,7 +592,7 @@ export class ImageComponent implements OnInit {
                     // If it's published when we call the function, it hides it, and vice-versa
                     if (action === "published")
                         this._commonService.displayNotification(
-                            this.currentLang.attributes.hiddenImage,
+                            this.lang.hiddenImage,
                             true,
                             null
                         );
@@ -616,7 +601,7 @@ export class ImageComponent implements OnInit {
                             type: emitterTypes.ALERT,
                             status: response.status,
                             notificationType: response.status,
-                            message: this.currentLang.attributes.unbannedImage,
+                            message: this.lang.unbannedImage,
                             timer: 3000,
                         });
 

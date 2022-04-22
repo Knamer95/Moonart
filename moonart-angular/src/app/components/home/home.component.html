@@ -1,6 +1,6 @@
 <div class="container-fluid col-md-12 container-ma deviantart-version" data-type="component-container" [ngClass]="{'error': this.hasElements === false}">
     <div *ngIf="this.hasElements === true; else elseBlock">
-    <h1 class="index-title no-select">&nbsp;&nbsp;{{this.currentLang.attributes.title}}</h1>
+    <h1 class="index-title no-select">&nbsp;&nbsp;{{lang.title}}</h1>
     <hr>
     <!-- <div class="spacing"></div> -->
     <div class="container-images">
@@ -16,7 +16,7 @@
                         <span class="image-name">{{image[0].name}}</span>
                         <br>
                         <span class="image-by">
-                            {{this.currentLang.attributes.by}} <span class="image-user">{{image.username}}</span>
+                            {{lang.by}} <span class="image-user">{{image.username}}</span>
                         </span>
                     </span>
                     <div class="image-action" *ngIf="identity && identity.nick != 'guest'">
@@ -43,7 +43,7 @@
     <nav aria-label="Page navigation example">
         <ul class="pagination float-right">
             <li *ngIf="page != 1 && totalPages > 1">
-                <a class="page-link" [routerLink]="['/home', prevPage]">{{this.currentLang.attributes.previous}}</a>
+                <a class="page-link" [routerLink]="['/home', prevPage]">{{lang.previous}}</a>
             </li>
             <li *ngFor="let num of numberPages; let i = index">
                 <a class="page-link" *ngIf="i<5" [routerLink]="['/home', num]"
@@ -52,7 +52,7 @@
             </li>
             <li *ngIf="page != totalPages && totalPages > 1">
                 <!--  && totalPages > 1 -->
-                <a class="page-link" [routerLink]="['/home', nextPage]">{{this.currentLang.attributes.next}}</a>
+                <a class="page-link" [routerLink]="['/home', nextPage]">{{lang.next}}</a>
             </li>
         </ul>
     </nav>
@@ -60,9 +60,9 @@
 <ng-template #elseBlock>
     <div>
       <img src="assets/img/404.png">
-      <h2>{{this.currentLang.attributes.suchEmpty}}</h2>
+      <h2>{{lang.suchEmpty}}</h2>
       <br><br>
-      <p>{{this.currentLang.attributes.tip}}</p>
+      <p>{{lang.tip}}</p>
     </div>
   </ng-template>
 </div>

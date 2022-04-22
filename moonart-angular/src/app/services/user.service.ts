@@ -141,13 +141,13 @@ export class UserService {
         return this._http.get(url);
     }
 
-    checkFollowing(that, name = false, userclass = "") {
+    checkFollowing(that, name = '', userclass = "") {
         let unique = true;
         let selector;
 
         // console.log(that.username);
 
-        if (name !== false) {
+        if (name !== '') {
             that.username = name;
             unique = false;
             selector = "button[name=" + userclass + "]";

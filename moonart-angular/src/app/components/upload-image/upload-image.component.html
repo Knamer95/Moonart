@@ -41,9 +41,9 @@
         <div class="mb-5">
           <label for="rights" class="mr-3 label-title">{{this.currentLang.attributes.rights}}</label>
           <select name="rights" #rights="ngModel" [(ngModel)]="_rights">
-            <option value="totales" ng-selected="selected">{{this.currentLang.attributes.total}}</option>
-            <option value="parciales">{{this.currentLang.attributes.partial}}</option>
-            <option value="ninguno">{{this.currentLang.attributes.none}}</option>
+            <option value="total" ng-selected="selected">{{this.currentLang.attributes.total}}</option>
+            <option value="partial">{{this.currentLang.attributes.partial}}</option>
+            <option value="none">{{this.currentLang.attributes.none}}</option>
           </select>
         </div>
         <div>

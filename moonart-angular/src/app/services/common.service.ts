@@ -157,9 +157,6 @@ export class CommonService {
     }
 
     changeLangAttr(lang) {
-        let array = ["en", "es"];
-
-        if (!(lang > 0 && lang <= array.length)) lang = 1;
     }
 
     /*

@@ -19,7 +19,7 @@ import { AppComponent } from "../../app.component";
 import { emitterTypes } from "../../models/struct";
 import { SharedService } from "../shared-service/shared-service.component";
 import { Identity } from "src/app/types/user";
-import { Config, Themes } from "src/app/types/config";
+import { Config, LanguageStructItem, Themes } from "src/app/types/config";
 import { mappedLanguages } from "src/app/lang/lang";
 
 declare var jQuery: any;
@@ -32,7 +32,8 @@ declare var jQuery: any;
 export class SettingsComponent implements OnInit, AfterViewInit {
     public identity: Identity;
     public config: Config;
-    public lang;
+    public lang: { [key: string]: string | null };
+
     public mappedLanguages = mappedLanguages;
     public selectedLangID: number;
     public emitType: number;
@@ -167,7 +168,6 @@ export class SettingsComponent implements OnInit, AfterViewInit {
             this.updateDB(this._sharedService.config);
 
             // Change the language in the DOM and emit it (not used since MoonArt v2.0)
-            this._commonService.changeLangAttr(this.lang);
             this.updateLang();
         }, 10);
     }
@@ -182,7 +182,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     }
 
     getTheme(theme) {
-     return `${theme} ${this.config.color === theme ? 'chosen' : ''}`        
+        return `${theme} ${this.config.color === theme ? "chosen" : ""}`;
     }
 
     loadUser() {

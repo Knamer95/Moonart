@@ -641,7 +641,7 @@ class ImageController extends AbstractController
      * but they can reapear in the next scroll call. (This function is called on scroll, when the user reaches the bottom of the page)
      *
      */
-    public function sharedImages(Request $request, JwtAuth $jwt_auth, PaginatorInterface $paginator){
+    public function sharedImages(Request $request, JwtAuth $jwt_auth, PaginatorInterface $paginator) {
 
         $data = [
             'status'            => 'error',
@@ -693,11 +693,42 @@ class ImageController extends AbstractController
                     'shared'        => 1
                 ]);
 
+                // Loop through the array of pictures shared by user
+                for ($j = 0; $j < sizeof($user_shared[$i]); $j++) {
+                // /*
+                    $image = $user_shared[$i][$j]->getImage();
+
+                    $interactions_likes = $this->getDoctrine()->getRepository(UserInteractsWithImage::class)->findBy([
+                        'image'         => $image,
+                        'liked'         => 1
+                    ]);
+
+                    $interactions_favs = $this->getDoctrine()->getRepository(UserInteractsWithImage::class)->findBy([
+                        'image'         => $image,
+                        'faved'         => 1
+                    ]);
+
+                    $interactions_shares = $this->getDoctrine()->getRepository(UserInteractsWithImage::class)->findBy([
+                        'image'         => $image,
+                        'shared'         => 1
+                    ]);
+
+                    $image_interactions = [
+                        'likes' => sizeof($interactions_likes),
+                        'favs' => sizeof($interactions_favs),
+                        'shares' => sizeof($interactions_shares),
+                    ];
+
+                    $image->setInteractions($image_interactions);
+
+                // */
+                }
+
                 array_push($all, $user_shared[$i]);
                 $total = $total + sizeof($user_shared[$i]);
             }
 
-            if ($all){ // There might not be elements to show if the user is not following anyone, or the users they follow haven't shared anything!
+            if ($all) { // There might not be elements to show if the user is not following anyone, or the users they follow haven't shared anything!
                 // We join them so they are at the same level. Arr[0][0] => Arr[0]; Arr[0][1] => Arr[1]
                 $merged = call_user_func_array('array_merge', $all);
 
@@ -708,8 +739,9 @@ class ImageController extends AbstractController
 
                 // We filter if the user has active filters (nsfw == false => Don't show sensitive content = filter activated)
                 for($i = 0; $i < sizeof($merged); $i++){
+                    $image = $merged[$i]->getImage();
 
-                    if($merged[$i]->getImage()->getStatus() != "published"){
+                    if($image->getStatus() != "published"){
                         array_push($to_delete, $i);
                         // unset($merged[$i]);  // Doesn't work properly like this
                     }
@@ -738,7 +770,6 @@ class ImageController extends AbstractController
                 $merged = array_values($merged);    // Reindexes emtpy spaces
 
                 for($i = $index; $i < sizeof($merged); $i++){
-
                     $num_iterations++;
                     array_push($arr_return, $merged[$i]);
                     
@@ -776,15 +807,16 @@ class ImageController extends AbstractController
         $data = [
             'status'            => 'success',
             'messsage'          => 'Images loaded successfully.',
+            // 'test'              => $user_shared[0],
             'num_iterations'    => $num_iterations,
             'index'             => $new_index,
-            'veces'             => $duplicated,
+            'times'             => $duplicated,
             'total_size'        => sizeof($merged),
             'isLast'            => $is_last,
             'element'           => $arr_return,
         ];
-
         }
+
         return $this->ajson($data);
     }
 }
