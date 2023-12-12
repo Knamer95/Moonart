@@ -41,7 +41,6 @@ export class AppComponent implements OnInit, DoCheck {
 
     public domInfo = {};
 
-    public navHeight: number;
     public i: number = 0;
     public searchQuery = "";
     public navStatus: number;
@@ -50,6 +49,7 @@ export class AppComponent implements OnInit, DoCheck {
 
     @ViewChild("loginElement") loginElement: ElementRef<HTMLElement>;
     @ViewChild(ImageComponent, {}) _imageComponent: ImageComponent;
+    @ViewChild("menuToggle") menuToggle: ElementRef<HTMLElement>;
 
     constructor(
         private modalService: NgbModal,
@@ -77,7 +77,6 @@ export class AppComponent implements OnInit, DoCheck {
             }
         );
 
-        this.navHeight = $(".clip").height();
         this.navStatus = 1;
 
         // console.log(this.alertsArray);
@@ -122,6 +121,9 @@ export class AppComponent implements OnInit, DoCheck {
     }
 
     toggle() {
+        const displayMenuToggle = this.menuToggle.nativeElement;
+        // console.log("--displayMenuToggle", displayMenuToggle); display style is empty, could control its status with Angular, instead of CSS
+
         if ($(".menu-toggle").css("display") != "none") {
             const elements = document.querySelectorAll("[data-view]");
             const status = document.querySelector(".navbar[data-theme]");

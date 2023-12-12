@@ -145,9 +145,9 @@ export class ImageService {
             .set("Content-Type", "application/x-www-form-urlencoded")
             .set("Authorization", token);
 
-        console.log('interactData', json);
-        console.log('url', url);
-        console.log('data.method.toLowerCase()', data.method.toLowerCase());
+        console.log("interactData", json);
+        console.log("url", url);
+        console.log("data.method.toLowerCase()", data.method.toLowerCase());
 
         return this._http[data.method.toLowerCase()](url, params, { headers });
     }
@@ -655,14 +655,24 @@ export class ImageService {
         const { user, image, action } = data;
         // 'unique' is an optional param, that if true, means it's a single image
 
-        // console.log(that);
+        interface RequestData {
+            user_id: number;
+            image_id: number;
+            action: string | null;
+            method: "PUT" | "POST" | null;
+        }
 
-        const formattedData = {
+        const formattedData: RequestData = {
             user_id: user.sub,
             image_id: image.id,
-            action: "",
-            method: "",
+            action: null,
+            method: "POST",
         };
+
+        this.interact(user.token, formattedData).subscribe(
+            // (response) => {},
+            (error) => console.log(error)
+        );
 
         this.checkInteractions(user.token, formattedData).subscribe(
             (response) => {
@@ -677,7 +687,6 @@ export class ImageService {
                         },
                         (error) => console.log(error)
                     );
-                } else {
                 }
             }
         );
